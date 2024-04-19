@@ -54,6 +54,26 @@ void InitSDL()
     }
 }
 
+void DrawGrid(SDL_Renderer *renderer)
+{
+    SDL_SetRenderDrawColor( renderer, 128, 128, 128, 255);
+
+    SDL_Rect cell;
+    cell.w = SNAKE_SIZE;
+    cell.h = SNAKE_SIZE;
+
+    for( int i = 0; i < GRID_ROWS_SIZE; i++)
+    {
+        for( int j = 0; j < GRID_COLUMNS_SIZE; j++)
+        {
+            cell.x = j * SNAKE_SIZE;
+            cell.y = i * SNAKE_SIZE;
+
+            SDL_RenderDrawRect( renderer, &cell);
+        }
+    }
+}
+
 void HandleInput()
 {
     SDL_Event event;
@@ -70,18 +90,21 @@ void HandleInput()
 
 void Render(SDL_Renderer *renderer)
 {
-    if(SDL_SetRenderDrawColor( renderer, 0, 255, 0, 255))
-    {
-        fprintf( stderr, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-    if(SDL_RenderClear( renderer))
+    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
     {
         fprintf( stderr, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
-    SDL_RenderPresent( renderer);
+    if(SDL_RenderClear(renderer))
+    {
+        fprintf( stderr, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    DrawGrid(renderer);
+
+    SDL_RenderPresent(renderer);
 }
 
 void QuitSDL()
