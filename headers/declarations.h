@@ -1,9 +1,10 @@
 #pragma once
 
-// Header files definitions
+// Header file definitions
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -32,6 +33,11 @@ typedef struct
 
 typedef struct
 {
+    coordinates position;
+} fruit;
+
+typedef struct
+{
     int direction;
     coordinates position;
 } segments;
@@ -40,7 +46,7 @@ typedef struct
 {
     int score, size;
     bool state;
-    segments chunk[1000];
+    segments chunk[10000];
 } player;
 
 SDL_Window *window = NULL;
@@ -48,6 +54,7 @@ SDL_Renderer *renderer = NULL;
 SDL_Surface *IconSurface = NULL;
 
 player snake;
+fruit apple;
 
 bool quit = false;
 
@@ -56,6 +63,12 @@ void InitSDL();
 
 // Function used to draw the grid in the window
 void DrawGrid(SDL_Renderer *renderer);
+
+// Function used to create the apple
+void CreateApple(fruit *apple);
+
+// Function used to draw the apple
+void DrawApple( SDL_Renderer *renderer, fruit *apple);
 
 // Function used to create the snake
 void CreateSnake(player *snake);

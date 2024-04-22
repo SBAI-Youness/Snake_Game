@@ -4,6 +4,7 @@ int main( int argc, char *argv[])
 {
     InitSDL();
 
+    CreateApple(&apple);
     CreateSnake(&snake);
 
     while(!quit)
@@ -86,6 +87,31 @@ void DrawGrid(SDL_Renderer *renderer)
     }
 }
 
+void CreateApple(fruit *apple)
+{
+    // Seed the random number generator with the current time
+    srand(time(NULL));
+
+    // Generation of a random position of the apple within the window
+    apple->position.x = (rand() % (GRID_COLUMNS_SIZE)) * SNAKE_SIZE;
+    apple->position.y = (rand() % (GRID_ROWS_SIZE)) * SNAKE_SIZE;
+}
+
+void DrawApple( SDL_Renderer *renderer, fruit *apple)
+{
+    // Setting the apple's color to red
+    if(SDL_SetRenderDrawColor( renderer, 255, 0, 0, 255))
+    {
+        fprintf( stderr, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Drawing a rectangle that is representing the apple
+    SDL_Rect AppleCell = { apple->position.x, apple->position.y, SNAKE_SIZE, SNAKE_SIZE};
+    SDL_RenderDrawRect( renderer, &AppleCell);
+    SDL_RenderFillRect( renderer, &AppleCell);
+}
+
 void CreateSnake(player *snake)
 {
     // Setting the snake to its initial size
@@ -108,7 +134,7 @@ void DrawSnake( SDL_Renderer *renderer, player *snake)
         QuitSDL();
     }
 
-    // Drawing rects that are representing each chunk of the snake
+    // Drawing rectangles that are representing each chunk of the snake
     for( int i = 0; i < snake->size; i++)
     {
         SDL_Rect SnakeSegment = { snake->chunk[i].position.x, snake->chunk[i].position.y, SNAKE_SIZE, SNAKE_SIZE};
@@ -145,6 +171,23 @@ void MoveSnake(player *snake)
         snake->chunk[0].position.y = 0;
     else if (snake->chunk[0].position.x >= WINDOW_WIDTH)
         snake->chunk[0].position.x = 0;
+
+    // Generating another position of the apple and increasing the size of the snake if it has been eaten by the snake 
+    if(snake->chunk[0].position.x == apple.position.x && snake->chunk[0].position.y == apple.position.y)
+    {
+        snake->size++;
+        CreateApple(&apple);
+    }
+
+    // Checking if the apple is generated on the body of the snake
+    for( int i = 1; i < snake->size; i++)
+    {
+        if(snake->chunk[i].position.x == apple.position.x && snake->chunk[i].position.y == apple.position.y)
+        {
+            CreateApple(&apple);
+            break;
+        }
+    }
 
     // Shift the positions of snake chunks to follow the head
     for( int i = snake->size-1; i > 0; i--)
@@ -205,6 +248,7 @@ void Render(SDL_Renderer *renderer)
     }
 
     DrawGrid(renderer);
+    DrawApple( renderer, &apple);
     MoveSnake(&snake);
     DrawSnake( renderer, &snake);
 
