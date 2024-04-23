@@ -26,6 +26,23 @@ void InitSDL()
         QuitSDL();
     }
 
+    // Attempt to initialize SDL audio system with specified parameters
+    if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024))
+    {
+        fprintf( stderr, "Mix_OpenAudio Error: %s\n", SDL_GetError());
+        SDL_Quit();
+    }
+
+    // Loading the mp3 audio file
+    SnakeEats = Mix_LoadMUS("tools/sounds/SnakeEats.mp3");
+
+    // Checking if the audio was successfully loaded
+    if(!SnakeEats)
+    {
+        fprintf( stderr, "Mix_LoadMUS Error: %s\n", SDL_GetError());
+        SDL_Quit();
+    }
+
     // Initialization of the PNG images
     if(!IMG_Init(IMG_INIT_PNG))
     {
@@ -172,9 +189,10 @@ void MoveSnake(player *snake)
     else if (snake->chunk[0].position.x >= WINDOW_WIDTH)
         snake->chunk[0].position.x = 0;
 
-    // Generating another position of the apple and increasing the size of the snake if it has been eaten by the snake 
+    // Generating another position of the apple, increasing the size of the snake and playing a sound if it the apple has been eaten by the snake 
     if(snake->chunk[0].position.x == apple.position.x && snake->chunk[0].position.y == apple.position.y)
     {
+        Mix_PlayMusic( SnakeEats, 0);
         snake->size++;
         CreateApple(&apple);
     }
@@ -263,10 +281,13 @@ void QuitSDL()
 {
     if(renderer)
         SDL_DestroyRenderer(renderer);
+    if(window)
+        SDL_DestroyWindow(window);
     if(IconSurface)
         SDL_FreeSurface(IconSurface);
     IMG_Quit();
-    if(window)
-        SDL_DestroyWindow(window);
+    if(SnakeEats)
+        Mix_FreeMusic(SnakeEats);
+    Mix_CloseAudio();
     SDL_Quit();
 }

@@ -7,6 +7,7 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 
 // Window definitions
 #define WINDOW_WIDTH 800
@@ -52,6 +53,7 @@ typedef struct
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Surface *IconSurface = NULL;
+Mix_Music *SnakeEats = NULL;
 
 player snake;
 fruit apple;
