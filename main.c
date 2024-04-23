@@ -7,7 +7,7 @@ int main( int argc, char *argv[])
     CreateApple(&apple);
     CreateSnake(&snake);
 
-    while(!quit)
+    while(!quit && snake.state)
     {
         HandleInput(&snake);
         Render(renderer);
@@ -131,8 +131,8 @@ void DrawApple( SDL_Renderer *renderer, fruit *apple)
 
 void CreateSnake(player *snake)
 {
-    // Setting the snake to its initial size
-    snake->size = SNAKE_INITIAL_SIZE;
+    // Setting the snake to its initial parameters
+    snake->size = SNAKE_INITIAL_SIZE, snake->score = 0, snake->state = true;
 
     // Setting each chunk to its position
     for( int i = 0; i < snake->size; i++)
@@ -193,7 +193,7 @@ void MoveSnake(player *snake)
     if(snake->chunk[0].position.x == apple.position.x && snake->chunk[0].position.y == apple.position.y)
     {
         Mix_PlayMusic( SnakeEats, 0);
-        snake->size++;
+        snake->size++, snake->score++;
         CreateApple(&apple);
     }
 
