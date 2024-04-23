@@ -1,6 +1,6 @@
 # Compiler and linker definitions
 CFLAGS = -I src/include -L src/lib
-LIBS = -lmingw32 -mwindows -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer
+LIBS = -lmingw32 -mwindows -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 SRC := $(wildcard *.c)
 CC = gcc
 
