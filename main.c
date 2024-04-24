@@ -22,15 +22,15 @@ void InitSDL()
     // Initialization of the SDL2 library
     if(SDL_Init(SDL_INIT_EVERYTHING))
     {
-        fprintf( stderr, "SDL_Init Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
     // Attempt to initialize SDL audio system with specified parameters
     if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024))
     {
-        fprintf( stderr, "Mix_OpenAudio Error: %s\n", SDL_GetError());
-        SDL_Quit();
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_OpenAudio Error: %s\n", Mix_GetError());
+        QuitSDL();
     }
 
     // Loading the mp3 audio file
@@ -39,14 +39,14 @@ void InitSDL()
     // Checking if the audio was successfully loaded
     if(!SnakeEats)
     {
-        fprintf( stderr, "Mix_LoadMUS Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
         SDL_Quit();
     }
 
     // Initialization of the PNG images
     if(!IMG_Init(IMG_INIT_PNG))
     {
-        fprintf( stderr, "IMG_Init Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Init Error: %s\n", IMG_GetError());
         QuitSDL();
     }
 
@@ -56,7 +56,7 @@ void InitSDL()
     // Checking if the image was successfully loaded
     if(!IconSurface)
     {
-        fprintf( stderr, "IMG_Load Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
     }
 
@@ -66,7 +66,7 @@ void InitSDL()
     // Checking if the window was successfully created
     if(!window)
     {
-        fprintf( stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
+        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
@@ -79,7 +79,7 @@ void InitSDL()
     // Checking if the renderer was successfully created
     if(!renderer)
     {
-        fprintf( stderr, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
+        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 }
