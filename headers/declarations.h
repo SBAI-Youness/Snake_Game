@@ -50,7 +50,8 @@ typedef struct
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL;
+SDL_Texture *AppleTexture = NULL;
 Mix_Music *EatingMusic = NULL;
 
 player snake;

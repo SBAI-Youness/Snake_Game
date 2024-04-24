@@ -82,6 +82,29 @@ void InitSDL()
         SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
         QuitSDL();
     }
+
+    // Loading the apple image
+    AppleSurface = IMG_Load("tools/images/AppleImage.png");
+
+    // Checking if the apple image was successfully loaded
+    if(!AppleSurface)
+    {
+        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
+        QuitSDL();
+    }
+
+    // Creating texture from surface
+    AppleTexture = SDL_CreateTextureFromSurface( renderer, AppleSurface);
+
+    // Checking if the texture was successfully created from surface
+    if(!AppleTexture)
+    {
+        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Free the surface after creating the texture
+    SDL_FreeSurface(AppleSurface);
 }
 
 void CreateApple(fruit *apple)
@@ -105,8 +128,7 @@ void DrawApple( SDL_Renderer *renderer, fruit *apple)
 
     // Drawing a rectangle that is representing the apple
     SDL_Rect AppleCell = { apple->position.x, apple->position.y, SNAKE_SIZE, SNAKE_SIZE};
-    SDL_RenderDrawRect( renderer, &AppleCell);
-    SDL_RenderFillRect( renderer, &AppleCell);
+    SDL_RenderCopy( renderer, AppleTexture, NULL, &AppleCell);
 }
 
 void CreateSnake(player *snake)
@@ -258,6 +280,8 @@ void Render(SDL_Renderer *renderer)
 
 void QuitSDL()
 {
+    if(AppleTexture)
+        SDL_DestroyTexture(AppleTexture);
     if(renderer)
         SDL_DestroyRenderer(renderer);
     if(window)
