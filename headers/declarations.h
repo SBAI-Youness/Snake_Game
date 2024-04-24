@@ -18,10 +18,6 @@
 #define SNAKE_INITIAL_SIZE 4
 #define SNAKE_SIZE 20
 
-// Grid definitions
-#define GRID_ROWS_SIZE (WINDOW_HEIGHT / SNAKE_SIZE)
-#define GRID_COLUMNS_SIZE (WINDOW_WIDTH / SNAKE_SIZE)
-
 // Direction definitions
 #define UP 1
 #define RIGHT 2
@@ -63,9 +59,6 @@ bool quit = false;
 
 // Function used to initialize the SDL2 library
 void InitSDL();
-
-// Function used to draw the grid in the window
-void DrawGrid(SDL_Renderer *renderer);
 
 // Function used to create the apple
 void CreateApple(fruit *apple);

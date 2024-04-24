@@ -84,34 +84,14 @@ void InitSDL()
     }
 }
 
-void DrawGrid(SDL_Renderer *renderer)
-{
-    // Setting the grid's color to grey
-    if(SDL_SetRenderDrawColor( renderer, 128, 128, 128, 255))
-    {
-        fprintf( stderr, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-
-    for( int i = 0; i < GRID_ROWS_SIZE; i++)
-    {
-        for( int j = 0; j < GRID_COLUMNS_SIZE; j++)
-        {
-            // Definition of a rect representing a cell in the grid
-            SDL_Rect cell = { j * SNAKE_SIZE, i * SNAKE_SIZE, SNAKE_SIZE, SNAKE_SIZE};
-            SDL_RenderDrawRect( renderer, &cell);
-        }
-    }
-}
-
 void CreateApple(fruit *apple)
 {
     // Seed the random number generator with the current time
     srand(time(NULL));
 
     // Generation of a random position of the apple within the window
-    apple->position.x = (rand() % (GRID_COLUMNS_SIZE)) * SNAKE_SIZE;
-    apple->position.y = (rand() % (GRID_ROWS_SIZE)) * SNAKE_SIZE;
+    apple->position.x = (rand() % (WINDOW_WIDTH / SNAKE_SIZE)) * SNAKE_SIZE;
+    apple->position.y = (rand() % (WINDOW_HEIGHT / SNAKE_SIZE)) * SNAKE_SIZE;
 }
 
 void DrawApple( SDL_Renderer *renderer, fruit *apple)
@@ -119,7 +99,7 @@ void DrawApple( SDL_Renderer *renderer, fruit *apple)
     // Setting the apple's color to red
     if(SDL_SetRenderDrawColor( renderer, 255, 0, 0, 255))
     {
-        fprintf( stderr, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
@@ -147,7 +127,7 @@ void DrawSnake( SDL_Renderer *renderer, player *snake)
     // Setting the snake's color to green
     if(SDL_SetRenderDrawColor( renderer, 0, 255, 0, 255))
     {
-        fprintf( stderr, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
@@ -254,18 +234,17 @@ void Render(SDL_Renderer *renderer)
     // Set the window color to black
     if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
     {
-        fprintf( stderr, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
     // Clearing the rendering target
     if(SDL_RenderClear(renderer))
     {
-        fprintf( stderr, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
-    DrawGrid(renderer);
     DrawApple( renderer, &apple);
     MoveSnake(&snake);
     DrawSnake( renderer, &snake);
