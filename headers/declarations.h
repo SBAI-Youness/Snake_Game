@@ -43,6 +43,7 @@ typedef struct
 typedef struct
 {
     int score, size;
+    float speed;
     bool state;
     segments chunk[10000];
 } player;
@@ -50,7 +51,7 @@ typedef struct
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Surface *IconSurface = NULL;
-Mix_Music *SnakeEats = NULL;
+Mix_Music *EatingMusic = NULL;
 
 player snake;
 fruit apple;

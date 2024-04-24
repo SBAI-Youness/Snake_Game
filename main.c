@@ -26,7 +26,7 @@ void InitSDL()
         QuitSDL();
     }
 
-    // Attempt to initialize SDL audio system with specified parameters
+    // Initialization of the SDL audio system with specified parameters
     if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_OpenAudio Error: %s\n", Mix_GetError());
@@ -34,13 +34,13 @@ void InitSDL()
     }
 
     // Loading the mp3 audio file
-    SnakeEats = Mix_LoadMUS("tools/sounds/SnakeEats.mp3");
+    EatingMusic = Mix_LoadMUS("tools/sounds/SnakeEats.mp3");
 
     // Checking if the audio was successfully loaded
-    if(!SnakeEats)
+    if(!EatingMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
-        SDL_Quit();
+        QuitSDL();
     }
 
     // Initialization of the PNG images
@@ -112,7 +112,7 @@ void DrawApple( SDL_Renderer *renderer, fruit *apple)
 void CreateSnake(player *snake)
 {
     // Setting the snake to its initial parameters
-    snake->size = SNAKE_INITIAL_SIZE, snake->score = 0, snake->state = true;
+    snake->size = SNAKE_INITIAL_SIZE, snake->score = 0, snake->state = true, snake->speed = 100;
 
     // Setting each chunk to its position
     for( int i = 0; i < snake->size; i++)
@@ -169,11 +169,11 @@ void MoveSnake(player *snake)
     else if (snake->chunk[0].position.x >= WINDOW_WIDTH)
         snake->chunk[0].position.x = 0;
 
-    // Generating another position of the apple, increasing the size of the snake and playing a sound if it the apple has been eaten by the snake 
+    // Generating another position of the apple, increasing the size of the snake and playing a sound if the apple has been eaten by the snake 
     if(snake->chunk[0].position.x == apple.position.x && snake->chunk[0].position.y == apple.position.y)
     {
-        Mix_PlayMusic( SnakeEats, 0);
-        snake->size++, snake->score++;
+        Mix_PlayMusic( EatingMusic, 0);
+        snake->size++, snake->score++, snake->speed = (snake->speed > 50)? snake->speed -= .2: snake->speed;
         CreateApple(&apple);
     }
 
@@ -253,7 +253,7 @@ void Render(SDL_Renderer *renderer)
     SDL_RenderPresent(renderer);
 
     // Delay to control frame rate
-    SDL_Delay(100);
+    SDL_Delay(snake.speed);
 }
 
 void QuitSDL()
@@ -265,8 +265,8 @@ void QuitSDL()
     if(IconSurface)
         SDL_FreeSurface(IconSurface);
     IMG_Quit();
-    if(SnakeEats)
-        Mix_FreeMusic(SnakeEats);
+    if(EatingMusic)
+        Mix_FreeMusic(EatingMusic);
     Mix_CloseAudio();
     SDL_Quit();
 }
