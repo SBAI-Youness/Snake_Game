@@ -63,9 +63,6 @@ bool quit = false;
 // Function used to initialize the SDL2 library
 void InitSDL();
 
-// Function used to load a surface
-void LoadSurface( SDL_Surface *surface, const char *path);
-
 // Function used to create the apple
 void CreateApple(fruit *apple);
 
