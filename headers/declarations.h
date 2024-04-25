@@ -50,9 +50,10 @@ typedef struct
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL;
-SDL_Texture *AppleTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL;
 Mix_Music *EatingMusic = NULL;
+TTF_Font *ScoreFont = NULL;
 
 player snake;
 fruit apple;
@@ -61,6 +62,9 @@ bool quit = false;
 
 // Function used to initialize the SDL2 library
 void InitSDL();
+
+// Function used to load a surface
+void LoadSurface( SDL_Surface *surface, const char *path);
 
 // Function used to create the apple
 void CreateApple(fruit *apple);
@@ -79,6 +83,9 @@ void MoveSnake(player *snake);
 
 // Function used to handle user input
 void HandleInput(player *snake);
+
+// Function used to show the score in the window
+void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, TTF_Font *font);
 
 // Function used for rendering
 void Render(SDL_Renderer *renderer);

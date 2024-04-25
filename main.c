@@ -105,6 +105,23 @@ void InitSDL()
 
     // Free the surface after creating the texture
     SDL_FreeSurface(AppleSurface);
+
+    // Initialization of the SDL_ttf library
+    if (TTF_Init() == -1)
+    {
+        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "TTF_Init Error: %s\n", TTF_GetError());
+        QuitSDL();
+    }
+
+    // Opening a font
+    ScoreFont = TTF_OpenFont("tools/fonts/MinecraftRegularFont.TTF", 30);
+
+    // Checking if the font was successfully openned
+    if(!ScoreFont)
+    {
+        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
+        QuitSDL();
+    }
 }
 
 void CreateApple(fruit *apple)
@@ -126,7 +143,7 @@ void DrawApple( SDL_Renderer *renderer, fruit *apple)
         QuitSDL();
     }
 
-    // Drawing a rectangle that is representing the apple
+    // ReNdering an image that is representing the apple
     SDL_Rect AppleCell = { apple->position.x, apple->position.y, SNAKE_SIZE, SNAKE_SIZE};
     SDL_RenderCopy( renderer, AppleTexture, NULL, &AppleCell);
 }
@@ -251,6 +268,27 @@ void HandleInput(player *snake)
     }
 }
 
+void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, TTF_Font *font)
+{
+    // Defining an array characters to store the score as a string
+    char ScoreString[50];
+
+    // Convert the integer score to a string using sprintf
+    itoa(snake.score, ScoreString, 10);
+
+    // Render the score string onto a surface using the provided font and color
+    surface = TTF_RenderText_Solid( font, ScoreString, (SDL_Color){ 255, 255, 255, 255});
+
+    // Create a texture from the rendered surface
+    texture = SDL_CreateTextureFromSurface( renderer, surface);
+
+    // Free the surface after creating the texture
+    SDL_FreeSurface(surface);
+
+    // Rendering the texture onto the renderer at a specific position and size
+    SDL_RenderCopy( renderer, texture, NULL, &(SDL_Rect){ 750, 0, 40, 40});
+}
+
 void Render(SDL_Renderer *renderer)
 {
     // Set the window color to black
@@ -270,6 +308,7 @@ void Render(SDL_Renderer *renderer)
     DrawApple( renderer, &apple);
     MoveSnake(&snake);
     DrawSnake( renderer, &snake);
+    DrawScore( renderer, ScoreSurface, ScoreTexture, ScoreFont);
 
     // Present the renderer
     SDL_RenderPresent(renderer);
@@ -280,6 +319,11 @@ void Render(SDL_Renderer *renderer)
 
 void QuitSDL()
 {
+    if(ScoreTexture)
+        SDL_DestroyTexture(ScoreTexture);
+    if(ScoreFont)
+        TTF_CloseFont(ScoreFont);
+    TTF_Quit();
     if(AppleTexture)
         SDL_DestroyTexture(AppleTexture);
     if(renderer)
