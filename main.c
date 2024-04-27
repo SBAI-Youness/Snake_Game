@@ -4,8 +4,7 @@ int main( int argc, char *argv[])
 {
     InitSDL();
 
-    CreateApple(&apple);
-    CreateSnake(&snake);
+    CreateApple(&apple), CreateSnake(&snake);
 
     while(!quit && snake.state)
     {
@@ -134,17 +133,10 @@ void CreateApple(fruit *apple)
     apple->position.y = (rand() % (WINDOW_HEIGHT / SNAKE_SIZE)) * SNAKE_SIZE;
 }
 
-void DrawApple( SDL_Renderer *renderer, fruit *apple)
+void DrawApple(SDL_Renderer *renderer)
 {
-    // Setting the apple's color to red
-    if(SDL_SetRenderDrawColor( renderer, 255, 0, 0, 255))
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-
-    // ReNdering an image that is representing the apple
-    SDL_Rect AppleCell = { apple->position.x, apple->position.y, SNAKE_SIZE, SNAKE_SIZE};
+    // Rendering an image that is representing the apple
+    SDL_Rect AppleCell = { apple.position.x, apple.position.y, SNAKE_SIZE, SNAKE_SIZE};
     SDL_RenderCopy( renderer, AppleTexture, NULL, &AppleCell);
 }
 
@@ -161,7 +153,7 @@ void CreateSnake(player *snake)
     }
 }
 
-void DrawSnake( SDL_Renderer *renderer, player *snake)
+void DrawSnake(SDL_Renderer *renderer)
 {
     // Setting the snake's color to green
     if(SDL_SetRenderDrawColor( renderer, 0, 255, 0, 255))
@@ -171,9 +163,9 @@ void DrawSnake( SDL_Renderer *renderer, player *snake)
     }
 
     // Drawing rectangles that are representing each chunk of the snake
-    for( int i = 0; i < snake->size; i++)
+    for( int i = 0; i < snake.size; i++)
     {
-        SDL_Rect SnakeSegment = { snake->chunk[i].position.x, snake->chunk[i].position.y, SNAKE_SIZE, SNAKE_SIZE};
+        SDL_Rect SnakeSegment = { snake.chunk[i].position.x, snake.chunk[i].position.y, SNAKE_SIZE, SNAKE_SIZE};
         SDL_RenderDrawRect( renderer, &SnakeSegment);
         SDL_RenderFillRect( renderer, &SnakeSegment);
     }
@@ -212,12 +204,12 @@ void MoveSnake(player *snake)
     if(snake->chunk[0].position.x == apple.position.x && snake->chunk[0].position.y == apple.position.y)
     {
         Mix_PlayMusic( EatingMusic, 0);
-        snake->size++, snake->score++, snake->speed = (snake->speed > 50)? snake->speed -= .2: snake->speed;
+        snake->size++, snake->score++, snake->speed = (snake->speed > 50)? snake->speed -= 2: snake->speed;
         CreateApple(&apple);
     }
 
     // Checking if the apple is generated on the body of the snake
-    for( int i = 1; i < snake->size; i++)
+    for( int i = 0; i < snake->size; i++)
     {
         if(snake->chunk[i].position.x == apple.position.x && snake->chunk[i].position.y == apple.position.y)
         {
@@ -305,9 +297,9 @@ void Render(SDL_Renderer *renderer)
         QuitSDL();
     }
 
-    DrawApple( renderer, &apple);
+    DrawApple(renderer);
     MoveSnake(&snake);
-    DrawSnake( renderer, &snake);
+    DrawSnake(renderer);
     DrawScore( renderer, ScoreSurface, ScoreTexture, ScoreFont);
 
     // Present the renderer

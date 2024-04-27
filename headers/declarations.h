@@ -67,13 +67,13 @@ void InitSDL();
 void CreateApple(fruit *apple);
 
 // Function used to draw the apple
-void DrawApple( SDL_Renderer *renderer, fruit *apple);
+void DrawApple(SDL_Renderer *renderer);
 
 // Function used to create the snake
 void CreateSnake(player *snake);
 
 // Function used to draw the snake in the window
-void DrawSnake( SDL_Renderer *renderer, player *snake);
+void DrawSnake(SDL_Renderer *renderer);
 
 // Function used to move the snake
 void MoveSnake(player *snake);
