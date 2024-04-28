@@ -4,7 +4,7 @@ int main( int argc, char *argv[])
 {
     InitSDL();
 
-    CreateApple(&apple), CreateSnake(&snake);
+    CreateApple(&apple), CreateSnake(&snake), CreateStars(stars);
 
     while(!quit && snake.state)
     {
@@ -121,6 +121,66 @@ void InitSDL()
         SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
         QuitSDL();
     }
+}
+
+void CreateStars(star stars[])
+{
+    // Loop through each star
+    for( int i = 0; i < NUMBER_OF_STARS; i++)
+    {
+        // Generation of a random position of the star within the window
+        stars[i].position.x = rand() % WINDOW_WIDTH;
+        stars[i].position.y = rand() % WINDOW_HEIGHT;
+
+        // Set the velocity (speed) of the star to a random value between 1 and 6
+        stars[i].velocity = ((float)rand() / RAND_MAX) * 5 + 1;
+
+        // Set the depth of the star to a random value between 0 and 1000
+        stars[i].depth = ((float)rand() / RAND_MAX) * 1000;
+        /*
+            The depth value might be used to adjust the size, color, or transparency (alpha value) of the stars
+            based on their perceived distance. For example, stars that are further away (higher depth values) might
+            appear smaller and fainter, while stars that are closer (lower depth values) might appear larger and brighter.
+        */
+    }
+}
+
+void UpdateAndDrawStars( SDL_Renderer *renderer, star stars[])
+{
+    // Loop through each star
+    for( int i = 0; i < NUMBER_OF_STARS; i++)
+    {
+        // Update the x-coordinate of the star based on its velocity
+        stars[i].position.x -= (int)stars[i].velocity;
+
+        // Wrap around stars that go off screen on the left side
+        if(stars[i].position.x < 0)
+        {
+            // Reset the x-coordinate to the right edge of the window
+            stars[i].position.x = WINDOW_WIDTH;
+
+            // Randomly set the y-coordinate within the window height
+            stars[i].position.y = rand() % WINDOW_HEIGHT;
+
+            // Randomize the velocity for a new movement pattern
+            stars[i].velocity = ((float)rand() / RAND_MAX) * 5 + 1;
+        }
+
+        // Calculate the size of the star based on its depth
+        int size = 1 + (int)(stars[i].depth / 100);
+
+        // Calculate the alpha value (transparency) based on the depth
+        int alpha = (int)(255 - stars[i].depth / 10);
+
+        // Set the render draw color to the calculated alpha for a fading effect
+        SDL_SetRenderDrawColor(renderer, alpha, alpha, alpha, 255);
+        
+        // Render a single point (pixel) representing the star on the screen
+        SDL_RenderDrawPoint(renderer, stars[i].position.x, stars[i].position.y);
+    }
+
+    // Introduce a small delay to control the frame rate of the animation
+    SDL_Delay(10);
 }
 
 void CreateApple(fruit *apple)
@@ -297,6 +357,7 @@ void Render(SDL_Renderer *renderer)
         QuitSDL();
     }
 
+    UpdateAndDrawStars( renderer, stars);
     DrawApple(renderer);
     MoveSnake(&snake);
     DrawSnake(renderer);

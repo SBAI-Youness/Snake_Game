@@ -18,6 +18,9 @@
 #define SNAKE_INITIAL_SIZE 4
 #define SNAKE_SIZE 20
 
+// Star definition
+#define NUMBER_OF_STARS 400
+
 // Direction definitions
 #define UP 1
 #define RIGHT 2
@@ -28,6 +31,12 @@ typedef struct
 {
     int x, y;
 } coordinates;
+
+typedef struct
+{
+    coordinates position;
+    float velocity, depth;
+} star;
 
 typedef struct
 {
@@ -57,11 +66,18 @@ TTF_Font *ScoreFont = NULL;
 
 player snake;
 fruit apple;
+star stars[NUMBER_OF_STARS];
 
 bool quit = false;
 
 // Function used to initialize the SDL2 library
 void InitSDL();
+
+// Function used to create the stars
+void CreateStars(star stars[]);
+
+// Function used to update and draw the stars
+void UpdateAndDrawStars( SDL_Renderer *renderer, star stars[]);
 
 // Function used to create the apple
 void CreateApple(fruit *apple);
