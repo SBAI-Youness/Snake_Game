@@ -5,7 +5,7 @@ SDL_Renderer *renderer = NULL;
 SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL;
 SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL;
 Mix_Music *EatingMusic = NULL;
-TTF_Font *ScoreFont = NULL;
+TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
 
 player snake;
 fruit apple;
@@ -114,6 +114,16 @@ void InitSDL()
 
     // Checking if the font was successfully openned
     if(!ScoreFont)
+    {
+        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
+        QuitSDL();
+    }
+
+    // Opening a font
+    MenuFont = TTF_OpenFont("tools/fonts/TalkComic.TTF", 30);
+
+    // Checking if the font was successfully openned
+    if(!MenuFont)
     {
         SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
         QuitSDL();

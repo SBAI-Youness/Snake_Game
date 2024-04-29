@@ -62,7 +62,7 @@ extern SDL_Renderer *renderer;
 extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface;
 extern SDL_Texture *AppleTexture, *ScoreTexture;
 extern Mix_Music *EatingMusic;
-extern TTF_Font *ScoreFont;
+extern TTF_Font *ScoreFont, *MenuFont;
 
 extern player snake;
 extern fruit apple;
