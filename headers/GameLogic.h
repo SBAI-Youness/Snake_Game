@@ -57,18 +57,18 @@ typedef struct
     segments chunk[10000];
 } player;
 
-SDL_Window *window = NULL;
-SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL;
-Mix_Music *EatingMusic = NULL;
-TTF_Font *ScoreFont = NULL;
+extern SDL_Window *window;
+extern SDL_Renderer *renderer;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture;
+extern Mix_Music *EatingMusic;
+extern TTF_Font *ScoreFont;
 
-player snake;
-fruit apple;
-star stars[NUMBER_OF_STARS];
+extern player snake;
+extern fruit apple;
+extern star stars[NUMBER_OF_STARS];
 
-bool quit = false;
+extern bool quit;
 
 // Function used to initialize the SDL2 library
 void InitSDL();
