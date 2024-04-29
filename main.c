@@ -1,4 +1,4 @@
-#include "headers/declarations.h"
+#include "headers/GameLogic.h"
 
 int main( int argc, char *argv[])
 {
