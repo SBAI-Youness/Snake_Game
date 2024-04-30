@@ -4,12 +4,31 @@ int main( int argc, char *argv[])
 {
     InitSDL();
 
-    CreateApple(&apple), CreateSnake(&snake), CreateStars(stars);
-
-    while(!quit && snake.state)
+    while(!quit)
     {
-        HandleInput(&snake);
-        Render(renderer);
+        switch(MenuOption)
+        {
+            // Show the menu
+            case 0:
+                HandleMenuInput();
+                RenderMenu(renderer);
+                break;
+
+            // Start the game
+            case 1:
+                CreateApple(&apple), CreateSnake(&snake), CreateStars(stars);
+                while(!quit && snake.state)
+                {
+                    HandleGameInput(&snake);
+                    RenderGame(renderer);
+                }
+                break;
+
+            // Exit the game
+            case 2:
+                quit = true;
+                break;
+        }
     }
 
     QuitSDL();

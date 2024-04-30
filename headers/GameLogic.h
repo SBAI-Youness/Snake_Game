@@ -21,6 +21,9 @@
 // Star definition
 #define NUMBER_OF_STARS 400
 
+// Menu's options enumeration
+typedef enum{ MENU, START, EXIT} GameState; // 0 --> show the menu || 1 --> start the game || 2 --> exit the game
+
 // Direction definitions
 #define UP 1
 #define RIGHT 2
@@ -59,8 +62,8 @@ typedef struct
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface;
-extern SDL_Texture *AppleTexture, *ScoreTexture;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture;
 extern Mix_Music *EatingMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
 
@@ -69,6 +72,8 @@ extern fruit apple;
 extern star stars[NUMBER_OF_STARS];
 
 extern bool quit;
+
+extern GameState MenuOption;
 
 // Function used to initialize the SDL2 library
 void InitSDL();
@@ -94,14 +99,20 @@ void DrawSnake(SDL_Renderer *renderer);
 // Function used to move the snake
 void MoveSnake(player *snake);
 
-// Function used to handle user input
-void HandleInput(player *snake);
+// Function used to handle user input while playing
+void HandleGameInput(player *snake);
+
+// Function used to draw the menu
+void RenderMenu(SDL_Renderer *renderer);
+
+// Function used to handle user input while the menu is shown
+void HandleMenuInput();
 
 // Function used to show the score in the window
 void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, TTF_Font *font);
 
 // Function used for rendering
-void Render(SDL_Renderer *renderer);
+void RenderGame(SDL_Renderer *renderer);
 
 // Function used to quit the SDL2 library
 void QuitSDL();
