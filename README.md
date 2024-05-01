@@ -28,7 +28,7 @@ Once SDL2 is set up, clone the repository and navigate to the project directory.
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/snake-game.git
+   git clone https://github.com/SBAI-Youness/Snake_Game.git
    ```
 
 2. Navigate to the project directory using the following commands:
