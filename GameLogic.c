@@ -3,7 +3,7 @@
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL;;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL;
 Mix_Music *EatingMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
 
@@ -64,7 +64,7 @@ void InitSDL()
     // Checking if the window was successfully created
     if(!window)
     {
-        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateWindow Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
@@ -77,7 +77,7 @@ void InitSDL()
     // Checking if the renderer was successfully created
     if(!renderer)
     {
-        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
@@ -87,7 +87,7 @@ void InitSDL()
     // Checking if the apple image was successfully loaded
     if(!AppleSurface)
     {
-        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
     }
 
@@ -97,7 +97,7 @@ void InitSDL()
     // Checking if the texture was successfully created from surface
     if(!AppleTexture)
     {
-        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
@@ -107,7 +107,7 @@ void InitSDL()
     // Initialization of the SDL_ttf library
     if (TTF_Init() == -1)
     {
-        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "TTF_Init Error: %s\n", TTF_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_Init Error: %s\n", TTF_GetError());
         QuitSDL();
     }
 
@@ -117,7 +117,7 @@ void InitSDL()
     // Checking if the font was successfully openned
     if(!ScoreFont)
     {
-        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
         QuitSDL();
     }
 
@@ -127,7 +127,7 @@ void InitSDL()
     // Checking if the font was successfully openned
     if(!MenuFont)
     {
-        SDL_LogError( SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
         QuitSDL();
     }
 }
@@ -146,11 +146,6 @@ void CreateStars(star stars[])
 
         // Set the depth of the star to a random value between 0 and 1000
         stars[i].depth = ((float)rand() / RAND_MAX) * 1000;
-        /*
-            The depth value might be used to adjust the size, color, or transparency (alpha value) of the stars
-            based on their perceived distance. For example, stars that are further away (higher depth values) might
-            appear smaller and fainter, while stars that are closer (lower depth values) might appear larger and brighter.
-        */
     }
 }
 
