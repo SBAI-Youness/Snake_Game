@@ -388,7 +388,7 @@ void RenderMenu(SDL_Renderer *renderer)
     }
 
     // Creating rectangles where the textures will be copied
-    SDL_Rect TitleRect = { 150, 90, 500, 100}, StartRect = { 275, 210, 250, 70}, ExitRect = { 275, 280, 250, 70};
+    SDL_Rect TitleRect = { 125, 30, 550, 120}, StartRect = { 250, 210, 300, 80}, ExitRect = { 250, 280, 300, 80};
 
     // Rendering the textures onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, TitleTexture, NULL, &TitleRect);
