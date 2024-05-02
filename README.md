@@ -40,10 +40,10 @@ Once SDL2 is set up, clone the repository and navigate to the project directory.
     ```
 ## Credits
 
-This Hangman Game was initially created by **Taha Ammour**. See the [Credits](#credits) section in the project for more information.
+This Snake Game was initially created by **Youness SBAI**. See the [Credits](#credits) section in the project for more information.
 
 ## License
 
-Hangman Game is released under the MIT License. See the [LICENSE](LICENSE) file for more details.
+Snake Game is released under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ---
