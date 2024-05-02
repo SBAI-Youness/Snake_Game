@@ -2,7 +2,7 @@
 
 This is a simple Snake Game implemented in C using SDL2 library. The game allows players to control a snake to eat apples and grow longer without hitting itself.
 
-![Snake Game Demo](tools/images/ScreenImage.png)
+![Snake Game Screen](tools/images/ScreenImage.png)
 
 ## Features
 
@@ -27,7 +27,7 @@ Once SDL2 is set up, clone the repository and navigate to the project directory.
 
 1. Clone the repository:
 
-   ```bash
+   ```shell
    git clone https://github.com/SBAI-Youness/Snake_Game.git
    ```
 
