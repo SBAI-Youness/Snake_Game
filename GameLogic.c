@@ -398,12 +398,18 @@ void RenderMenu(SDL_Renderer *renderer)
     }
 
     // Creating rectangles where the textures will be copied
-    SDL_Rect TitleRect = { 125, 30, 550, 120}, StartRect = { 250, 210, 300, 80}, ExitRect = { 250, 280, 300, 80};
+    SDL_Rect TitleRect = { 125, 30, 550, 120}, StartRect = { 250, 210, 300, 80}, ExitRect = { 250, 300, 300, 80};
 
     // Rendering the textures onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, TitleTexture, NULL, &TitleRect);
     SDL_RenderCopy( renderer, StartTexture, NULL, &StartRect);
     SDL_RenderCopy( renderer, ExitTexture, NULL, &ExitRect);
+
+    // Setting a white color under the game title
+    SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255);
+
+    // Drawing a white line under the game title
+    SDL_RenderDrawLine( renderer, TitleRect.x, TitleRect.y + TitleRect.h + 5, TitleRect.x + TitleRect.w, TitleRect.y + TitleRect.h + 5);
 
     // Free the surfaces after creating the textures
     SDL_FreeSurface(TitleSurface);
