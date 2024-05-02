@@ -4,7 +4,7 @@ SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL;
 SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL;
-Mix_Music *EatingMusic = NULL;
+Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
 
 player snake;
@@ -36,6 +36,16 @@ void InitSDL()
 
     // Checking if the audio was successfully loaded
     if(!EatingMusic)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
+        QuitSDL();
+    }
+
+    // Loading the mp3 audio file
+    ClickingMusic = Mix_LoadMUS("tools/sounds/Clicking.mp3");
+
+    // Checking if the audio was successfully loaded
+    if(!ClickingMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
         QuitSDL();
@@ -429,9 +439,11 @@ void HandleMenuInput()
                 switch(event.key.keysym.sym)
                 {
                     case SDLK_s:
+                        Mix_PlayMusic( ClickingMusic, 0);
                         MenuOption = START; // set to 0 in order to start the game
                         break;
                     case SDLK_e:
+                        Mix_PlayMusic( ClickingMusic, 0);
                         MenuOption = EXIT ; // set to 0 in order to exit the game
                         break;
                 }
@@ -520,6 +532,8 @@ void QuitSDL()
     if(IconSurface)
         SDL_FreeSurface(IconSurface);
     IMG_Quit();
+    if(ClickingMusic)
+        Mix_FreeMusic(ClickingMusic);
     if(EatingMusic)
         Mix_FreeMusic(EatingMusic);
     Mix_CloseAudio();

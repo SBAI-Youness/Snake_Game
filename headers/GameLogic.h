@@ -64,7 +64,7 @@ extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface;
 extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture;
-extern Mix_Music *EatingMusic;
+extern Mix_Music *EatingMusic, *ClickingMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
 
 extern player snake;
