@@ -454,6 +454,28 @@ void HandleMenuInput()
                         break;
                 }
                 break;
+
+                // If a mouse button is released
+                case SDL_MOUSEBUTTONUP:
+                    // Handle mouse input
+                    switch(event.button.button)
+                    {
+                        case SDL_BUTTON_LEFT:
+                            int mouseX = event.button.x, mouseY = event.button.y;
+
+                            if(mouseX >= 250 && mouseX <= 550 && mouseY >= 210 && mouseY <= 290) // If the user pressed start
+                            {
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = START;
+                            }
+                            else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 300 && mouseY <= 380) // If the user pressed exit
+                            {
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = EXIT;
+                            }
+                            break;
+                    }
+                    break;
         }
     }
 }
