@@ -5,7 +5,7 @@ SDL_Renderer *renderer = NULL;
 SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *MenuBackgroundSurface = NULL;
 SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *MenuBackgroundTexture = NULL;
 SDL_Cursor *Cursor = NULL;
-Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL;
+Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *RainMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
 
 player snake;
@@ -47,6 +47,16 @@ void InitSDL()
 
     // Checking if the audio was successfully loaded
     if(!ClickingMusic)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
+        QuitSDL();
+    }
+
+    // Loading the mp3 audio file
+    RainMusic = Mix_LoadMUS("tools/sounds/rain.mp3");
+
+    // Checking if the audio was successfully loaded
+    if(!RainMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
         QuitSDL();
@@ -360,6 +370,11 @@ void HandleGameInput(player *snake)
 
 void RenderMenu(SDL_Renderer *renderer)
 {
+    if(!Mix_PlayingMusic()) // Checking if a music is already playing
+    {
+        Mix_PlayMusic( RainMusic, -1); // Playing the rain music in an infinite loop
+    }
+
     // Loading the background image
     MenuBackgroundSurface = IMG_Load("tools/images/MenuBackground.png");
 
@@ -478,10 +493,12 @@ void HandleMenuInput()
                 switch(event.key.keysym.sym)
                 {
                     case SDLK_s:
+                        Mix_HaltMusic();
                         Mix_PlayMusic( ClickingMusic, 0);
                         MenuOption = START; // set to 0 in order to start the game
                         break;
                     case SDLK_e:
+                        Mix_HaltMusic();
                         Mix_PlayMusic( ClickingMusic, 0);
                         MenuOption = EXIT ; // set to 0 in order to exit the game
                         break;
@@ -498,11 +515,13 @@ void HandleMenuInput()
 
                             if(mouseX >= 250 && mouseX <= 550 && mouseY >= 210 && mouseY <= 290) // If the user pressed start
                             {
+                                Mix_HaltMusic();
                                 Mix_PlayMusic( ClickingMusic, 0);
                                 MenuOption = START;
                             }
                             else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 300 && mouseY <= 380) // If the user pressed exit
                             {
+                                Mix_HaltMusic();
                                 Mix_PlayMusic( ClickingMusic, 0);
                                 MenuOption = EXIT;
                             }
@@ -597,6 +616,8 @@ void QuitSDL()
     if(IconSurface)
         SDL_FreeSurface(IconSurface);
     IMG_Quit();
+    if(RainMusic)
+        Mix_FreeMusic(RainMusic);
     if(ClickingMusic)
         Mix_FreeMusic(ClickingMusic);
     if(EatingMusic)
