@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *MenuBackgroundSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *MenuBackgroundTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -360,17 +360,23 @@ void HandleGameInput(player *snake)
 
 void RenderMenu(SDL_Renderer *renderer)
 {
-    // Set the window color to black
-    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    // Loading the background image
+    MenuBackgroundSurface = IMG_Load("tools/images/MenuBackground.png");
+
+    // Checking if the background image was successfully loaded
+    if(!MenuBackgroundSurface)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
     }
 
-    // Clearing the rendering target
-    if(SDL_RenderClear(renderer))
+    // Creating texture from surface
+    MenuBackgroundTexture = SDL_CreateTextureFromSurface( renderer, MenuBackgroundSurface);
+
+    // Checking if the texture was successfully created from surface
+    if(!MenuBackgroundTexture)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
@@ -425,6 +431,7 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_Rect TitleRect = { 125, 30, 550, 120}, StartRect = { 250, 210, 300, 80}, ExitRect = { 250, 300, 300, 80};
 
     // Rendering the textures onto the renderer at a specific position and size
+    SDL_RenderCopy( renderer, MenuBackgroundTexture, NULL, NULL);
     SDL_RenderCopy( renderer, TitleTexture, NULL, &TitleRect);
     SDL_RenderCopy( renderer, StartTexture, NULL, &StartRect);
     SDL_RenderCopy( renderer, ExitTexture, NULL, &ExitRect);
@@ -439,11 +446,13 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_FreeSurface(TitleSurface);
     SDL_FreeSurface(StartSurface);
     SDL_FreeSurface(ExitSurface);
+    SDL_FreeSurface(MenuBackgroundSurface);
 
     // Destroying textures after creating them
     SDL_DestroyTexture(TitleTexture);
     SDL_DestroyTexture(StartTexture);
     SDL_DestroyTexture(ExitTexture);
+    SDL_DestroyTexture(MenuBackgroundTexture);
 
     // Present the renderer
     SDL_RenderPresent(renderer);
