@@ -1,4 +1,4 @@
-# Snake Game
+# Snake Game 🐍
 
 This is a simple Snake Game implemented in C using SDL2 library. The game allows players to control a snake to eat apples and grow longer without hitting itself.
 
