@@ -2,8 +2,9 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL;
 SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL;
+SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
 
@@ -113,6 +114,29 @@ void InitSDL()
 
     // Free the surface after creating the texture
     SDL_FreeSurface(AppleSurface);
+
+    // Loading the cursor image
+    CursorSurface = IMG_Load("tools/images/cursor.png");
+
+    // Checking if the cursor image was successfully loaded
+    if(!CursorSurface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
+        QuitSDL();
+    }
+
+    // Create a color cursor from the loaded surface
+    Cursor = SDL_CreateColorCursor( CursorSurface, 0, 0);
+
+    // Checking if the cursor was successfully created
+    if(!Cursor)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateColorCursor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Setting the created cursor as the active cursor for the application
+    SDL_SetCursor(Cursor);
 
     // Initialization of the SDL_ttf library
     if (TTF_Init() == -1)
@@ -551,6 +575,10 @@ void QuitSDL()
     if(ScoreFont)
         TTF_CloseFont(ScoreFont);
     TTF_Quit();
+    if(Cursor)
+        SDL_FreeCursor(Cursor);
+    if(CursorSurface)
+        SDL_FreeSurface(CursorSurface);
     if(AppleTexture)
         SDL_DestroyTexture(AppleTexture);
     if(renderer)
