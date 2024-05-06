@@ -148,6 +148,29 @@ void InitSDL()
     // Setting the created cursor as the active cursor for the application
     SDL_SetCursor(Cursor);
 
+    // Loading the background image
+    MenuBackgroundSurface = IMG_Load("tools/images/MenuBackground.png");
+
+    // Checking if the background image was successfully loaded
+    if(!MenuBackgroundSurface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
+        QuitSDL();
+    }
+
+    // Creating texture from surface
+    MenuBackgroundTexture = SDL_CreateTextureFromSurface( renderer, MenuBackgroundSurface);
+
+    // Checking if the texture was successfully created from surface
+    if(!MenuBackgroundTexture)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+    
+    // Free the surface used to create the menu background texture
+    SDL_FreeSurface(MenuBackgroundSurface);
+
     // Initialization of the SDL_ttf library
     if (TTF_Init() == -1)
     {
@@ -375,34 +398,8 @@ void RenderMenu(SDL_Renderer *renderer)
         Mix_PlayMusic( RainMusic, -1); // Playing the rain music in an infinite loop
     }
 
-    // Loading the background image
-    MenuBackgroundSurface = IMG_Load("tools/images/MenuBackground.png");
-
-    // Checking if the background image was successfully loaded
-    if(!MenuBackgroundSurface)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
-        QuitSDL();
-    }
-
-    // Creating texture from surface
-    MenuBackgroundTexture = SDL_CreateTextureFromSurface( renderer, MenuBackgroundSurface);
-
-    // Checking if the texture was successfully created from surface
-    if(!MenuBackgroundTexture)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-
     // Render the menu background texture onto the renderer at its default position and size
     SDL_RenderCopy( renderer, MenuBackgroundTexture, NULL, NULL);
-
-    // Free the surface used to create the menu background texture
-    SDL_FreeSurface(MenuBackgroundSurface);
-
-    // Destroy the menu background texture to release associated memory
-    SDL_DestroyTexture(MenuBackgroundTexture);
 
     // Setting colors for the game title and the buttons
     SDL_Color TitleColor = { 255, 255, 255, 255}, ButtonsColor = { 128, 128, 128, 128};
@@ -468,6 +465,9 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_DestroyTexture(TitleTexture);
     SDL_DestroyTexture(StartTexture);
     SDL_DestroyTexture(ExitTexture);
+    
+    // Destroy the menu background texture to release associated memory
+    SDL_DestroyTexture(MenuBackgroundTexture);
 
     // Present the renderer
     SDL_RenderPresent(renderer);
