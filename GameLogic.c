@@ -395,6 +395,15 @@ void RenderMenu(SDL_Renderer *renderer)
         QuitSDL();
     }
 
+    // Render the menu background texture onto the renderer at its default position and size
+    SDL_RenderCopy( renderer, MenuBackgroundTexture, NULL, NULL);
+
+    // Free the surface used to create the menu background texture
+    SDL_FreeSurface(MenuBackgroundSurface);
+
+    // Destroy the menu background texture to release associated memory
+    SDL_DestroyTexture(MenuBackgroundTexture);
+
     // Setting colors for the game title and the buttons
     SDL_Color TitleColor = { 255, 255, 255, 255}, ButtonsColor = { 128, 128, 128, 128};
 
@@ -446,28 +455,19 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_Rect TitleRect = { 125, 30, 550, 120}, StartRect = { 250, 210, 300, 80}, ExitRect = { 250, 300, 300, 80};
 
     // Rendering the textures onto the renderer at a specific position and size
-    SDL_RenderCopy( renderer, MenuBackgroundTexture, NULL, NULL);
     SDL_RenderCopy( renderer, TitleTexture, NULL, &TitleRect);
     SDL_RenderCopy( renderer, StartTexture, NULL, &StartRect);
     SDL_RenderCopy( renderer, ExitTexture, NULL, &ExitRect);
-
-    // Setting a white color under the game title
-    SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255);
-
-    // Drawing a white line under the game title
-    SDL_RenderDrawLine( renderer, TitleRect.x, TitleRect.y + TitleRect.h + 5, TitleRect.x + TitleRect.w, TitleRect.y + TitleRect.h + 5);
 
     // Free the surfaces after creating the textures
     SDL_FreeSurface(TitleSurface);
     SDL_FreeSurface(StartSurface);
     SDL_FreeSurface(ExitSurface);
-    SDL_FreeSurface(MenuBackgroundSurface);
 
     // Destroying textures after creating them
     SDL_DestroyTexture(TitleTexture);
     SDL_DestroyTexture(StartTexture);
     SDL_DestroyTexture(ExitTexture);
-    SDL_DestroyTexture(MenuBackgroundTexture);
 
     // Present the renderer
     SDL_RenderPresent(renderer);
