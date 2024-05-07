@@ -24,6 +24,9 @@
 // Menu's options enumeration
 typedef enum{ MENU, START, EXIT} GameState; // 0 --> show the menu || 1 --> start the game || 2 --> exit the game
 
+// Button's state enumeration
+typedef enum{ onNothing, onStart, onExit} MouseHoveringState; // 0 --> mouse isn't hovering any button || 1 --> mouse is hovering start button || 2 --> mouse is hovering exit button
+
 // Direction definitions
 #define UP 1
 #define RIGHT 2
@@ -62,8 +65,8 @@ typedef struct
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface, *CursorSurface;
-extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface, *CursorSurface, *PointerSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture, *PointerTexture;
 extern SDL_Cursor *Cursor;
 extern Mix_Music *EatingMusic, *ClickingMusic, *RainMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
@@ -75,6 +78,8 @@ extern star stars[NUMBER_OF_STARS];
 extern bool quit;
 
 extern GameState MenuOption;
+
+extern MouseHoveringState isHovering;
 
 // Function used to initialize the SDL2 library
 void InitSDL();

@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *RainMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -15,6 +15,8 @@ star stars[NUMBER_OF_STARS];
 bool quit = false;
 
 GameState MenuOption = MENU;
+
+MouseHoveringState isHovering = onNothing;
 
 void InitSDL()
 {
@@ -147,6 +149,29 @@ void InitSDL()
 
     // Setting the created cursor as the active cursor for the application
     SDL_SetCursor(Cursor);
+
+    // Loading the button's pointer image
+    PointerSurface = IMG_Load("tools/images/pointer.png");
+
+    // Checking if the button's pointer image was successfully loaded
+    if(!PointerSurface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
+        QuitSDL();
+    }
+
+    // Creating texture from surface
+    PointerTexture = SDL_CreateTextureFromSurface( renderer, PointerSurface);
+
+    // Checking if the texture was successfully created from surface
+    if(!PointerTexture)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Free the surface after creating the texture
+    SDL_FreeSurface(PointerSurface);
 
     // Initialization of the SDL_ttf library
     if (TTF_Init() == -1)
@@ -458,6 +483,17 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_DestroyTexture(StartTexture);
     SDL_DestroyTexture(ExitTexture);
 
+    switch(isHovering)
+    {
+        case onStart:
+            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 200, 230, 40, 40});
+            break;
+
+        case onExit:
+            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 200, 320, 40, 40});
+            break;
+    }
+
     // Present the renderer
     SDL_RenderPresent(renderer);
 }
@@ -492,6 +528,19 @@ void HandleMenuInput()
                         MenuOption = EXIT ; // set to 0 in order to exit the game
                         break;
                 }
+                break;
+
+            // This case case is related to mouse motions
+            case SDL_MOUSEMOTION:
+                // Extract the x and y coordinates of the mouse pointer from the event
+                int mouseX = event.motion.x, mouseY = event.motion.y;
+
+                if(mouseX >= 250 && mouseX <= 550 && mouseY >= 210 && mouseY <= 290) // Mouse is hovering start button
+                    isHovering = onStart;
+                else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 300 && mouseY <= 380) // Mouse is hovering exit button
+                    isHovering = onExit;
+                else // Mouse is hovering any button
+                    isHovering = onNothing;
                 break;
 
             // If a mouse button is released
