@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *MenuBackgroundSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *MenuBackgroundTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *RainMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -148,29 +148,6 @@ void InitSDL()
     // Setting the created cursor as the active cursor for the application
     SDL_SetCursor(Cursor);
 
-    // Loading the background image
-    MenuBackgroundSurface = IMG_Load("tools/images/MenuBackground.png");
-
-    // Checking if the background image was successfully loaded
-    if(!MenuBackgroundSurface)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
-        QuitSDL();
-    }
-
-    // Creating texture from surface
-    MenuBackgroundTexture = SDL_CreateTextureFromSurface( renderer, MenuBackgroundSurface);
-
-    // Checking if the texture was successfully created from surface
-    if(!MenuBackgroundTexture)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-    
-    // Free the surface used to create the menu background texture
-    SDL_FreeSurface(MenuBackgroundSurface);
-
     // Initialization of the SDL_ttf library
     if (TTF_Init() == -1)
     {
@@ -179,7 +156,7 @@ void InitSDL()
     }
 
     // Opening a font
-    ScoreFont = TTF_OpenFont("tools/fonts/MinecraftRegularFont.TTF", 30);
+    ScoreFont = TTF_OpenFont("tools/fonts/MinecraftRegularFont.TTF", 28);
 
     // Checking if the font was successfully openned
     if(!ScoreFont)
@@ -189,7 +166,7 @@ void InitSDL()
     }
 
     // Opening a font
-    MenuFont = TTF_OpenFont("tools/fonts/TalkComic.TTF", 30);
+    MenuFont = TTF_OpenFont("tools/fonts/TalkComic.TTF", 38);
 
     // Checking if the font was successfully openned
     if(!MenuFont)
@@ -373,15 +350,19 @@ void HandleGameInput(player *snake)
                 // Handle keyboard input
                 switch(event.key.keysym.sym)
                 {
+                    case SDLK_z:
                     case SDLK_UP:
                         snake->chunk[0].direction = UP;
                         break;
+                    case SDLK_d:
                     case SDLK_RIGHT:
                         snake->chunk[0].direction = RIGHT;
                         break;
+                    case SDLK_s:
                     case SDLK_DOWN:
                         snake->chunk[0].direction = DOWN;
                         break;
+                    case SDLK_q:
                     case SDLK_LEFT:
                         snake->chunk[0].direction = LEFT;
                         break;
@@ -393,13 +374,24 @@ void HandleGameInput(player *snake)
 
 void RenderMenu(SDL_Renderer *renderer)
 {
+    // Set the window color to black
+    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Clearing the rendering target
+    if(SDL_RenderClear(renderer))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
     if(!Mix_PlayingMusic()) // Checking if a music is already playing
     {
         Mix_PlayMusic( RainMusic, -1); // Playing the rain music in an infinite loop
     }
-
-    // Render the menu background texture onto the renderer at its default position and size
-    SDL_RenderCopy( renderer, MenuBackgroundTexture, NULL, NULL);
 
     // Setting colors for the game title and the buttons
     SDL_Color TitleColor = { 255, 255, 255, 255}, ButtonsColor = { 128, 128, 128, 128};
@@ -449,7 +441,7 @@ void RenderMenu(SDL_Renderer *renderer)
     }
 
     // Creating rectangles where the textures will be copied
-    SDL_Rect TitleRect = { 125, 30, 550, 120}, StartRect = { 250, 210, 300, 80}, ExitRect = { 250, 300, 300, 80};
+    SDL_Rect TitleRect = { 125, 20, 550, 120}, StartRect = { 250, 210, 300, 80}, ExitRect = { 250, 300, 300, 80};
 
     // Rendering the textures onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, TitleTexture, NULL, &TitleRect);
@@ -465,9 +457,6 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_DestroyTexture(TitleTexture);
     SDL_DestroyTexture(StartTexture);
     SDL_DestroyTexture(ExitTexture);
-    
-    // Destroy the menu background texture to release associated memory
-    SDL_DestroyTexture(MenuBackgroundTexture);
 
     // Present the renderer
     SDL_RenderPresent(renderer);
@@ -505,29 +494,29 @@ void HandleMenuInput()
                 }
                 break;
 
-                // If a mouse button is released
-                case SDL_MOUSEBUTTONUP:
-                    // Handle mouse input
-                    switch(event.button.button)
-                    {
-                        case SDL_BUTTON_LEFT:
-                            int mouseX = event.button.x, mouseY = event.button.y;
+            // If a mouse button is released
+            case SDL_MOUSEBUTTONUP:
+                // Handle mouse input
+                switch(event.button.button)
+                {
+                    case SDL_BUTTON_LEFT:
+                        int mouseX = event.button.x, mouseY = event.button.y;
 
-                            if(mouseX >= 250 && mouseX <= 550 && mouseY >= 210 && mouseY <= 290) // If the user pressed start
-                            {
-                                Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
-                                MenuOption = START;
-                            }
-                            else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 300 && mouseY <= 380) // If the user pressed exit
-                            {
-                                Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
-                                MenuOption = EXIT;
-                            }
-                            break;
-                    }
-                    break;
+                        if(mouseX >= 250 && mouseX <= 550 && mouseY >= 210 && mouseY <= 290) // If the user pressed start
+                        {
+                            Mix_HaltMusic();
+                            Mix_PlayMusic( ClickingMusic, 0);
+                            MenuOption = START;
+                        }
+                        else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 300 && mouseY <= 380) // If the user pressed exit
+                        {
+                            Mix_HaltMusic();
+                            Mix_PlayMusic( ClickingMusic, 0);
+                            MenuOption = EXIT;
+                        }
+                        break;
+                }
+                break;
         }
     }
 }
