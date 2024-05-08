@@ -5,7 +5,7 @@ SDL_Renderer *renderer = NULL;
 SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL;
 SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL;
 SDL_Cursor *Cursor = NULL;
-Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL;
+Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
 
 player snake;
@@ -49,6 +49,16 @@ void InitSDL()
 
     // Checking if the audio was successfully loaded
     if(!ClickingMusic)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
+        QuitSDL();
+    }
+
+    // Loading the mp3 audio file
+    ClickingPopMusic = Mix_LoadMUS("tools/sounds/ClickingPop.mp3");
+
+    // Checking if the audio was successfully loaded
+    if(!ClickingPopMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
         QuitSDL();
@@ -404,12 +414,12 @@ void RenderMenu(SDL_Renderer *renderer)
     }
 
     // Setting colors for the game title and the buttons
-    SDL_Color TitleColor = { 255, 255, 255, 255}, DefaultColor = { 128, 128, 128, 128};
+    SDL_Color TitleColor = { 255, 255, 255, 255}, DefaultColor = { 128, 128, 128, 128}, HoveringColor = { 160, 160, 160, 255};
 
     // Render the texts onto surfaces using the provided fonts and colors
     TitleSurface = TTF_RenderText_Solid( MenuFont, "Snake Game", TitleColor);
-    StartSurface = TTF_RenderText_Solid( MenuFont, "Start", (isHovering != onStart)? DefaultColor: (SDL_Color){ 0, 255, 0, 255});
-    ExitSurface = TTF_RenderText_Solid( MenuFont, "Exit", (isHovering != onExit)? DefaultColor: (SDL_Color){ 255, 0, 0, 255});
+    StartSurface = TTF_RenderText_Solid( MenuFont, "Start", (isHovering != onStart)? DefaultColor: HoveringColor);
+    ExitSurface = TTF_RenderText_Solid( MenuFont, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
 
     // Checking if the texts were successfully rendered
     if(!TitleSurface)
@@ -521,9 +531,21 @@ void HandleMenuInput()
                 int mouseX = event.motion.x, mouseY = event.motion.y;
 
                 if(mouseX >= 250 && mouseX <= 550 && mouseY >= 210 && mouseY <= 290) // Mouse is hovering start button
-                    isHovering = onStart;
+                {
+                    if(isHovering != onStart)
+                    {
+                        isHovering = onStart;
+                        Mix_PlayMusic( ClickingPopMusic, 0);
+                    }
+                }
                 else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 300 && mouseY <= 380) // Mouse is hovering exit button
-                    isHovering = onExit;
+                {
+                    if (isHovering != onExit)
+                    {
+                        isHovering = onExit;
+                        Mix_PlayMusic( ClickingPopMusic, 0);
+                    }
+                }
                 else // Mouse is hovering any button
                     isHovering = onNothing;
                 break;
@@ -639,6 +661,8 @@ void QuitSDL()
     if(IconSurface)
         SDL_FreeSurface(IconSurface);
     IMG_Quit();
+    if(ClickingPopMusic)
+        Mix_FreeMusic(ClickingPopMusic);
     if(ClickingMusic)
         Mix_FreeMusic(ClickingMusic);
     if(EatingMusic)
