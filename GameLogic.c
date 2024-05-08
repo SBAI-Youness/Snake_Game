@@ -323,15 +323,12 @@ void MoveSnake(player *snake)
             break;
     }
 
-    // Adjust snake position if it moves beyond the window boundaries
-    if(snake->chunk[0].position.y < 0)
-        snake->chunk[0].position.y = WINDOW_HEIGHT - SNAKE_SIZE;
-    else if (snake->chunk[0].position.x < 0)
-        snake->chunk[0].position.x = WINDOW_WIDTH - SNAKE_SIZE;
-    else if(snake->chunk[0].position.y >= WINDOW_HEIGHT)
-        snake->chunk[0].position.y = 0;
-    else if (snake->chunk[0].position.x >= WINDOW_WIDTH)
-        snake->chunk[0].position.x = 0;
+    // Game over if the snake goes beyond the boundaries
+    if((snake->chunk[0].position.y < 0) || (snake->chunk[0].position.x < 0) || (snake->chunk[0].position.y >= WINDOW_HEIGHT) || (snake->chunk[0].position.x >= WINDOW_WIDTH))
+    {
+        snake->state = false;
+        MenuOption = EXIT;
+    }
 
     // Generating another position of the apple, increasing the size of the snake and playing a sound if the apple has been eaten by the snake 
     if(snake->chunk[0].position.x == apple.position.x && snake->chunk[0].position.y == apple.position.y)
