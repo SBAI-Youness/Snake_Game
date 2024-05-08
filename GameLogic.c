@@ -465,16 +465,6 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_RenderCopy( renderer, StartTexture, NULL, &StartRect);
     SDL_RenderCopy( renderer, ExitTexture, NULL, &ExitRect);
 
-    // Free the surfaces after creating the textures
-    SDL_FreeSurface(TitleSurface);
-    SDL_FreeSurface(StartSurface);
-    SDL_FreeSurface(ExitSurface);
-
-    // Destroying textures after creating them
-    SDL_DestroyTexture(TitleTexture);
-    SDL_DestroyTexture(StartTexture);
-    SDL_DestroyTexture(ExitTexture);
-
     switch(isHovering)
     {
         case onStart:
@@ -640,6 +630,19 @@ void RenderGame(SDL_Renderer *renderer)
 
 void QuitSDL()
 {
+    if(TitleSurface)
+        SDL_FreeSurface(TitleSurface);
+    if(StartSurface)
+        SDL_FreeSurface(StartSurface);
+    if(ExitSurface)
+        SDL_FreeSurface(ExitSurface);
+    if(TitleTexture)
+        SDL_DestroyTexture(TitleTexture);
+    if(StartTexture)
+        SDL_DestroyTexture(StartTexture);
+    if(ExitTexture)
+        SDL_DestroyTexture(ExitTexture);
+
     if(ScoreTexture)
         SDL_DestroyTexture(ScoreTexture);
     if(ScoreFont)

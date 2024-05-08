@@ -60,7 +60,7 @@ typedef struct
     int score, size;
     float speed;
     bool state;
-    segments chunk[10000];
+    segments chunk[999];
 } player;
 
 extern SDL_Window *window;
