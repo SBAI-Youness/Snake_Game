@@ -224,7 +224,7 @@ void InitSDL()
     }
 
     // Opening a font
-    MenuFont = TTF_OpenFont("tools/fonts/TalkComic.TTF", 38);
+    MenuFont = TTF_OpenFont("tools/fonts/TalkComic.TTF", 50);
 
     // Checking if the font was successfully openned
     if(!MenuFont)
@@ -585,15 +585,24 @@ void HandleMenuInput()
                 // Handle keyboard input
                 switch(event.key.keysym.sym)
                 {
-                    case SDLK_s:
-                        Mix_HaltMusic();
-                        Mix_PlayMusic( ClickingMusic, 0);
-                        MenuOption = START; // set to 0 in order to start the game
+                    case SDLK_UP:
+                        if (isHovering != onStart)
+                        {
+                            isHovering = onStart;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
                         break;
-                    case SDLK_e:
+                    case SDLK_DOWN:
+                        if (isHovering != onExit)
+                        {
+                            isHovering = onExit;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
+                        break;
+                    case SDLK_RETURN:
                         Mix_HaltMusic();
                         Mix_PlayMusic( ClickingMusic, 0);
-                        MenuOption = EXIT ; // set to 0 in order to exit the game
+                        MenuOption = isHovering;
                         break;
                 }
                 break;
