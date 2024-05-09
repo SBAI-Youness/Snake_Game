@@ -22,7 +22,7 @@
 #define NUMBER_OF_STARS 400
 
 // Menu's options enumeration
-typedef enum{ MENU, START, EXIT} GameState; // 0 --> show the menu || 1 --> start the game || 2 --> exit the game
+typedef enum{ MENU, START, EXIT, GAMEOVER} GameState; // 0 --> show the menu || 1 --> start the game || 2 --> exit the game
 
 // Button's state enumeration
 typedef enum{ onNothing, onStart, onExit} MouseHoveringState; // 0 --> mouse isn't hovering any button || 1 --> mouse is hovering start button || 2 --> mouse is hovering exit button
@@ -65,10 +65,10 @@ typedef struct
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface, *CursorSurface, *PointerSurface;
-extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture, *PointerTexture;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface, *CursorSurface, *PointerSurface, *GameOverSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture, *PointerTexture, *GameOverTexture;
 extern SDL_Cursor *Cursor;
-extern Mix_Music *EatingMusic, *ClickingMusic, *ClickingPopMusic;
+extern Mix_Music *EatingMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
 
 extern player snake;
@@ -110,6 +110,12 @@ void HandleGameInput(player *snake);
 
 // Function used to draw the menu
 void RenderMenu(SDL_Renderer *renderer);
+
+// Function used to draw the game over
+void RenderGameOver(SDL_Renderer *renderer);
+
+// Function used to handle the user input while he is in the game over
+void HandleGameOverInput();
 
 // Function used to handle user input while the menu is shown
 void HandleMenuInput();

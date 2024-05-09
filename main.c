@@ -9,13 +9,13 @@ int main( int argc, char *argv[])
         switch(MenuOption)
         {
             // Show the menu
-            case 0:
+            case MENU:
                 HandleMenuInput();
                 RenderMenu(renderer);
                 break;
 
             // Start the game
-            case 1:
+            case START:
                 CreateApple(&apple), CreateSnake(&snake), CreateStars(stars);
                 while(!quit && snake.state)
                 {
@@ -25,8 +25,14 @@ int main( int argc, char *argv[])
                 break;
 
             // Exit the game
-            case 2:
+            case EXIT:
                 quit = true;
+                break;
+
+            // Show the game over
+            case GAMEOVER:
+                HandleGameOverInput();
+                RenderGameOver(renderer);
                 break;
         }
     }

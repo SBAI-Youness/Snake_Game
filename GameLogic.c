@@ -2,10 +2,10 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL;
 SDL_Cursor *Cursor = NULL;
-Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL;
+Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
 
 player snake;
@@ -59,6 +59,16 @@ void InitSDL()
 
     // Checking if the audio was successfully loaded
     if(!ClickingPopMusic)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
+        QuitSDL();
+    }
+
+    // Loading the mp3 audio file
+    GameOverMusic = Mix_LoadMUS("tools/sounds/GameOver.mp3");
+
+    // Checking if the audio was successfully loaded
+    if(!GameOverMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
         QuitSDL();
@@ -172,6 +182,29 @@ void InitSDL()
 
     // Free the surface after creating the texture
     SDL_FreeSurface(PointerSurface);
+
+    // Loading the game over image
+    GameOverSurface = IMG_Load("tools/images/GameOver.png");
+
+    // Checking if the game over image was successfully loaded
+    if(!GameOverSurface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
+        QuitSDL();
+    }
+
+    // Creating texture from surface
+    GameOverTexture = SDL_CreateTextureFromSurface( renderer, GameOverSurface);
+
+    // Checking if the texture was successfully created from surface
+    if(!GameOverTexture)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Free the surface after creating the texture
+    SDL_FreeSurface(GameOverSurface);
 
     // Initialization of the SDL_ttf library
     if (TTF_Init() == -1)
@@ -327,7 +360,8 @@ void MoveSnake(player *snake)
     if((snake->chunk[0].position.y < 0) || (snake->chunk[0].position.x < 0) || (snake->chunk[0].position.y >= WINDOW_HEIGHT) || (snake->chunk[0].position.x >= WINDOW_WIDTH))
     {
         snake->state = false;
-        MenuOption = EXIT;
+        MenuOption = GAMEOVER;
+        Mix_PlayMusic( GameOverMusic, 0);
     }
 
     // Generating another position of the apple, increasing the size of the snake and playing a sound if the apple has been eaten by the snake 
@@ -480,6 +514,44 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_RenderPresent(renderer);
 }
 
+void RenderGameOver(SDL_Renderer *renderer)
+{
+    // Set the window color to black
+    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Clearing the rendering target
+    if(SDL_RenderClear(renderer))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    SDL_RenderCopy( renderer, GameOverTexture, NULL, &(SDL_Rect){ 100, 40, 600, 300});
+
+    SDL_RenderPresent(renderer);
+}
+
+void HandleGameOverInput()
+{
+    // Event handling loop
+    SDL_Event event;
+    while(SDL_PollEvent(&event))
+    {
+        // Handle each event type
+        switch(event.type)
+        {
+            // If the user quits the game
+            case SDL_QUIT:
+                quit = true;
+                break;
+        }
+    }
+}
+
 void HandleMenuInput()  
 {
     // Event handling loop
@@ -630,6 +702,11 @@ void RenderGame(SDL_Renderer *renderer)
 
 void QuitSDL()
 {
+    if(GameOverSurface)
+        SDL_FreeSurface(GameOverSurface);
+    if(GameOverTexture)
+        SDL_DestroyTexture(GameOverTexture);
+
     if(TitleSurface)
         SDL_FreeSurface(TitleSurface);
     if(StartSurface)
@@ -661,6 +738,8 @@ void QuitSDL()
     if(IconSurface)
         SDL_FreeSurface(IconSurface);
     IMG_Quit();
+    if(GameOverMusic)
+        Mix_FreeMusic(GameOverMusic);
     if(ClickingPopMusic)
         Mix_FreeMusic(ClickingPopMusic);
     if(ClickingMusic)
