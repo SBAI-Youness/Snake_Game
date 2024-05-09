@@ -356,13 +356,27 @@ void MoveSnake(player *snake)
             break;
     }
 
-    // Game over if the snake goes beyond the boundaries
-    if((snake->chunk[0].position.y < 0) || (snake->chunk[0].position.x < 0) || (snake->chunk[0].position.y >= WINDOW_HEIGHT) || (snake->chunk[0].position.x >= WINDOW_WIDTH))
+    // Check if the snake's head collides with its body
+    for( int i = 1; i < snake->size; i++)
     {
-        snake->state = false;
-        MenuOption = GAMEOVER;
-        Mix_PlayMusic( GameOverMusic, 0);
+        if(snake->chunk[0].position.x == snake->chunk[i].position.x && snake->chunk[0].position.y == snake->chunk[i].position.y && snake->score != 0)
+        {
+            snake->state = false; // Snake collides with itself, game over
+            MenuOption = GAMEOVER;
+            Mix_PlayMusic( GameOverMusic, 0);
+            break;
+        }
     }
+
+    // Adjust snake position if it moves beyond the window boundaries
+    if(snake->chunk[0].position.y < 0)
+        snake->chunk[0].position.y = WINDOW_HEIGHT - SNAKE_SIZE;
+    else if (snake->chunk[0].position.x < 0)
+        snake->chunk[0].position.x = WINDOW_WIDTH - SNAKE_SIZE;
+    else if(snake->chunk[0].position.y >= WINDOW_HEIGHT)
+        snake->chunk[0].position.y = 0;
+    else if (snake->chunk[0].position.x >= WINDOW_WIDTH)
+        snake->chunk[0].position.x = 0;
 
     // Generating another position of the apple, increasing the size of the snake and playing a sound if the apple has been eaten by the snake 
     if(snake->chunk[0].position.x == apple.position.x && snake->chunk[0].position.y == apple.position.y)
@@ -530,7 +544,7 @@ void RenderGameOver(SDL_Renderer *renderer)
         QuitSDL();
     }
 
-    SDL_RenderCopy( renderer, GameOverTexture, NULL, &(SDL_Rect){ 100, 40, 600, 300});
+    SDL_RenderCopy( renderer, GameOverTexture, NULL, &(SDL_Rect){ 200, 40, 400, 170});
 
     SDL_RenderPresent(renderer);
 }
