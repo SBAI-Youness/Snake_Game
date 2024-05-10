@@ -543,19 +543,23 @@ void HandleGameInput(player *snake)
                 {
                     case SDLK_z:
                     case SDLK_UP:
-                        snake->chunk[0].direction = UP;
+                        if(snake->chunk[0].direction != DOWN)
+                            snake->chunk[0].direction = UP;
                         break;
                     case SDLK_d:
                     case SDLK_RIGHT:
-                        snake->chunk[0].direction = RIGHT;
+                        if(snake->chunk[0].direction != LEFT)
+                            snake->chunk[0].direction = RIGHT;
                         break;
                     case SDLK_s:
                     case SDLK_DOWN:
-                        snake->chunk[0].direction = DOWN;
+                        if(snake->chunk[0].direction != UP)
+                            snake->chunk[0].direction = DOWN;
                         break;
                     case SDLK_q:
                     case SDLK_LEFT:
-                        snake->chunk[0].direction = LEFT;
+                        if(snake->chunk[0].direction != RIGHT)
+                            snake->chunk[0].direction = LEFT;
                         break;
                 }
                 break;
