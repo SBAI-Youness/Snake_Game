@@ -36,39 +36,12 @@ void InitSDL()
 
     // Loading the mp3 audio file
     EatingMusic = Mix_LoadMUS("tools/sounds/SnakeEats.mp3");
-
-    // Checking if the audio was successfully loaded
-    if(!EatingMusic)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
-        QuitSDL();
-    }
-
-    // Loading the mp3 audio file
     ClickingMusic = Mix_LoadMUS("tools/sounds/Clicking.mp3");
-
-    // Checking if the audio was successfully loaded
-    if(!ClickingMusic)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
-        QuitSDL();
-    }
-
-    // Loading the mp3 audio file
     ClickingPopMusic = Mix_LoadMUS("tools/sounds/ClickingPop.mp3");
-
-    // Checking if the audio was successfully loaded
-    if(!ClickingPopMusic)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
-        QuitSDL();
-    }
-
-    // Loading the mp3 audio file
     GameOverMusic = Mix_LoadMUS("tools/sounds/GameOver.mp3");
 
     // Checking if the audio was successfully loaded
-    if(!GameOverMusic)
+    if(!EatingMusic || !ClickingMusic || !ClickingPopMusic || !GameOverMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
         QuitSDL();
@@ -114,11 +87,13 @@ void InitSDL()
         QuitSDL();
     }
 
-    // Loading the apple image
+    // Loading image files
     AppleSurface = IMG_Load("tools/images/AppleImage.png");
+    PointerSurface = IMG_Load("tools/images/pointer.png");
+    GameOverSurface = IMG_Load("tools/images/GameOver.png");
 
     // Checking if the apple image was successfully loaded
-    if(!AppleSurface)
+    if(!AppleSurface || !PointerSurface || !GameOverSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -126,9 +101,11 @@ void InitSDL()
 
     // Creating texture from surface
     AppleTexture = SDL_CreateTextureFromSurface( renderer, AppleSurface);
+    PointerTexture = SDL_CreateTextureFromSurface( renderer, PointerSurface);
+    GameOverTexture = SDL_CreateTextureFromSurface( renderer, GameOverSurface);
 
     // Checking if the texture was successfully created from surface
-    if(!AppleTexture)
+    if(!AppleSurface || !PointerSurface || !GameOverSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -136,6 +113,8 @@ void InitSDL()
 
     // Free the surface after creating the texture
     SDL_FreeSurface(AppleSurface);
+    SDL_FreeSurface(PointerSurface);
+    SDL_FreeSurface(GameOverSurface);
 
     // Loading the cursor image
     CursorSurface = IMG_Load("tools/images/cursor.png");
@@ -160,51 +139,7 @@ void InitSDL()
     // Setting the created cursor as the active cursor for the application
     SDL_SetCursor(Cursor);
 
-    // Loading the button's pointer image
-    PointerSurface = IMG_Load("tools/images/pointer.png");
-
-    // Checking if the button's pointer image was successfully loaded
-    if(!PointerSurface)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
-        QuitSDL();
-    }
-
-    // Creating texture from surface
-    PointerTexture = SDL_CreateTextureFromSurface( renderer, PointerSurface);
-
-    // Checking if the texture was successfully created from surface
-    if(!PointerTexture)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-
-    // Free the surface after creating the texture
-    SDL_FreeSurface(PointerSurface);
-
-    // Loading the game over image
-    GameOverSurface = IMG_Load("tools/images/GameOver.png");
-
-    // Checking if the game over image was successfully loaded
-    if(!GameOverSurface)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
-        QuitSDL();
-    }
-
-    // Creating texture from surface
-    GameOverTexture = SDL_CreateTextureFromSurface( renderer, GameOverSurface);
-
-    // Checking if the texture was successfully created from surface
-    if(!GameOverTexture)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-
-    // Free the surface after creating the texture
-    SDL_FreeSurface(GameOverSurface);
+    SDL_FreeSurface(CursorSurface);
 
     // Initialization of the SDL_ttf library
     if (TTF_Init() == -1)
@@ -215,19 +150,10 @@ void InitSDL()
 
     // Opening a font
     ScoreFont = TTF_OpenFont("tools/fonts/MinecraftRegularFont.TTF", 28);
-
-    // Checking if the font was successfully openned
-    if(!ScoreFont)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
-        QuitSDL();
-    }
-
-    // Opening a font
     MenuFont = TTF_OpenFont("tools/fonts/TalkComic.TTF", 50);
 
     // Checking if the font was successfully openned
-    if(!MenuFont)
+    if(!ScoreFont || !MenuFont)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
         QuitSDL();
@@ -401,169 +327,39 @@ void MoveSnake(player *snake)
         snake->chunk[i] = snake->chunk[i-1]; // Assign the position of the previous chunk to the current chunk
 }
 
-void HandleGameInput(player *snake)
+void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, TTF_Font *font)
 {
-    // Event handling loop
-    SDL_Event event;
-    while(SDL_PollEvent(&event))
-    {
-        // Handle each event type
-        switch(event.type)
-        {
-            // If the user quits the game
-            case SDL_QUIT:
-                quit = true;
-                break;
+    // Defining an array characters to store the score as a string
+    char ScoreString[50];
 
-            // If a key is pressed
-            case SDL_KEYDOWN:
-                // Handle keyboard input
-                switch(event.key.keysym.sym)
-                {
-                    case SDLK_z:
-                    case SDLK_UP:
-                        snake->chunk[0].direction = UP;
-                        break;
-                    case SDLK_d:
-                    case SDLK_RIGHT:
-                        snake->chunk[0].direction = RIGHT;
-                        break;
-                    case SDLK_s:
-                    case SDLK_DOWN:
-                        snake->chunk[0].direction = DOWN;
-                        break;
-                    case SDLK_q:
-                    case SDLK_LEFT:
-                        snake->chunk[0].direction = LEFT;
-                        break;
-                }
-                break;
-        }
-    }
-}
+    // Convert the integer score to a string using sprintf
+    itoa(snake.score, ScoreString, 10);
 
-void RenderMenu(SDL_Renderer *renderer)
-{
-    // Set the window color to black
-    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
+    // Render the score string onto a surface using the provided font and color
+    surface = TTF_RenderText_Solid( font, ScoreString, (SDL_Color){ 255, 255, 255, 255});
 
-    // Clearing the rendering target
-    if(SDL_RenderClear(renderer))
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-
-    // Setting colors for the game title and the buttons
-    SDL_Color TitleColor = { 255, 255, 255, 255}, DefaultColor = { 128, 128, 128, 128}, HoveringColor = { 160, 160, 160, 255};
-
-    // Render the texts onto surfaces using the provided fonts and colors
-    TitleSurface = TTF_RenderText_Solid( MenuFont, "Snake Game", TitleColor);
-    StartSurface = TTF_RenderText_Solid( MenuFont, "Start", (isHovering != onStart)? DefaultColor: HoveringColor);
-    ExitSurface = TTF_RenderText_Solid( MenuFont, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
-
-    // Checking if the texts were successfully rendered
-    if(!TitleSurface)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
-        QuitSDL();
-    }
-    if(!StartSurface)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
-        QuitSDL();
-    }
-    if(!ExitSurface)
+    // Checking if the text was successfully rendered
+    if(!surface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
     }
 
-    // Create textures from the rendered surfaces
-    TitleTexture = SDL_CreateTextureFromSurface( renderer, TitleSurface);
-    StartTexture = SDL_CreateTextureFromSurface( renderer, StartSurface);
-    ExitTexture = SDL_CreateTextureFromSurface( renderer, ExitSurface);
+    // Create a texture from the rendered surface
+    texture = SDL_CreateTextureFromSurface( renderer, surface);
 
-    // Checking if the textures were successfully created
-    if(!TitleTexture)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-    if(!StartTexture)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-    if(!ExitTexture)
+    // Checking if the texture was successfully created
+    if(!texture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
-    // Creating rectangles where the textures will be copied
-    SDL_Rect TitleRect = { 125, 20, 550, 120}, StartRect = { 250, 210, 300, 80}, ExitRect = { 250, 300, 300, 80};
+    // Free the surface after creating the texture
+    SDL_FreeSurface(surface);
 
-    // Rendering the textures onto the renderer at a specific position and size
-    SDL_RenderCopy( renderer, TitleTexture, NULL, &TitleRect);
-    SDL_RenderCopy( renderer, StartTexture, NULL, &StartRect);
-    SDL_RenderCopy( renderer, ExitTexture, NULL, &ExitRect);
-
-    switch(isHovering)
-    {
-        case onStart:
-            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 200, 230, 40, 40});
-            break;
-
-        case onExit:
-            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 200, 320, 40, 40});
-            break;
-    }
-
-    // Present the renderer
-    SDL_RenderPresent(renderer);
-}
-
-void RenderGameOver(SDL_Renderer *renderer)
-{
-    // Set the window color to black
-    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-
-    // Clearing the rendering target
-    if(SDL_RenderClear(renderer))
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
-
-    SDL_RenderCopy( renderer, GameOverTexture, NULL, &(SDL_Rect){ 200, 40, 400, 170});
-
-    SDL_RenderPresent(renderer);
-}
-
-void HandleGameOverInput()
-{
-    // Event handling loop
-    SDL_Event event;
-    while(SDL_PollEvent(&event))
-    {
-        // Handle each event type
-        switch(event.type)
-        {
-            // If the user quits the game
-            case SDL_QUIT:
-                quit = true;
-                break;
-        }
-    }
+    // Rendering the texture onto the renderer at a specific position and size
+    SDL_RenderCopy( renderer, texture, NULL, &(SDL_Rect){ 750, 0, 40, 40});
 }
 
 void HandleMenuInput()  
@@ -659,39 +455,112 @@ void HandleMenuInput()
     }
 }
 
-void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, TTF_Font *font)
+void RenderMenu(SDL_Renderer *renderer)
 {
-    // Defining an array characters to store the score as a string
-    char ScoreString[50];
+    // Set the window color to black
+    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
 
-    // Convert the integer score to a string using sprintf
-    itoa(snake.score, ScoreString, 10);
+    // Clearing the rendering target
+    if(SDL_RenderClear(renderer))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
 
-    // Render the score string onto a surface using the provided font and color
-    surface = TTF_RenderText_Solid( font, ScoreString, (SDL_Color){ 255, 255, 255, 255});
+    // Setting colors for the game title and the buttons
+    SDL_Color DefaultColor = { 128, 128, 128, 128}, HoveringColor = { 160, 160, 160, 255};
 
-    // Checking if the text was successfully rendered
-    if(!surface)
+    // Render the texts onto surfaces using the provided fonts and colors
+    TitleSurface = TTF_RenderText_Solid( MenuFont, "Snake Game", (SDL_Color){ 255, 255, 255, 255});
+    StartSurface = TTF_RenderText_Solid( MenuFont, "Start", (isHovering != onStart)? DefaultColor: HoveringColor);
+    ExitSurface = TTF_RenderText_Solid( MenuFont, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
+
+    // Checking if the texts were successfully rendered
+    if(!TitleSurface || !StartSurface || !ExitSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
     }
 
-    // Create a texture from the rendered surface
-    texture = SDL_CreateTextureFromSurface( renderer, surface);
+    // Create textures from the rendered surfaces
+    TitleTexture = SDL_CreateTextureFromSurface( renderer, TitleSurface);
+    StartTexture = SDL_CreateTextureFromSurface( renderer, StartSurface);
+    ExitTexture = SDL_CreateTextureFromSurface( renderer, ExitSurface);
 
-    // Checking if the texture was successfully created
-    if(!texture)
+    // Checking if the textures were successfully created
+    if(!TitleTexture || !StartTexture || !ExitTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
-    // Free the surface after creating the texture
-    SDL_FreeSurface(surface);
+    SDL_FreeSurface(TitleSurface);
+    SDL_FreeSurface(StartSurface);
+    SDL_FreeSurface(ExitSurface);
 
-    // Rendering the texture onto the renderer at a specific position and size
-    SDL_RenderCopy( renderer, texture, NULL, &(SDL_Rect){ 750, 0, 40, 40});
+    // Rendering the textures onto the renderer at a specific position and size
+    SDL_RenderCopy( renderer, TitleTexture, NULL, &(SDL_Rect){ 125, 20, 550, 120});
+    SDL_RenderCopy( renderer, StartTexture, NULL, &(SDL_Rect){ 250, 210, 300, 80});
+    SDL_RenderCopy( renderer, ExitTexture, NULL, &(SDL_Rect){ 250, 300, 300, 80});
+
+    switch(isHovering)
+    {
+        case onStart:
+            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 200, 230, 40, 40});
+            break;
+
+        case onExit:
+            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 200, 320, 40, 40});
+            break;
+    }
+
+    // Present the renderer
+    SDL_RenderPresent(renderer);
+}
+
+void HandleGameInput(player *snake)
+{
+    // Event handling loop
+    SDL_Event event;
+    while(SDL_PollEvent(&event))
+    {
+        // Handle each event type
+        switch(event.type)
+        {
+            // If the user quits the game
+            case SDL_QUIT:
+                quit = true;
+                break;
+
+            // If a key is pressed
+            case SDL_KEYDOWN:
+                // Handle keyboard input
+                switch(event.key.keysym.sym)
+                {
+                    case SDLK_z:
+                    case SDLK_UP:
+                        snake->chunk[0].direction = UP;
+                        break;
+                    case SDLK_d:
+                    case SDLK_RIGHT:
+                        snake->chunk[0].direction = RIGHT;
+                        break;
+                    case SDLK_s:
+                    case SDLK_DOWN:
+                        snake->chunk[0].direction = DOWN;
+                        break;
+                    case SDLK_q:
+                    case SDLK_LEFT:
+                        snake->chunk[0].direction = LEFT;
+                        break;
+                }
+                break;
+        }
+    }
 }
 
 void RenderGame(SDL_Renderer *renderer)
@@ -723,35 +592,65 @@ void RenderGame(SDL_Renderer *renderer)
     SDL_Delay(snake.speed);
 }
 
+void HandleGameOverInput()
+{
+    // Event handling loop
+    SDL_Event event;
+    while(SDL_PollEvent(&event))
+    {
+        // Handle each event type
+        switch(event.type)
+        {
+            // If the user quits the game
+            case SDL_QUIT:
+                quit = true;
+                break;
+        }
+    }
+}
+
+void RenderGameOver(SDL_Renderer *renderer)
+{
+    // Set the window color to black
+    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Clearing the rendering target
+    if(SDL_RenderClear(renderer))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    SDL_RenderCopy( renderer, GameOverTexture, NULL, &(SDL_Rect){ 150, 40, 500, 80});
+
+    SDL_RenderPresent(renderer);
+}
+
 void QuitSDL()
 {
-    if(GameOverSurface)
-        SDL_FreeSurface(GameOverSurface);
-    if(GameOverTexture)
-        SDL_DestroyTexture(GameOverTexture);
-
-    if(TitleSurface)
-        SDL_FreeSurface(TitleSurface);
-    if(StartSurface)
-        SDL_FreeSurface(StartSurface);
-    if(ExitSurface)
-        SDL_FreeSurface(ExitSurface);
+    if(ScoreTexture)
+        SDL_DestroyTexture(ScoreTexture);
     if(TitleTexture)
         SDL_DestroyTexture(TitleTexture);
     if(StartTexture)
         SDL_DestroyTexture(StartTexture);
     if(ExitTexture)
         SDL_DestroyTexture(ExitTexture);
-
-    if(ScoreTexture)
-        SDL_DestroyTexture(ScoreTexture);
+    if(MenuFont)
+        TTF_CloseFont(MenuFont);
     if(ScoreFont)
         TTF_CloseFont(ScoreFont);
     TTF_Quit();
     if(Cursor)
         SDL_FreeCursor(Cursor);
-    if(CursorSurface)
-        SDL_FreeSurface(CursorSurface);
+    if(GameOverTexture)
+        SDL_DestroyTexture(GameOverTexture);
+    if(PointerTexture)
+        SDL_DestroyTexture(PointerTexture);
     if(AppleTexture)
         SDL_DestroyTexture(AppleTexture);
     if(renderer)

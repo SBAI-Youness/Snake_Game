@@ -60,7 +60,7 @@ typedef struct
     int score, size;
     float speed;
     bool state;
-    segments chunk[999];
+    segments chunk[9999];
 } player;
 
 extern SDL_Window *window;
@@ -105,26 +105,26 @@ void DrawSnake(SDL_Renderer *renderer);
 // Function used to move the snake
 void MoveSnake(player *snake);
 
-// Function used to handle user input while playing
-void HandleGameInput(player *snake);
-
-// Function used to draw the menu
-void RenderMenu(SDL_Renderer *renderer);
-
-// Function used to draw the game over
-void RenderGameOver(SDL_Renderer *renderer);
-
-// Function used to handle the user input while he is in the game over
-void HandleGameOverInput();
+// Function used to show the score in the window
+void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, TTF_Font *font);
 
 // Function used to handle user input while the menu is shown
 void HandleMenuInput();
 
-// Function used to show the score in the window
-void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, TTF_Font *font);
+// Function used to draw the menu
+void RenderMenu(SDL_Renderer *renderer);
+
+// Function used to handle user input while playing
+void HandleGameInput(player *snake);
 
 // Function used for rendering
 void RenderGame(SDL_Renderer *renderer);
+
+// Function used to handle the user input while he is in the game over
+void HandleGameOverInput();
+
+// Function used to draw the game over
+void RenderGameOver(SDL_Renderer *renderer);
 
 // Function used to quit the SDL2 library
 void QuitSDL();
