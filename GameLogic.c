@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -92,7 +92,7 @@ void InitSDL()
     PointerSurface = IMG_Load("tools/images/pointer.png");
     GameOverSurface = IMG_Load("tools/images/GameOver.png");
 
-    // Checking if the apple image was successfully loaded
+    // Checking if the image was successfully loaded
     if(!AppleSurface || !PointerSurface || !GameOverSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
@@ -105,7 +105,7 @@ void InitSDL()
     GameOverTexture = SDL_CreateTextureFromSurface( renderer, GameOverSurface);
 
     // Checking if the texture was successfully created from surface
-    if(!AppleSurface || !PointerSurface || !GameOverSurface)
+    if(!AppleTexture || !PointerTexture || !GameOverTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -140,6 +140,38 @@ void InitSDL()
     SDL_SetCursor(Cursor);
 
     SDL_FreeSurface(CursorSurface);
+
+    // Loading snake's image files
+    SnakeHeadSurface = IMG_Load("tools/images/snake/head.png");
+    SnakeBodySurface = IMG_Load("tools/images/snake/body.png");
+    SnakeCornerSurface = IMG_Load("tools/images/snake/corner.png");
+    SnakeTailSurface = IMG_Load("tools/images/snake/tail.png");
+
+    // Checking if the snake's image was successfully loaded
+    if(!SnakeHeadSurface || !SnakeBodySurface || !SnakeCornerSurface || !SnakeTailSurface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
+        QuitSDL();
+    }
+
+    // Creating texture from surface
+    SnakeHeadTexture = SDL_CreateTextureFromSurface( renderer, SnakeHeadSurface);
+    SnakeBodyTexture = SDL_CreateTextureFromSurface( renderer, SnakeBodySurface);
+    SnakeCornerTexture = SDL_CreateTextureFromSurface( renderer, SnakeCornerSurface);
+    SnakeTailTexture = SDL_CreateTextureFromSurface( renderer, SnakeTailSurface);
+
+    // Checking if the texture was successfully created from surface
+    if(!SnakeHeadTexture || !SnakeBodyTexture || !SnakeCornerTexture || !SnakeTailTexture)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Free the surface after creating the texture
+    SDL_FreeSurface(SnakeHeadSurface);
+    SDL_FreeSurface(SnakeBodySurface);
+    SDL_FreeSurface(SnakeCornerSurface);
+    SDL_FreeSurface(SnakeTailSurface);
 
     // Initialization of the SDL_ttf library
     if (TTF_Init() == -1)
@@ -240,48 +272,30 @@ void CreateSnake(player *snake)
     // Setting each chunk to its position
     for( int i = 0; i < snake->size; i++)
     {
-        snake->chunk[i].position.x = - i * SNAKE_SIZE;
+        snake->chunk[i].position.x = 40 - i * SNAKE_SIZE;
         snake->chunk[i].position.y = 0;
     }
 }
 
 void DrawSnake(SDL_Renderer *renderer)
 {
-    // Setting the snake's color to green
-    if(SDL_SetRenderDrawColor( renderer, 0, 255, 0, 255))
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
-        QuitSDL();
-    }
+    // TODO: synchronize the snake while it is turning
 
-    // Drawing rectangles that are representing each chunk of the snake
     for( int i = 0; i < snake.size; i++)
     {
         SDL_Rect SnakeSegment = { snake.chunk[i].position.x, snake.chunk[i].position.y, SNAKE_SIZE, SNAKE_SIZE};
-        SDL_RenderDrawRect( renderer, &SnakeSegment);
-        SDL_RenderFillRect( renderer, &SnakeSegment);
+
+        if (i == 0) // Render snake head
+            SDL_RenderCopy( renderer, SnakeHeadTexture, NULL, &SnakeSegment);
+        else if (i == snake.size-1) // Render snake tail
+            SDL_RenderCopy( renderer, SnakeTailTexture, NULL, &SnakeSegment);
+        else  // Render snake body
+            SDL_RenderCopy( renderer, SnakeBodyTexture, NULL, &SnakeSegment);
     }
 }
 
 void MoveSnake(player *snake)
 {
-    // Switch statement to handle snake movement based on its direction
-    switch(snake->chunk[0].direction)
-    {
-        case UP:
-            snake->chunk[0].position.y -= SNAKE_SIZE;
-            break;
-        case RIGHT:
-            snake->chunk[0].position.x += SNAKE_SIZE;
-            break;
-        case DOWN:
-            snake->chunk[0].position.y += SNAKE_SIZE;
-            break;
-        case LEFT:
-            snake->chunk[0].position.x -= SNAKE_SIZE;
-            break;
-    }
-
     // Check if the snake's head collides with its body
     for( int i = 1; i < snake->size; i++)
     {
@@ -323,8 +337,25 @@ void MoveSnake(player *snake)
     }
 
     // Shift the positions of snake chunks to follow the head
-    for( int i = snake->size-1; i > 0; i--)
+    for( int i = snake->size-1; (i > 0) && (snake->chunk[0].direction == UP || snake->chunk[0].direction == RIGHT || snake->chunk[0].direction == DOWN || snake->chunk[0].direction == LEFT); i--)
         snake->chunk[i] = snake->chunk[i-1]; // Assign the position of the previous chunk to the current chunk
+
+    // Switch statement to handle snake movement based on its direction
+    switch(snake->chunk[0].direction)
+    {
+        case UP:
+            snake->chunk[0].position.y -= SNAKE_SIZE;
+            break;
+        case RIGHT:
+            snake->chunk[0].position.x += SNAKE_SIZE;
+            break;
+        case DOWN:
+            snake->chunk[0].position.y += SNAKE_SIZE;
+            break;
+        case LEFT:
+            snake->chunk[0].position.x -= SNAKE_SIZE;
+            break;
+    }
 }
 
 void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, TTF_Font *font)
@@ -585,8 +616,8 @@ void RenderGame(SDL_Renderer *renderer)
 
     UpdateAndDrawStars( renderer, stars);
     DrawApple(renderer);
-    MoveSnake(&snake);
     DrawSnake(renderer);
+    MoveSnake(&snake);
     DrawScore( renderer, ScoreSurface, ScoreTexture, ScoreFont);
 
     // Present the renderer
@@ -649,6 +680,14 @@ void QuitSDL()
     if(ScoreFont)
         TTF_CloseFont(ScoreFont);
     TTF_Quit();
+    if(SnakeTailTexture)
+        SDL_DestroyTexture(SnakeTailTexture);
+    if(SnakeCornerTexture)
+        SDL_DestroyTexture(SnakeCornerTexture);
+    if(SnakeBodyTexture)
+        SDL_DestroyTexture(SnakeBodyTexture);
+    if(SnakeHeadTexture)
+        SDL_DestroyTexture(SnakeHeadTexture);
     if(Cursor)
         SDL_FreeCursor(Cursor);
     if(GameOverTexture)
