@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL, *MenuBackgroundSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL, *MenuBackgroundTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -91,9 +91,10 @@ void InitSDL()
     AppleSurface = IMG_Load("tools/images/AppleImage.png");
     PointerSurface = IMG_Load("tools/images/pointer.png");
     GameOverSurface = IMG_Load("tools/images/GameOver.png");
+    MenuBackgroundSurface = IMG_Load("tools/images/MenuBackground.png");
 
     // Checking if the image was successfully loaded
-    if(!AppleSurface || !PointerSurface || !GameOverSurface)
+    if(!AppleSurface || !PointerSurface || !GameOverSurface || !MenuBackgroundSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -103,9 +104,10 @@ void InitSDL()
     AppleTexture = SDL_CreateTextureFromSurface( renderer, AppleSurface);
     PointerTexture = SDL_CreateTextureFromSurface( renderer, PointerSurface);
     GameOverTexture = SDL_CreateTextureFromSurface( renderer, GameOverSurface);
+    MenuBackgroundTexture = SDL_CreateTextureFromSurface( renderer, MenuBackgroundSurface);
 
     // Checking if the texture was successfully created from surface
-    if(!AppleTexture || !PointerTexture || !GameOverTexture)
+    if(!AppleTexture || !PointerTexture || !GameOverTexture || !MenuBackgroundTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -115,6 +117,7 @@ void InitSDL()
     SDL_FreeSurface(AppleSurface);
     SDL_FreeSurface(PointerSurface);
     SDL_FreeSurface(GameOverSurface);
+    SDL_FreeSurface(MenuBackgroundSurface);
 
     // Loading the cursor image
     CursorSurface = IMG_Load("tools/images/cursor.png");
@@ -440,7 +443,7 @@ void HandleMenuInput()
                 // Extract the x and y coordinates of the mouse pointer from the event
                 int mouseX = event.motion.x, mouseY = event.motion.y;
 
-                if(mouseX >= 250 && mouseX <= 550 && mouseY >= 210 && mouseY <= 290) // Mouse is hovering start button
+                if(mouseX >= 250 && mouseX <= 550 && mouseY >= 150 && mouseY <= 230) // Mouse is hovering start button
                 {
                     if(isHovering != onStart)
                     {
@@ -448,7 +451,7 @@ void HandleMenuInput()
                         Mix_PlayMusic( ClickingPopMusic, 0);
                     }
                 }
-                else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 300 && mouseY <= 380) // Mouse is hovering exit button
+                else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 240 && mouseY <= 320) // Mouse is hovering exit button
                 {
                     if (isHovering != onExit)
                     {
@@ -468,13 +471,13 @@ void HandleMenuInput()
                     case SDL_BUTTON_LEFT:
                         int mouseX = event.button.x, mouseY = event.button.y;
 
-                        if(mouseX >= 250 && mouseX <= 550 && mouseY >= 210 && mouseY <= 290) // If the user pressed start
+                        if(mouseX >= 250 && mouseX <= 550 && mouseY >= 150 && mouseY <= 230) // If the user pressed start
                         {
                             Mix_HaltMusic();
                             Mix_PlayMusic( ClickingMusic, 0);
                             MenuOption = START;
                         }
-                        else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 300 && mouseY <= 380) // If the user pressed exit
+                        else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 240 && mouseY <= 320) // If the user pressed exit
                         {
                             Mix_HaltMusic();
                             Mix_PlayMusic( ClickingMusic, 0);
@@ -503,11 +506,13 @@ void RenderMenu(SDL_Renderer *renderer)
         QuitSDL();
     }
 
+    SDL_RenderCopy( renderer, MenuBackgroundTexture, NULL, NULL);
+
     // Setting colors for the game title and the buttons
-    SDL_Color DefaultColor = { 128, 128, 128, 128}, HoveringColor = { 160, 160, 160, 255};
+    SDL_Color DefaultColor = { 160, 160, 160, 255}, HoveringColor = { 0, 153, 76, 255};
 
     // Render the texts onto surfaces using the provided fonts and colors
-    TitleSurface = TTF_RenderText_Solid( MenuFont, "Snake Game", (SDL_Color){ 255, 255, 255, 255});
+    TitleSurface = TTF_RenderText_Solid( MenuFont, "Snake Game", (SDL_Color){ 0, 0, 0, 255});
     StartSurface = TTF_RenderText_Solid( MenuFont, "Start", (isHovering != onStart)? DefaultColor: HoveringColor);
     ExitSurface = TTF_RenderText_Solid( MenuFont, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
 
@@ -536,17 +541,17 @@ void RenderMenu(SDL_Renderer *renderer)
 
     // Rendering the textures onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, TitleTexture, NULL, &(SDL_Rect){ 125, 20, 550, 120});
-    SDL_RenderCopy( renderer, StartTexture, NULL, &(SDL_Rect){ 250, 210, 300, 80});
-    SDL_RenderCopy( renderer, ExitTexture, NULL, &(SDL_Rect){ 250, 300, 300, 80});
+    SDL_RenderCopy( renderer, StartTexture, NULL, &(SDL_Rect){ 250, 150, 300, 80});
+    SDL_RenderCopy( renderer, ExitTexture, NULL, &(SDL_Rect){ 250, 240, 300, 80});
 
     switch(isHovering)
     {
         case onStart:
-            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 200, 230, 40, 40});
+            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 190, 170, 50, 40});
             break;
 
         case onExit:
-            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 200, 320, 40, 40});
+            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 190, 260, 50, 40});
             break;
     }
 
@@ -739,6 +744,8 @@ void QuitSDL()
         SDL_DestroyTexture(SnakeHeadTexture);
     if(Cursor)
         SDL_FreeCursor(Cursor);
+    if(MenuBackgroundTexture)
+        SDL_DestroyTexture(MenuBackgroundTexture);
     if(GameOverTexture)
         SDL_DestroyTexture(GameOverTexture);
     if(PointerTexture)
