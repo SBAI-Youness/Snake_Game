@@ -274,6 +274,7 @@ void CreateSnake(player *snake)
     {
         snake->chunk[i].position.x = 40 - i * SNAKE_SIZE;
         snake->chunk[i].position.y = 0;
+        snake->chunk[i].angle = 0;
     }
 }
 
@@ -286,11 +287,11 @@ void DrawSnake(SDL_Renderer *renderer)
         SDL_Rect SnakeSegment = { snake.chunk[i].position.x, snake.chunk[i].position.y, SNAKE_SIZE, SNAKE_SIZE};
 
         if (i == 0) // Render snake head
-            SDL_RenderCopy( renderer, SnakeHeadTexture, NULL, &SnakeSegment);
+            SDL_RenderCopyEx( renderer, SnakeHeadTexture, NULL, &SnakeSegment, snake.chunk[i].angle, NULL, SDL_FLIP_NONE);
         else if (i == snake.size-1) // Render snake tail
-            SDL_RenderCopy( renderer, SnakeTailTexture, NULL, &SnakeSegment);
-        else  // Render snake body
-            SDL_RenderCopy( renderer, SnakeBodyTexture, NULL, &SnakeSegment);
+            SDL_RenderCopyEx( renderer, SnakeTailTexture, NULL, &SnakeSegment, snake.chunk[i].angle, NULL, SDL_FLIP_NONE);
+        else // Render snake body
+            SDL_RenderCopyEx( renderer, SnakeBodyTexture, NULL, &SnakeSegment, snake.chunk[i].angle, NULL, SDL_FLIP_NONE);
     }
 }
 
@@ -575,22 +576,34 @@ void HandleGameInput(player *snake)
                     case SDLK_z:
                     case SDLK_UP:
                         if(snake->chunk[0].direction != DOWN)
+                        {
                             snake->chunk[0].direction = UP;
+                            snake->chunk[0].angle = -90;
+                        }
                         break;
                     case SDLK_d:
                     case SDLK_RIGHT:
                         if(snake->chunk[0].direction != LEFT)
+                        {
                             snake->chunk[0].direction = RIGHT;
+                            snake->chunk[0].angle = 0;
+                        }
                         break;
                     case SDLK_s:
                     case SDLK_DOWN:
                         if(snake->chunk[0].direction != UP)
+                        {
                             snake->chunk[0].direction = DOWN;
+                            snake->chunk[0].angle = 90;
+                        }
                         break;
                     case SDLK_q:
                     case SDLK_LEFT:
                         if(snake->chunk[0].direction != RIGHT)
+                        {
                             snake->chunk[0].direction = LEFT;
+                            snake->chunk[0].angle = 180;
+                        }
                         break;
                 }
                 break;
@@ -616,8 +629,8 @@ void RenderGame(SDL_Renderer *renderer)
 
     UpdateAndDrawStars( renderer, stars);
     DrawApple(renderer);
-    DrawSnake(renderer);
     MoveSnake(&snake);
+    DrawSnake(renderer);
     DrawScore( renderer, ScoreSurface, ScoreTexture, ScoreFont);
 
     // Present the renderer

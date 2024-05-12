@@ -52,6 +52,7 @@ typedef struct
 typedef struct
 {
     int direction;
+    double angle;
     coordinates position;
 } segments;
 
