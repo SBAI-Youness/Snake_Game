@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -364,7 +364,7 @@ void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *textu
     // Defining an array characters to store the score as a string
     char ScoreString[50];
 
-    // Convert the integer score to a string using sprintf
+    // Convert the integer score to a string using itoa
     itoa(snake.score, ScoreString, 10);
 
     // Render the score string onto a surface using the provided font and color
@@ -673,13 +673,49 @@ void RenderGameOver(SDL_Renderer *renderer)
         QuitSDL();
     }
 
+    // Rendering the game over texture onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, GameOverTexture, NULL, &(SDL_Rect){ 150, 40, 500, 80});
 
+    // Defining an array of characters to srore the final score as a string
+    char FinalScoreString[60];
+
+    // Convert the integer score to a string using sprintf
+    sprintf( FinalScoreString, "Final Score: %d", snake.score);
+
+    // Render the final score string onto a surface using the provided font and color
+    FinalScoreSurface = TTF_RenderText_Solid( MenuFont, FinalScoreString, (SDL_Color){ 255, 255, 255, 255});
+
+    // Checking if the text was successfully rendered
+    if(!FinalScoreSurface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
+        QuitSDL();
+    }
+
+    // Create a texture from the rendered surface
+    FinalScoreTexture = SDL_CreateTextureFromSurface( renderer, FinalScoreSurface);
+
+    // Checking if the texture was successfully created
+    if(!FinalScoreTexture)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Free the surface after creating the texture
+    SDL_FreeSurface(FinalScoreSurface);
+
+    // Rendering the texture onto the renderer at a specific position and size
+    SDL_RenderCopy( renderer, FinalScoreTexture, NULL, &(SDL_Rect){ 250, 160, 300, 60});
+
+    // Presenting the renderer
     SDL_RenderPresent(renderer);
 }
 
 void QuitSDL()
 {
+    if(FinalScoreTexture)
+        SDL_DestroyTexture(FinalScoreTexture);
     if(ScoreTexture)
         SDL_DestroyTexture(ScoreTexture);
     if(TitleTexture)
