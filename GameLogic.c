@@ -283,16 +283,23 @@ void CreateSnake(player *snake)
 
 void DrawSnake(SDL_Renderer *renderer)
 {
-    // TODO: synchronize the snake while it is turning
-
     for( int i = 0; i < snake.size; i++)
     {
         SDL_Rect SnakeSegment = { snake.chunk[i].position.x, snake.chunk[i].position.y, SNAKE_SIZE, SNAKE_SIZE};
+        int previousDirection = snake.chunk[i+1].direction, currentDirection = snake.chunk[i].direction;
 
         if (i == 0) // Render snake head
             SDL_RenderCopyEx( renderer, SnakeHeadTexture, NULL, &SnakeSegment, snake.chunk[i].angle, NULL, SDL_FLIP_NONE);
         else if (i == snake.size-1) // Render snake tail
             SDL_RenderCopyEx( renderer, SnakeTailTexture, NULL, &SnakeSegment, snake.chunk[i].angle, NULL, SDL_FLIP_NONE);
+        else if ((previousDirection == UP && currentDirection == RIGHT) || (previousDirection == LEFT && currentDirection == DOWN)) // Render snake corner
+            SDL_RenderCopyEx( renderer, SnakeCornerTexture, NULL, &SnakeSegment, 0, NULL, SDL_FLIP_NONE);
+        else if ((previousDirection == RIGHT && currentDirection == DOWN) || (previousDirection == UP && currentDirection == LEFT)) // Render snake corner
+            SDL_RenderCopyEx( renderer, SnakeCornerTexture, NULL, &SnakeSegment, 90, NULL, SDL_FLIP_NONE);
+        else if ((previousDirection == DOWN && currentDirection == LEFT) || (previousDirection == RIGHT && currentDirection == UP)) // Render snake corner
+            SDL_RenderCopyEx( renderer, SnakeCornerTexture, NULL, &SnakeSegment, 180, NULL, SDL_FLIP_NONE);
+        else if ((previousDirection == LEFT && currentDirection == UP) || (previousDirection == DOWN && currentDirection == RIGHT)) // Render snake corner
+            SDL_RenderCopyEx( renderer, SnakeCornerTexture, NULL, &SnakeSegment, -90, NULL, SDL_FLIP_NONE);
         else // Render snake body
             SDL_RenderCopyEx( renderer, SnakeBodyTexture, NULL, &SnakeSegment, snake.chunk[i].angle, NULL, SDL_FLIP_NONE);
     }
