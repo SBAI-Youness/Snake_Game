@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL, *MenuBackgroundSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL, *MenuBackgroundTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL, *MenuBackgroundSurface = NULL, *PlayAgainSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL, *MenuBackgroundTexture = NULL, *PlayAgainTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -445,7 +445,7 @@ void HandleMenuInput()
                 }
                 break;
 
-            // This case case is related to mouse motions
+            // This case is related to mouse motions
             case SDL_MOUSEMOTION:
                 // Extract the x and y coordinates of the mouse pointer from the event
                 int mouseX = event.motion.x, mouseY = event.motion.y;
@@ -665,6 +665,62 @@ void HandleGameOverInput()
             case SDL_QUIT:
                 quit = true;
                 break;
+
+            // If a key is pressed
+            case SDL_KEYDOWN:
+                // Handle keyboard input
+                switch(event.key.keysym.sym)
+                {
+                    case SDLK_DOWN:
+                    case SDLK_UP:
+                        if (isHovering != onPlayAgain)
+                        {
+                            isHovering = onPlayAgain;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
+                        break;
+                    case SDLK_RETURN:
+                        Mix_HaltMusic();
+                        Mix_PlayMusic( ClickingMusic, 0);
+                        MenuOption = (isHovering == onPlayAgain)? START: isHovering;
+                        break;
+                }
+                break;
+
+            // This case is related to mouse motions
+            case SDL_MOUSEMOTION:
+                // Extract the x and y coordinates of the mouse pointer from the event
+                int mouseX = event.motion.x, mouseY = event.motion.y;
+
+                if(mouseX >= 250 && mouseX <= 550 && mouseY >= 260 && mouseY <= 340) // Mouse is hovering play again button
+                {
+                    if(isHovering != onPlayAgain)
+                    {
+                        isHovering = onPlayAgain;
+                        Mix_PlayMusic( ClickingPopMusic, 0);
+                    }
+                }
+                else // Mouse is hovering any button
+                    isHovering = onNothing;
+                break;
+
+            // If a mouse button is released
+            case SDL_MOUSEBUTTONUP:
+                // Handle mouse input
+                switch(event.button.button)
+                {
+                    case SDL_BUTTON_LEFT:
+                        int mouseX = event.button.x, mouseY = event.button.y;
+
+                        if(mouseX >= 250 && mouseX <= 550 && mouseY >= 260 && mouseY <= 340) // If the user pressed play again
+                        {
+                            Mix_HaltMusic();
+                            Mix_PlayMusic( ClickingMusic, 0);
+                            MenuOption = START;
+                        }
+                        break;
+                }
+                break;
         }
     }
 }
@@ -688,17 +744,21 @@ void RenderGameOver(SDL_Renderer *renderer)
     // Rendering the game over texture onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, GameOverTexture, NULL, &(SDL_Rect){ 150, 40, 500, 80});
 
+    // Setting colors for the game title and the buttons
+    SDL_Color DefaultColor = { 160, 160, 160, 255}, HoveringColor = { 0, 153, 76, 255};
+
     // Defining an array of characters to srore the final score as a string
     char FinalScoreString[60];
 
     // Convert the integer score to a string using sprintf
     sprintf( FinalScoreString, "Final Score: %d", snake.score);
 
-    // Render the final score string onto a surface using the provided font and color
+    // Render the game over visuals onto a surface using the provided font and color
     FinalScoreSurface = TTF_RenderText_Solid( MenuFont, FinalScoreString, (SDL_Color){ 255, 255, 255, 255});
+    PlayAgainSurface = TTF_RenderText_Solid( MenuFont, "Play Again", (isHovering != onPlayAgain)? DefaultColor: HoveringColor);
 
     // Checking if the text was successfully rendered
-    if(!FinalScoreSurface)
+    if(!FinalScoreSurface || !PlayAgainSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
@@ -706,9 +766,10 @@ void RenderGameOver(SDL_Renderer *renderer)
 
     // Create a texture from the rendered surface
     FinalScoreTexture = SDL_CreateTextureFromSurface( renderer, FinalScoreSurface);
+    PlayAgainTexture = SDL_CreateTextureFromSurface( renderer, PlayAgainSurface);
 
     // Checking if the texture was successfully created
-    if(!FinalScoreTexture)
+    if(!FinalScoreTexture || !PlayAgainTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -716,9 +777,14 @@ void RenderGameOver(SDL_Renderer *renderer)
 
     // Free the surface after creating the texture
     SDL_FreeSurface(FinalScoreSurface);
+    SDL_FreeSurface(PlayAgainSurface);
 
     // Rendering the texture onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, FinalScoreTexture, NULL, &(SDL_Rect){ 250, 160, 300, 60});
+    SDL_RenderCopy( renderer, PlayAgainTexture, NULL, &(SDL_Rect){ 250, 260, 300, 80});
+
+    if(isHovering == onPlayAgain)
+        SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 190, 280, 50, 40});
 
     // Presenting the renderer
     SDL_RenderPresent(renderer);
@@ -726,6 +792,8 @@ void RenderGameOver(SDL_Renderer *renderer)
 
 void QuitSDL()
 {
+    if(PlayAgainTexture)
+        SDL_DestroyTexture(PlayAgainTexture);
     if(FinalScoreTexture)
         SDL_DestroyTexture(FinalScoreTexture);
     if(ScoreTexture)
