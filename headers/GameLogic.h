@@ -25,7 +25,7 @@
 typedef enum{ MENU, START, EXIT, GAMEOVER} GameState; // 0 --> show the menu || 1 --> start the game || 2 --> exit the game
 
 // Button's state enumeration
-typedef enum{ onNothing, onStart, onExit, onPlayAgain} MouseHoveringState; // 0 --> mouse isn't hovering any button || 1 --> mouse is hovering start button || 2 --> mouse is hovering exit button || 3 --> mouse is hovering play over button
+typedef enum{ onNothing, onStart, onExit} MouseHoveringState; // 0 --> mouse isn't hovering any button || 1 --> mouse is hovering start button || 2 --> mouse is hovering exit button
 
 // Direction enumerations
 typedef enum{ STABLE, UP, RIGHT, DOWN, LEFT} Direction;
@@ -63,8 +63,8 @@ typedef struct
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *SnakeHeadSurface, *SnakeBodySurface, *SnakeCornerSurface, *SnakeTailSurface, *FinalScoreSurface, *MenuBackgroundSurface, *PlayAgainSurface;
-extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture, *PointerTexture, *GameOverTexture, *SnakeHeadTexture, *SnakeBodyTexture, *SnakeCornerTexture, *SnakeTailTexture, *FinalScoreTexture, *MenuBackgroundTexture, *PlayAgainTexture;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *SnakeHeadSurface, *SnakeBodySurface, *SnakeCornerSurface, *SnakeTailSurface, *FinalScoreSurface, *MenuBackgroundSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture, *PointerTexture, *GameOverTexture, *SnakeHeadTexture, *SnakeBodyTexture, *SnakeCornerTexture, *SnakeTailTexture, *FinalScoreTexture, *MenuBackgroundTexture;
 extern SDL_Cursor *Cursor;
 extern Mix_Music *EatingMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
