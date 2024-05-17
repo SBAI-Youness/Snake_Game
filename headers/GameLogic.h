@@ -63,8 +63,8 @@ typedef struct
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *SnakeHeadSurface, *SnakeBodySurface, *SnakeCornerSurface, *SnakeTailSurface, *FinalScoreSurface, *MenuBackgroundSurface;
-extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture, *PointerTexture, *GameOverTexture, *SnakeHeadTexture, *SnakeBodyTexture, *SnakeCornerTexture, *SnakeTailTexture, *FinalScoreTexture, *MenuBackgroundTexture;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *SnakeHeadSurface, *SnakeBodySurface, *SnakeCornerSurface, *SnakeTailSurface, *FinalScoreSurface, *MenuBackgroundSurface, *HomeSurface, *PlayAgainSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture, *PointerTexture, *GameOverTexture, *SnakeHeadTexture, *SnakeBodyTexture, *SnakeCornerTexture, *SnakeTailTexture, *FinalScoreTexture, *MenuBackgroundTexture, *HomeTexture, *PlayAgainTexture;
 extern SDL_Cursor *Cursor;
 extern Mix_Music *EatingMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic;
 extern TTF_Font *ScoreFont, *MenuFont;

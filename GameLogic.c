@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL, *MenuBackgroundSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL, *MenuBackgroundTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL, *MenuBackgroundSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL, *MenuBackgroundTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -92,9 +92,11 @@ void InitSDL()
     PointerSurface = IMG_Load("tools/images/pointer.png");
     GameOverSurface = IMG_Load("tools/images/GameOver.png");
     MenuBackgroundSurface = IMG_Load("tools/images/MenuBackground.png");
+    HomeSurface = IMG_Load("tools/images/home.png");
+    PlayAgainSurface = IMG_Load("tools/images/PlayAgain.png");
 
     // Checking if the image was successfully loaded
-    if(!AppleSurface || !PointerSurface || !GameOverSurface || !MenuBackgroundSurface)
+    if(!AppleSurface || !PointerSurface || !GameOverSurface || !MenuBackgroundSurface || !HomeSurface || !PlayAgainSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -105,9 +107,11 @@ void InitSDL()
     PointerTexture = SDL_CreateTextureFromSurface( renderer, PointerSurface);
     GameOverTexture = SDL_CreateTextureFromSurface( renderer, GameOverSurface);
     MenuBackgroundTexture = SDL_CreateTextureFromSurface( renderer, MenuBackgroundSurface);
+    HomeTexture = SDL_CreateTextureFromSurface( renderer, HomeSurface);
+    PlayAgainTexture = SDL_CreateTextureFromSurface( renderer, PlayAgainSurface);
 
     // Checking if the texture was successfully created from surface
-    if(!AppleTexture || !PointerTexture || !GameOverTexture || !MenuBackgroundTexture)
+    if(!AppleTexture || !PointerTexture || !GameOverTexture || !MenuBackgroundTexture || !HomeTexture || !PlayAgainTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -118,6 +122,8 @@ void InitSDL()
     SDL_FreeSurface(PointerSurface);
     SDL_FreeSurface(GameOverSurface);
     SDL_FreeSurface(MenuBackgroundSurface);
+    SDL_FreeSurface(HomeSurface);
+    SDL_FreeSurface(PlayAgainSurface);
 
     // Loading the cursor image
     CursorSurface = IMG_Load("tools/images/cursor.png");
@@ -722,6 +728,8 @@ void RenderGameOver(SDL_Renderer *renderer)
 
     // Rendering the texture onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, FinalScoreTexture, NULL, &(SDL_Rect){ 250, 160, 300, 60});
+    SDL_RenderCopy( renderer, HomeTexture, NULL, &(SDL_Rect){ 290, 300, 70, 70});
+    SDL_RenderCopy( renderer, PlayAgainTexture, NULL, &(SDL_Rect){ 440, 300, 70, 70});
 
     // Presenting the renderer
     SDL_RenderPresent(renderer);
@@ -754,6 +762,10 @@ void QuitSDL()
         SDL_DestroyTexture(SnakeHeadTexture);
     if(Cursor)
         SDL_FreeCursor(Cursor);
+    if(PlayAgainTexture)
+        SDL_DestroyTexture(PlayAgainTexture);
+    if(HomeTexture)
+        SDL_DestroyTexture(HomeTexture);
     if(MenuBackgroundTexture)
         SDL_DestroyTexture(MenuBackgroundTexture);
     if(GameOverTexture)
