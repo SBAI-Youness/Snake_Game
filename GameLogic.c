@@ -278,6 +278,7 @@ void CreateSnake(player *snake)
         snake->chunk[i].position.x = 40 - i * SNAKE_SIZE;
         snake->chunk[i].position.y = 0;
         snake->chunk[i].angle = 0;
+        snake->chunk[i].direction = STABLE;
     }
 }
 
@@ -354,6 +355,8 @@ void MoveSnake(player *snake)
     // Switch statement to handle snake movement based on its direction
     switch(snake->chunk[0].direction)
     {
+        case STABLE:
+            break;
         case UP:
             snake->chunk[0].position.y -= SNAKE_SIZE;
             break;

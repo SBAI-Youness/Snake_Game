@@ -27,11 +27,8 @@ typedef enum{ MENU, START, EXIT, GAMEOVER} GameState; // 0 --> show the menu || 
 // Button's state enumeration
 typedef enum{ onNothing, onStart, onExit, onPlayAgain} MouseHoveringState; // 0 --> mouse isn't hovering any button || 1 --> mouse is hovering start button || 2 --> mouse is hovering exit button || 3 --> mouse is hovering play over button
 
-// Direction definitions
-#define UP 1
-#define RIGHT 2
-#define DOWN 3
-#define LEFT 4
+// Direction enumerations
+typedef enum{ STABLE, UP, RIGHT, DOWN, LEFT} Direction;
 
 typedef struct
 {
@@ -51,7 +48,7 @@ typedef struct
 
 typedef struct
 {
-    int direction;
+    Direction direction;
     double angle;
     coordinates position;
 } segments;
