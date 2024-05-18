@@ -261,12 +261,25 @@ void CreateApple(fruit *apple)
     // Seed the random number generator with the current time
     srand(time(NULL));
 
+    bool onSnake;
+
     // Generation of a random position of the apple within the window
     do
     {
         apple->position.x = (rand() % (WINDOW_WIDTH / SNAKE_SIZE)) * SNAKE_SIZE;
         apple->position.y = (rand() % (WINDOW_HEIGHT / SNAKE_SIZE)) * SNAKE_SIZE;
-    } while((apple->position.x >= 750 && apple->position.x < 790) && (apple->position.y >= 0 && apple->position.y < 40));
+
+        onSnake = false;
+        // Checking if the apple is generated on the body of the snake
+        for( int i = 0; i < snake.size; i++)
+        {
+            if(snake.chunk[i].position.x == apple->position.x && snake.chunk[i].position.y == apple->position.y)
+            {
+                onSnake = true;
+                break;
+            }
+        }
+    } while(((apple->position.x >= 750 && apple->position.x < 790) && (apple->position.y >= 0 && apple->position.y < 40)) || onSnake);
 }
 
 void DrawApple(SDL_Renderer *renderer)
@@ -347,18 +360,8 @@ void MoveSnake(player *snake)
         CreateApple(&apple);
     }
 
-    // Checking if the apple is generated on the body of the snake
-    for( int i = 0; i < snake->size; i++)
-    {
-        if(snake->chunk[i].position.x == apple.position.x && snake->chunk[i].position.y == apple.position.y)
-        {
-            CreateApple(&apple);
-            break;
-        }
-    }
-
     // Shift the positions of snake chunks to follow the head
-    for( int i = snake->size-1; (i > 0) && (snake->chunk[0].direction == UP || snake->chunk[0].direction == RIGHT || snake->chunk[0].direction == DOWN || snake->chunk[0].direction == LEFT); i--)
+    for( int i = snake->size-1; i > 0 && snake->chunk[0].direction != STABLE; i--)
         snake->chunk[i] = snake->chunk[i-1]; // Assign the position of the previous chunk to the current chunk
 
     // Switch statement to handle snake movement based on its direction
