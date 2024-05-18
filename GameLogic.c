@@ -614,6 +614,9 @@ void RenderMenu(SDL_Renderer *renderer)
 
 void HandleGameInput(player *snake)
 {
+    // ensuring that the direction can only be changed once per frame
+    bool directionChanged = false;
+
     // Event handling loop
     SDL_Event event;
     while(SDL_PollEvent(&event))
@@ -628,6 +631,8 @@ void HandleGameInput(player *snake)
 
             // If a key is pressed
             case SDL_KEYDOWN:
+                if(directionChanged) break;
+
                 // Handle keyboard input
                 switch(event.key.keysym.sym)
                 {
@@ -637,6 +642,7 @@ void HandleGameInput(player *snake)
                         {
                             snake->chunk[0].direction = UP;
                             snake->chunk[0].angle = -90;
+                            directionChanged = true;
                         }
                         break;
                     case SDLK_d:
@@ -645,6 +651,7 @@ void HandleGameInput(player *snake)
                         {
                             snake->chunk[0].direction = RIGHT;
                             snake->chunk[0].angle = 0;
+                            directionChanged = true;
                         }
                         break;
                     case SDLK_s:
@@ -653,6 +660,7 @@ void HandleGameInput(player *snake)
                         {
                             snake->chunk[0].direction = DOWN;
                             snake->chunk[0].angle = 90;
+                            directionChanged = true;
                         }
                         break;
                     case SDLK_q:
@@ -661,12 +669,13 @@ void HandleGameInput(player *snake)
                         {
                             snake->chunk[0].direction = LEFT;
                             snake->chunk[0].angle = 180;
+                            directionChanged = true;
                         }
                         break;
                 }
                 break;
         }
-    }
+    } directionChanged = false;
 }
 
 void RenderGame(SDL_Renderer *renderer)
