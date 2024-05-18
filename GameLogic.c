@@ -460,9 +460,12 @@ void HandleMenuInput()
                         Mix_PlayMusic( ClickingPopMusic, 0);
                         break;
                     case SDLK_RETURN:
-                        Mix_HaltMusic();
-                        Mix_PlayMusic( ClickingMusic, 0);
-                        MenuOption = isHovering; // This line is working just because onStart, onExit and onMode have the same values as START, EXIT and MODE
+                        if(isHovering == onStart || isHovering == onMode || isHovering == onExit)
+                        {
+                            Mix_HaltMusic();
+                            Mix_PlayMusic( ClickingMusic, 0);
+                            MenuOption = isHovering; // This line is working just because onStart, onExit and onMode have the same values as START, EXIT and MODE
+                        }
                         break;
                 }
                 break;
@@ -729,9 +732,12 @@ void HandleGameOverInput()
                         }
                         break;
                     case SDLK_RETURN:
-                        Mix_HaltMusic();
-                        Mix_PlayMusic( ClickingMusic, 0);
-                        MenuOption = (isHovering == onHome)? MENU: (isHovering == onPlayAgain)? START: isHovering;
+                        if(isHovering == onHome || isHovering == onPlayAgain)
+                        {
+                            Mix_HaltMusic();
+                            Mix_PlayMusic( ClickingMusic, 0);
+                            MenuOption = (isHovering == onHome)? MENU: (isHovering == onPlayAgain)? START: isHovering;
+                        }
                         break;
                 }
                 break;
