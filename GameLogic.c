@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL, *MenuBackgroundSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL, *MenuBackgroundTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ModeSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL, *MenuBackgroundSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ModeTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL, *MenuBackgroundTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -436,23 +436,33 @@ void HandleMenuInput()
                 switch(event.key.keysym.sym)
                 {
                     case SDLK_UP:
-                        if (isHovering != onStart)
-                        {
+                        if(isHovering == onStart)
+                            isHovering = onExit;
+                        else if(isHovering == onMode)
                             isHovering = onStart;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
-                        }
+                        else if(isHovering == onExit)
+                            isHovering = onMode;
+                        else
+                            isHovering = onStart;
+
+                        Mix_PlayMusic( ClickingPopMusic, 0);
                         break;
                     case SDLK_DOWN:
-                        if (isHovering != onExit)
-                        {
+                        if(isHovering == onStart)
+                            isHovering = onMode;
+                        else if(isHovering == onMode)
                             isHovering = onExit;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
-                        }
+                        else if(isHovering == onExit)
+                            isHovering = onStart;
+                        else
+                            isHovering = onExit;
+
+                        Mix_PlayMusic( ClickingPopMusic, 0);
                         break;
                     case SDLK_RETURN:
                         Mix_HaltMusic();
                         Mix_PlayMusic( ClickingMusic, 0);
-                        MenuOption = isHovering; // This line is working just because onStart and onExit have the same values as START and EXIT
+                        MenuOption = isHovering; // This line is working just because onStart, onExit and onMode have the same values as START, EXIT and MODE
                         break;
                 }
                 break;
@@ -462,7 +472,7 @@ void HandleMenuInput()
                 // Extract the x and y coordinates of the mouse pointer from the event
                 int mouseX = event.motion.x, mouseY = event.motion.y;
 
-                if(mouseX >= 250 && mouseX <= 550 && mouseY >= 150 && mouseY <= 230) // Mouse is hovering start button
+                if(mouseX >= 240 && mouseX <= 460 && mouseY >= 150 && mouseY <= 230) // Mouse is hovering start button
                 {
                     if(isHovering != onStart)
                     {
@@ -470,7 +480,15 @@ void HandleMenuInput()
                         Mix_PlayMusic( ClickingPopMusic, 0);
                     }
                 }
-                else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 240 && mouseY <= 320) // Mouse is hovering exit button
+                else if(mouseX >= 240 && mouseX <= 460 && mouseY >= 240 && mouseY <= 320) // mouse is hovering mode button
+                {
+                    if(isHovering != onMode)
+                    {
+                        isHovering = onMode;
+                        Mix_PlayMusic( ClickingPopMusic, 0);
+                    }
+                }
+                else if(mouseX >= 240 && mouseX <= 460 && mouseY >= 330 && mouseY <= 410) // Mouse is hovering exit button
                 {
                     if (isHovering != onExit)
                     {
@@ -490,13 +508,19 @@ void HandleMenuInput()
                     case SDL_BUTTON_LEFT:
                         int mouseX = event.button.x, mouseY = event.button.y;
 
-                        if(mouseX >= 250 && mouseX <= 550 && mouseY >= 150 && mouseY <= 230) // If the user pressed start
+                        if(mouseX >= 240 && mouseX <= 460 && mouseY >= 150 && mouseY <= 230) // If the user pressed start
                         {
                             Mix_HaltMusic();
                             Mix_PlayMusic( ClickingMusic, 0);
                             MenuOption = START;
                         }
-                        else if(mouseX >= 250 && mouseX <= 550 && mouseY >= 240 && mouseY <= 320) // If the user pressed exit
+                        else if(mouseX >= 240 && mouseX <= 460 && mouseY >= 240 && mouseY <= 320) // If the user pressed mode
+                        {
+                            Mix_HaltMusic();
+                            Mix_PlayMusic( ClickingMusic, 0);
+                            MenuOption = MODE;
+                        }
+                        else if(mouseX >= 240 && mouseX <= 460 && mouseY >= 330 && mouseY <= 410) // If the user pressed exit
                         {
                             Mix_HaltMusic();
                             Mix_PlayMusic( ClickingMusic, 0);
@@ -533,10 +557,11 @@ void RenderMenu(SDL_Renderer *renderer)
     // Render the texts onto surfaces using the provided fonts and colors
     TitleSurface = TTF_RenderText_Solid( MenuFont, "Snake Game", (SDL_Color){ 0, 0, 0, 255});
     StartSurface = TTF_RenderText_Solid( MenuFont, "Start", (isHovering != onStart)? DefaultColor: HoveringColor);
+    ModeSurface = TTF_RenderText_Solid( MenuFont, "Mode", (isHovering != onMode)? DefaultColor: HoveringColor);
     ExitSurface = TTF_RenderText_Solid( MenuFont, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
 
     // Checking if the texts were successfully rendered
-    if(!TitleSurface || !StartSurface || !ExitSurface)
+    if(!TitleSurface || !StartSurface || !ExitSurface || !ModeSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
@@ -545,10 +570,11 @@ void RenderMenu(SDL_Renderer *renderer)
     // Create textures from the rendered surfaces
     TitleTexture = SDL_CreateTextureFromSurface( renderer, TitleSurface);
     StartTexture = SDL_CreateTextureFromSurface( renderer, StartSurface);
+    ModeTexture = SDL_CreateTextureFromSurface( renderer, ModeSurface);
     ExitTexture = SDL_CreateTextureFromSurface( renderer, ExitSurface);
 
     // Checking if the textures were successfully created
-    if(!TitleTexture || !StartTexture || !ExitTexture)
+    if(!TitleTexture || !StartTexture || !ExitTexture || !ModeTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -556,22 +582,27 @@ void RenderMenu(SDL_Renderer *renderer)
 
     SDL_FreeSurface(TitleSurface);
     SDL_FreeSurface(StartSurface);
+    SDL_FreeSurface(ModeSurface);
     SDL_FreeSurface(ExitSurface);
 
     // Rendering the textures onto the renderer at a specific position and size
-    SDL_RenderCopy( renderer, TitleTexture, NULL, &(SDL_Rect){ 125, 20, 550, 120});
-    SDL_RenderCopy( renderer, StartTexture, NULL, &(SDL_Rect){ 250, 150, 300, 80});
-    SDL_RenderCopy( renderer, ExitTexture, NULL, &(SDL_Rect){ 250, 240, 300, 80});
+    SDL_RenderCopy( renderer, TitleTexture, NULL, &(SDL_Rect){ 100, 20, 600, 100});
+    SDL_RenderCopy( renderer, StartTexture, NULL, &(SDL_Rect){ 240, 150, 220, 80});
+    SDL_RenderCopy( renderer, ModeTexture, NULL, &(SDL_Rect){ 240, 240, 220, 80});
+    SDL_RenderCopy( renderer, ExitTexture, NULL, &(SDL_Rect){ 240, 330, 220, 80});
 
     switch(isHovering)
     {
         case onStart:
-            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 190, 170, 50, 40});
+            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 180, 170, 50, 40});
+            break;
+
+        case onMode:
+            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 180, 260, 50, 40});
             break;
 
         case onExit:
-            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 190, 260, 50, 40});
-            break;
+            SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 180, 350, 50, 40});
     }
 
     // Present the renderer
@@ -824,6 +855,8 @@ void QuitSDL()
         SDL_DestroyTexture(TitleTexture);
     if(StartTexture)
         SDL_DestroyTexture(StartTexture);
+    if(ModeTexture)
+        SDL_DestroyTexture(ModeTexture);
     if(ExitTexture)
         SDL_DestroyTexture(ExitTexture);
     if(MenuFont)
