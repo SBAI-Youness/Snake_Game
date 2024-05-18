@@ -449,7 +449,7 @@ void HandleMenuInput()
                     case SDLK_RETURN:
                         Mix_HaltMusic();
                         Mix_PlayMusic( ClickingMusic, 0);
-                        MenuOption = isHovering;
+                        MenuOption = isHovering; // This line is working just because onStart and onExit have the same values as START and EXIT
                         break;
                 }
                 break;
@@ -674,6 +674,82 @@ void HandleGameOverInput()
             case SDL_QUIT:
                 quit = true;
                 break;
+
+            // If a key is pressed
+            case SDL_KEYDOWN:
+                // Handle keyboard input
+                switch(event.key.keysym.sym)
+                {
+                    case SDLK_RIGHT:
+                        if (isHovering != onPlayAgain)
+                        {
+                            isHovering = onPlayAgain;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
+                        break;
+                    case SDLK_LEFT:
+                        if (isHovering != onHome)
+                        {
+                            isHovering = onHome;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
+                        break;
+                    case SDLK_RETURN:
+                        Mix_HaltMusic();
+                        Mix_PlayMusic( ClickingMusic, 0);
+                        MenuOption = (isHovering == onHome)? MENU: (isHovering == onPlayAgain)? START: isHovering;
+                        break;
+                }
+                break;
+
+            // This case is related to mouse motions
+            case SDL_MOUSEMOTION:
+                // Extract the x and y coordinates of the mouse pointer from the event
+                int mouseX = event.motion.x, mouseY = event.motion.y;
+
+                if(mouseX >= 290 && mouseX <= 360 && mouseY >= 300 && mouseY <= 370) // Mouse is hovering home button
+                {
+                    if(isHovering != onHome)
+                    {
+                        isHovering = onHome;
+                        Mix_PlayMusic( ClickingPopMusic, 0);
+                    }
+                }
+                else if(mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // Mouse is hovering play again button
+                {
+                    if (isHovering != onPlayAgain)
+                    {
+                        isHovering = onPlayAgain;
+                        Mix_PlayMusic( ClickingPopMusic, 0);
+                    }
+                }
+                else // Mouse is hovering any button
+                    isHovering = onNothing;
+                break;
+
+            // If a mouse button is released
+            case SDL_MOUSEBUTTONUP:
+                // Handle mouse input
+                switch(event.button.button)
+                {
+                    case SDL_BUTTON_LEFT:
+                        int mouseX = event.button.x, mouseY = event.button.y;
+
+                        if(mouseX >= 290 && mouseX <= 360 && mouseY >= 300 && mouseY <= 370) // If the user pressed home
+                        {
+                            Mix_HaltMusic();
+                            Mix_PlayMusic( ClickingMusic, 0);
+                            MenuOption = MENU;
+                        }
+                        else if(mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // If the user pressed play again
+                        {
+                            Mix_HaltMusic();
+                            Mix_PlayMusic( ClickingMusic, 0);
+                            MenuOption = START;
+                        }
+                        break;
+                }
+                break;
         }
     }
 }
@@ -728,8 +804,8 @@ void RenderGameOver(SDL_Renderer *renderer)
 
     // Rendering the texture onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, FinalScoreTexture, NULL, &(SDL_Rect){ 250, 160, 300, 60});
-    SDL_RenderCopy( renderer, HomeTexture, NULL, &(SDL_Rect){ 290, 300, 70, 70});
-    SDL_RenderCopy( renderer, PlayAgainTexture, NULL, &(SDL_Rect){ 440, 300, 70, 70});
+    SDL_RenderCopy( renderer, HomeTexture, NULL, (isHovering != onHome)? &(SDL_Rect){ 290, 300, 70, 70}: &(SDL_Rect){ 285, 295, 80, 80});
+    SDL_RenderCopy( renderer, PlayAgainTexture, NULL, (isHovering != onPlayAgain)? &(SDL_Rect){ 440, 300, 70, 70}: &(SDL_Rect){ 435, 295, 80, 80});
 
     // Presenting the renderer
     SDL_RenderPresent(renderer);

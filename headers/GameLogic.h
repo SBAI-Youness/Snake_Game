@@ -25,7 +25,7 @@
 typedef enum{ MENU, START, EXIT, GAMEOVER} GameState; // 0 --> show the menu || 1 --> start the game || 2 --> exit the game
 
 // Button's state enumeration
-typedef enum{ onNothing, onStart, onExit} MouseHoveringState; // 0 --> mouse isn't hovering any button || 1 --> mouse is hovering start button || 2 --> mouse is hovering exit button
+typedef enum{ onNothing, onStart, onExit, onHome, onPlayAgain} MouseHoveringState; // 0 --> mouse isn't hovering any button || 1 --> mouse is hovering start button || 2 --> mouse is hovering exit button || 3 --> mouse is hovering home button || 4 --> mouse is hovering play again button
 
 // Direction enumerations
 typedef enum{ STABLE, UP, RIGHT, DOWN, LEFT} Direction;
