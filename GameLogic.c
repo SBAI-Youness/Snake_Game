@@ -262,8 +262,11 @@ void CreateApple(fruit *apple)
     srand(time(NULL));
 
     // Generation of a random position of the apple within the window
-    apple->position.x = (rand() % (WINDOW_WIDTH / SNAKE_SIZE)) * SNAKE_SIZE;
-    apple->position.y = (rand() % (WINDOW_HEIGHT / SNAKE_SIZE)) * SNAKE_SIZE;
+    do
+    {
+        apple->position.x = (rand() % (WINDOW_WIDTH / SNAKE_SIZE)) * SNAKE_SIZE;
+        apple->position.y = (rand() % (WINDOW_HEIGHT / SNAKE_SIZE)) * SNAKE_SIZE;
+    } while((apple->position.x >= 750 && apple->position.x < 790) && (apple->position.y >= 0 && apple->position.y < 40));
 }
 
 void DrawApple(SDL_Renderer *renderer)
