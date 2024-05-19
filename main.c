@@ -30,12 +30,11 @@ int main( int argc, char *argv[])
                 quit = true;
                 break;
 
-            // Show the mode
-            /*
-                !: This case is still not implemented
-                case MODE:
-                    break;
-            */
+            // Show the modes
+            case MODE:
+                HandleModeInput();
+                RenderMode(renderer);
+                break;
 
             // Show the game over
             case GAMEOVER:

@@ -22,10 +22,10 @@
 #define NUMBER_OF_STARS 400
 
 // Menu's options enumeration
-typedef enum{ MENU, START, EXIT, MODE, GAMEOVER} GameState; // 0 --> show the menu || 1 --> start the game || 2 --> exit the game || 3 --> show the mode || 4 --> show the game over
+typedef enum{ MENU, START, EXIT, MODE, GAMEOVER} GameState;
 
 // Button's state enumeration
-typedef enum{ onNothing, onStart, onExit, onMode, onHome, onPlayAgain} MouseHoveringState; // 0 --> mouse isn't hovering any button || 1 --> mouse is hovering start button || 2 --> mouse is hovering exit button || 3 --> mouse is hovering mode button || 4 --> mouse is hovering home button || 5 --> mouse is hovering play again button
+typedef enum{ onNothing, onStart, onExit, onMode1, onMode2, onHome, onPlayAgain} MouseHoveringState;
 
 // Direction enumerations
 typedef enum{ STABLE, UP, RIGHT, DOWN, LEFT} Direction;
@@ -63,8 +63,8 @@ typedef struct
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ModeSurface, *ExitSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *SnakeHeadSurface, *SnakeBodySurface, *SnakeCornerSurface, *SnakeTailSurface, *FinalScoreSurface, *HighestScoreSurface, *MenuBackgroundSurface, *HomeSurface, *PlayAgainSurface;
-extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ModeTexture, *ExitTexture, *PointerTexture, *GameOverTexture, *SnakeHeadTexture, *SnakeBodyTexture, *SnakeCornerTexture, *SnakeTailTexture, *FinalScoreTexture, *HighestScoreTexture, *MenuBackgroundTexture, *HomeTexture, *PlayAgainTexture;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ExitSurface, *ModeSurface, *Mode1Surface, *Mode2Surface, *CursorSurface, *PointerSurface, *GameOverSurface, *SnakeHeadSurface, *SnakeBodySurface, *SnakeCornerSurface, *SnakeTailSurface, *FinalScoreSurface, *HighestScoreSurface, *MenuBackgroundSurface, *HomeSurface, *PlayAgainSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ExitTexture, *ModeTexture, *Mode1Texture, *Mode2Texture, *PointerTexture, *GameOverTexture, *SnakeHeadTexture, *SnakeBodyTexture, *SnakeCornerTexture, *SnakeTailTexture, *FinalScoreTexture, *HighestScoreTexture, *MenuBackgroundTexture, *HomeTexture, *PlayAgainTexture;
 extern SDL_Cursor *Cursor;
 extern Mix_Music *EatingMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
@@ -114,6 +114,12 @@ void HandleMenuInput();
 
 // Function used to draw the menu
 void RenderMenu(SDL_Renderer *renderer);
+
+// Function used to handle user input while the modes are shown
+void HandleModeInput();
+
+// Function used to draw the modes
+void RenderMode(SDL_Renderer *renderer);
 
 // Function used to handle user input while playing
 void HandleGameInput(player *snake);
