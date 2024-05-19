@@ -55,7 +55,7 @@ typedef struct
 
 typedef struct
 {
-    int score, size;
+    int score, highestScore, size;
     float speed;
     bool state;
     segments chunk[999];
@@ -63,8 +63,8 @@ typedef struct
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ModeSurface, *ExitSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *SnakeHeadSurface, *SnakeBodySurface, *SnakeCornerSurface, *SnakeTailSurface, *FinalScoreSurface, *MenuBackgroundSurface, *HomeSurface, *PlayAgainSurface;
-extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ModeTexture, *ExitTexture, *PointerTexture, *GameOverTexture, *SnakeHeadTexture, *SnakeBodyTexture, *SnakeCornerTexture, *SnakeTailTexture, *FinalScoreTexture, *MenuBackgroundTexture, *HomeTexture, *PlayAgainTexture;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *TitleSurface, *StartSurface, *ModeSurface, *ExitSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *SnakeHeadSurface, *SnakeBodySurface, *SnakeCornerSurface, *SnakeTailSurface, *FinalScoreSurface, *HighestScoreSurface, *MenuBackgroundSurface, *HomeSurface, *PlayAgainSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture, *TitleTexture, *StartTexture, *ModeTexture, *ExitTexture, *PointerTexture, *GameOverTexture, *SnakeHeadTexture, *SnakeBodyTexture, *SnakeCornerTexture, *SnakeTailTexture, *FinalScoreTexture, *HighestScoreTexture, *MenuBackgroundTexture, *HomeTexture, *PlayAgainTexture;
 extern SDL_Cursor *Cursor;
 extern Mix_Music *EatingMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
@@ -93,6 +93,9 @@ void CreateApple(fruit *apple);
 
 // Function used to draw the apple
 void DrawApple(SDL_Renderer *renderer);
+
+// Function used to intialize the highest score of the snake
+void InitializeHighestScore(player *snake);
 
 // Function used to create the snake
 void CreateSnake(player *snake);

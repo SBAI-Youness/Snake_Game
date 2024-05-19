@@ -3,6 +3,7 @@
 int main( int argc, char *argv[])
 {
     InitSDL();
+    InitializeHighestScore(&snake);
 
     while(!quit)
     {

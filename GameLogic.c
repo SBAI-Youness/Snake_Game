@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ModeSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL, *MenuBackgroundSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ModeTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL, *MenuBackgroundTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ModeSurface = NULL, *ExitSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL, *HighestScoreSurface = NULL, *MenuBackgroundSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ModeTexture = NULL, *ExitTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL, *HighestScoreTexture = NULL, *MenuBackgroundTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -289,10 +289,15 @@ void DrawApple(SDL_Renderer *renderer)
     SDL_RenderCopy( renderer, AppleTexture, NULL, &AppleCell);
 }
 
+void InitializeHighestScore(player *snake)
+{
+    snake->highestScore = -1;
+}
+
 void CreateSnake(player *snake)
 {
     // Setting the snake to its initial parameters
-    snake->size = SNAKE_INITIAL_SIZE, snake->score = 0, snake->state = true, snake->speed = 100;
+    snake->size = SNAKE_INITIAL_SIZE, snake->score = 0, snake->highestScore = (snake->highestScore == -1)? 0: snake->highestScore, snake->state = true, snake->speed = 100;
 
     // Setting each chunk to its position
     for( int i = 0; i < snake->size; i++)
@@ -335,6 +340,7 @@ void MoveSnake(player *snake)
     {
         if(snake->chunk[0].position.x == snake->chunk[i].position.x && snake->chunk[0].position.y == snake->chunk[i].position.y && snake->score != 0)
         {
+            if (snake->score > snake->highestScore) snake->highestScore = snake->score;
             snake->state = false; // Snake collides with itself, game over
             MenuOption = GAMEOVER;
             Mix_PlayMusic( GameOverMusic, 0);
@@ -826,16 +832,18 @@ void RenderGameOver(SDL_Renderer *renderer)
     SDL_RenderCopy( renderer, GameOverTexture, NULL, &(SDL_Rect){ 150, 40, 500, 80});
 
     // Defining an array of characters to srore the final score as a string
-    char FinalScoreString[60];
+    char FinalScoreString[60], HighestScoreString[60];
 
     // Convert the integer score to a string using sprintf
     sprintf( FinalScoreString, "Final Score: %d", snake.score);
+    sprintf( HighestScoreString, "Highest Score: %d", snake.highestScore);
 
     // Render the game over visuals onto a surface using the provided font and color
     FinalScoreSurface = TTF_RenderText_Solid( MenuFont, FinalScoreString, (SDL_Color){ 255, 255, 255, 255});
+    HighestScoreSurface = TTF_RenderText_Solid( MenuFont, HighestScoreString, (SDL_Color){ 255, 255, 255, 255});
 
     // Checking if the text was successfully rendered
-    if(!FinalScoreSurface)
+    if(!FinalScoreSurface || !HighestScoreSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
@@ -843,9 +851,10 @@ void RenderGameOver(SDL_Renderer *renderer)
 
     // Create a texture from the rendered surface
     FinalScoreTexture = SDL_CreateTextureFromSurface( renderer, FinalScoreSurface);
+    HighestScoreTexture = SDL_CreateTextureFromSurface( renderer, HighestScoreSurface);
 
     // Checking if the texture was successfully created
-    if(!FinalScoreTexture)
+    if(!FinalScoreTexture || !HighestScoreTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -853,9 +862,11 @@ void RenderGameOver(SDL_Renderer *renderer)
 
     // Free the surface after creating the texture
     SDL_FreeSurface(FinalScoreSurface);
+    SDL_FreeSurface(HighestScoreSurface);
 
     // Rendering the texture onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, FinalScoreTexture, NULL, &(SDL_Rect){ 250, 160, 300, 60});
+    SDL_RenderCopy( renderer, HighestScoreTexture, NULL, &(SDL_Rect){ 540, 440, 250, 60});
     SDL_RenderCopy( renderer, HomeTexture, NULL, (isHovering != onHome)? &(SDL_Rect){ 290, 300, 70, 70}: &(SDL_Rect){ 285, 295, 80, 80});
     SDL_RenderCopy( renderer, PlayAgainTexture, NULL, (isHovering != onPlayAgain)? &(SDL_Rect){ 440, 300, 70, 70}: &(SDL_Rect){ 435, 295, 80, 80});
 
@@ -865,6 +876,8 @@ void RenderGameOver(SDL_Renderer *renderer)
 
 void QuitSDL()
 {
+    if(HighestScoreTexture)
+        SDL_DestroyTexture(HighestScoreTexture);
     if(FinalScoreTexture)
         SDL_DestroyTexture(FinalScoreTexture);
     if(ScoreTexture)
