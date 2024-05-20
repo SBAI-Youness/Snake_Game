@@ -8,7 +8,7 @@ SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
 
-player snake;
+player snake, snake1, snake2;
 fruit apple;
 star stars[NUMBER_OF_STARS];
 
@@ -294,7 +294,7 @@ void InitializeHighestScore(player *snake)
     snake->highestScore = -1;
 }
 
-void CreateSnake(player *snake)
+void CreateSnake( player *snake, int initialX, int initialY)
 {
     // Setting the snake to its initial parameters
     snake->size = SNAKE_INITIAL_SIZE, snake->score = 0, snake->highestScore = (snake->highestScore == -1)? 0: snake->highestScore, snake->state = true, snake->speed = 100;
@@ -302,24 +302,25 @@ void CreateSnake(player *snake)
     // Setting each chunk to its position
     for( int i = 0; i < snake->size; i++)
     {
-        snake->chunk[i].position.x = 40 - i * SNAKE_SIZE;
-        snake->chunk[i].position.y = 0;
+        snake->chunk[i].position.x = initialX - i * SNAKE_SIZE;
+        snake->chunk[i].position.y = initialY;
         snake->chunk[i].angle = 0;
         snake->chunk[i].direction = STABLE;
     }
 }
 
-void DrawSnake(SDL_Renderer *renderer)
+// TODO: This function should also depend on the color of the snake
+void DrawSnake( player *snake, SDL_Renderer *renderer)
 {
-    for( int i = 0; i < snake.size; i++)
+    for( int i = 0; i < snake->size; i++)
     {
-        SDL_Rect SnakeSegment = { snake.chunk[i].position.x, snake.chunk[i].position.y, SNAKE_SIZE, SNAKE_SIZE};
-        int previousDirection = snake.chunk[i+1].direction, currentDirection = snake.chunk[i].direction;
+        SDL_Rect SnakeSegment = { snake->chunk[i].position.x, snake->chunk[i].position.y, SNAKE_SIZE, SNAKE_SIZE};
+        int previousDirection = snake->chunk[i+1].direction, currentDirection = snake->chunk[i].direction;
 
         if (i == 0) // Render snake head
-            SDL_RenderCopyEx( renderer, SnakeHeadTexture, NULL, &SnakeSegment, snake.chunk[i].angle, NULL, SDL_FLIP_NONE);
-        else if (i == snake.size-1) // Render snake tail
-            SDL_RenderCopyEx( renderer, SnakeTailTexture, NULL, &SnakeSegment, snake.chunk[i].angle, NULL, SDL_FLIP_NONE);
+            SDL_RenderCopyEx( renderer, SnakeHeadTexture, NULL, &SnakeSegment, snake->chunk[i].angle, NULL, SDL_FLIP_NONE);
+        else if (i == snake->size-1) // Render snake tail
+            SDL_RenderCopyEx( renderer, SnakeTailTexture, NULL, &SnakeSegment, snake->chunk[i].angle, NULL, SDL_FLIP_NONE);
         else if ((previousDirection == UP && currentDirection == RIGHT) || (previousDirection == LEFT && currentDirection == DOWN)) // Render snake corner
             SDL_RenderCopyEx( renderer, SnakeCornerTexture, NULL, &SnakeSegment, 0, NULL, SDL_FLIP_NONE);
         else if ((previousDirection == RIGHT && currentDirection == DOWN) || (previousDirection == UP && currentDirection == LEFT)) // Render snake corner
@@ -329,14 +330,14 @@ void DrawSnake(SDL_Renderer *renderer)
         else if ((previousDirection == LEFT && currentDirection == UP) || (previousDirection == DOWN && currentDirection == RIGHT)) // Render snake corner
             SDL_RenderCopyEx( renderer, SnakeCornerTexture, NULL, &SnakeSegment, -90, NULL, SDL_FLIP_NONE);
         else // Render snake body
-            SDL_RenderCopyEx( renderer, SnakeBodyTexture, NULL, &SnakeSegment, snake.chunk[i].angle, NULL, SDL_FLIP_NONE);
+            SDL_RenderCopyEx( renderer, SnakeBodyTexture, NULL, &SnakeSegment, snake->chunk[i].angle, NULL, SDL_FLIP_NONE);
     }
 }
 
 void MoveSnake(player *snake)
 {
     // Check if the snake's head collides with its body
-    for( int i = 1; i < snake->size; i++)
+    for( int i = 1; i < snake->size && isHovering == onMode1; i++)
     {
         if(snake->chunk[0].position.x == snake->chunk[i].position.x && snake->chunk[0].position.y == snake->chunk[i].position.y && snake->score != 0)
         {
@@ -390,16 +391,16 @@ void MoveSnake(player *snake)
     }
 }
 
-void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, TTF_Font *font)
+void DrawScore( player *snake, SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, SDL_Color color, SDL_Rect rect)
 {
     // Defining an array characters to store the score as a string
     char ScoreString[50];
 
     // Convert the integer score to a string using itoa
-    itoa(snake.score, ScoreString, 10);
+    itoa(snake->score, ScoreString, 10);
 
     // Render the score string onto a surface using the provided font and color
-    surface = TTF_RenderText_Solid( font, ScoreString, (SDL_Color){ 255, 255, 255, 255});
+    surface = TTF_RenderText_Solid( ScoreFont, ScoreString, color);
 
     // Checking if the text was successfully rendered
     if(!surface)
@@ -422,7 +423,7 @@ void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *textu
     SDL_FreeSurface(surface);
 
     // Rendering the texture onto the renderer at a specific position and size
-    SDL_RenderCopy( renderer, texture, NULL, &(SDL_Rect){ 750, 0, 40, 40});
+    SDL_RenderCopy( renderer, texture, NULL, &rect);
 }
 
 void HandleMenuInput()  
@@ -641,9 +642,7 @@ void HandleModeInput()
                         {
                             Mix_HaltMusic();
                             Mix_PlayMusic( ClickingMusic, 0);
-                            if(isHovering == onMode1)
-                                MenuOption = START;
-                            // TODO: implement the option of 1v1 (else MenuOption = EXIT;)
+                            MenuOption = START;
                         }
                         break;
                 }
@@ -692,7 +691,7 @@ void HandleModeInput()
                         {
                             Mix_HaltMusic();
                             Mix_PlayMusic( ClickingMusic, 0);
-                            // TODO: implement the option of 1v1 (MenuOption = EXIT;)
+                            MenuOption = START;
                         }
                         break;
                 }
@@ -769,7 +768,7 @@ void RenderMode(SDL_Renderer *renderer)
     SDL_RenderPresent(renderer);
 }
 
-void HandleGameInput(player *snake)
+void HandleMode1Input(player *snake)
 {
     // ensuring that the direction can only be changed once per frame
     bool directionChanged = false;
@@ -835,7 +834,7 @@ void HandleGameInput(player *snake)
     } directionChanged = false;
 }
 
-void RenderGame(SDL_Renderer *renderer)
+void RenderMode1(SDL_Renderer *renderer)
 {
     // Set the window color to black
     if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
@@ -854,14 +853,138 @@ void RenderGame(SDL_Renderer *renderer)
     UpdateAndDrawStars( renderer, stars);
     DrawApple(renderer);
     MoveSnake(&snake);
-    DrawSnake(renderer);
-    DrawScore( renderer, ScoreSurface, ScoreTexture, ScoreFont);
+    DrawSnake( &snake, renderer);
+    DrawScore( &snake, renderer, ScoreSurface, ScoreTexture, (SDL_Color){ 255, 255, 255, 255}, (SDL_Rect){ 750, 0, 40, 40});
 
     // Present the renderer
     SDL_RenderPresent(renderer);
 
     // Delay to control frame rate
     SDL_Delay(snake.speed);
+}
+
+void HandleMode2Input( player *snake1, player *snake2)
+{
+    // ensuring that the direction can only be changed once per frame
+    bool direction1Changed = false, direction2Changed = false;
+
+    // Event handling loop
+    SDL_Event event;
+    while(SDL_PollEvent(&event))
+    {
+        // Handle each event type
+        switch(event.type)
+        {
+            // If the user quits the game
+            case SDL_QUIT:
+                quit = true;
+                break;
+
+            // If a key is pressed
+            case SDL_KEYDOWN:
+                // Handle keyboard input
+                switch(event.key.keysym.sym)
+                {
+                    // Input handling for the player number 1
+                    case SDLK_UP:
+                        if(!direction1Changed && snake1->chunk[0].direction != DOWN)
+                        {
+                            snake1->chunk[0].direction = UP;
+                            snake1->chunk[0].angle = -90;
+                            direction1Changed = true;
+                        }
+                        break;
+                    case SDLK_RIGHT:
+                        if(!direction1Changed && snake1->chunk[0].direction != LEFT)
+                        {
+                            snake1->chunk[0].direction = RIGHT;
+                            snake1->chunk[0].angle = 0;
+                            direction1Changed = true;
+                        }
+                        break;
+                    case SDLK_DOWN:
+                        if(!direction1Changed && snake1->chunk[0].direction != UP)
+                        {
+                            snake1->chunk[0].direction = DOWN;
+                            snake1->chunk[0].angle = 90;
+                            direction1Changed = true;
+                        }
+                        break;
+                    case SDLK_LEFT:
+                        if(!direction1Changed && snake1->chunk[0].direction != RIGHT)
+                        {
+                            snake1->chunk[0].direction = LEFT;
+                            snake1->chunk[0].angle = 180;
+                            direction1Changed = true;
+                        }
+                        break;
+
+                    // Input handling for the player number 2
+                    case SDLK_z:
+                        if(!direction2Changed && snake2->chunk[0].direction != DOWN)
+                        {
+                            snake2->chunk[0].direction = UP;
+                            snake2->chunk[0].angle = -90;
+                            direction2Changed = true;
+                        }
+                        break;
+                    case SDLK_d:
+                        if(!direction2Changed && snake2->chunk[0].direction != LEFT)
+                        {
+                            snake2->chunk[0].direction = RIGHT;
+                            snake2->chunk[0].angle = 0;
+                            direction2Changed = true;
+                        }
+                        break;
+                    case SDLK_s:
+                        if(!direction2Changed && snake2->chunk[0].direction != UP)
+                        {
+                            snake2->chunk[0].direction = DOWN;
+                            snake2->chunk[0].angle = 90;
+                            direction2Changed = true;
+                        }
+                        break;
+                    case SDLK_q:
+                        if(!direction2Changed && snake2->chunk[0].direction != RIGHT)
+                        {
+                            snake2->chunk[0].direction = LEFT;
+                            snake2->chunk[0].angle = 180;
+                            direction2Changed = true;
+                        }
+                        break;
+                }
+                break;
+        }
+    } direction1Changed = false; direction2Changed = false;
+}
+
+void RenderMode2(SDL_Renderer *renderer)
+{
+    // Set the window color to black
+    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Clearing the rendering target
+    if(SDL_RenderClear(renderer))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    UpdateAndDrawStars( renderer, stars);
+    DrawApple(renderer);
+    MoveSnake(&snake1), MoveSnake(&snake2);
+    DrawSnake( &snake1, renderer), DrawSnake( &snake2, renderer);
+    DrawScore( &snake1, renderer, ScoreSurface, ScoreTexture, (SDL_Color){ 0, 255, 0, 255}, (SDL_Rect){ 360, 0, 40, 40}), DrawScore( &snake2, renderer, ScoreSurface, ScoreTexture, (SDL_Color){ 0, 0, 255, 255}, (SDL_Rect){ 400, 0, 40, 40});
+
+    // Present the renderer
+    SDL_RenderPresent(renderer);
+
+    // Delay to control frame rate
+    SDL_Delay((snake1.speed > snake2.speed)? snake1.speed: snake2.speed);
 }
 
 void HandleGameOverInput()

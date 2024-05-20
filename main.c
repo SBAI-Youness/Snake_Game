@@ -17,11 +17,23 @@ int main( int argc, char *argv[])
 
             // Start the game
             case START:
-                CreateApple(&apple), CreateSnake(&snake), CreateStars(stars);
-                while(!quit && snake.state)
+                if(isHovering == onMode1)
                 {
-                    HandleGameInput(&snake);
-                    RenderGame(renderer);
+                    CreateApple(&apple), CreateSnake( &snake, 40, 0), CreateStars(stars);
+                    while(!quit && snake.state)
+                    {
+                        HandleMode1Input(&snake);
+                        RenderMode1(renderer);
+                    }
+                }
+                else if(isHovering == onMode2)
+                {
+                    CreateApple(&apple), CreateSnake( &snake1, 40, 0), CreateSnake( &snake2, 40, 480), CreateStars(stars);
+                    while(!quit) // TODO: This game loop should also depend on the time (1 minute)
+                    {
+                        HandleMode2Input( &snake1, &snake2);
+                        RenderMode2(renderer);
+                    }
                 }
                 break;
 

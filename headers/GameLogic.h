@@ -69,7 +69,7 @@ extern SDL_Cursor *Cursor;
 extern Mix_Music *EatingMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
 
-extern player snake;
+extern player snake, snake1, snake2;
 extern fruit apple;
 extern star stars[NUMBER_OF_STARS];
 
@@ -98,16 +98,16 @@ void DrawApple(SDL_Renderer *renderer);
 void InitializeHighestScore(player *snake);
 
 // Function used to create the snake
-void CreateSnake(player *snake);
+void CreateSnake( player *snake, int initialX, int initialY);
 
 // Function used to draw the snake in the window
-void DrawSnake(SDL_Renderer *renderer);
+void DrawSnake( player *snake, SDL_Renderer *renderer);
 
 // Function used to move the snake
 void MoveSnake(player *snake);
 
 // Function used to show the score in the window
-void DrawScore( SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, TTF_Font *font);
+void DrawScore( player *snake, SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, SDL_Color color, SDL_Rect rect);
 
 // Function used to handle user input while the menu is shown
 void HandleMenuInput();
@@ -121,11 +121,17 @@ void HandleModeInput();
 // Function used to draw the modes
 void RenderMode(SDL_Renderer *renderer);
 
-// Function used to handle user input while playing
-void HandleGameInput(player *snake);
+// Function used to handle user input while playing in the first mode
+void HandleMode1Input(player *snake);
 
-// Function used for rendering
-void RenderGame(SDL_Renderer *renderer);
+// Function used for rendering the first mode
+void RenderMode1(SDL_Renderer *renderer);
+
+// Function used to handle user input while playing in the second mode
+void HandleMode2Input( player *snake1, player *snake2);
+
+// Function used for rendering the second mode
+void RenderMode2(SDL_Renderer *renderer);
 
 // Function used to handle the user input while he is in the game over
 void HandleGameOverInput();
