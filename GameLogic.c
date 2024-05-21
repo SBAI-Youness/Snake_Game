@@ -65,7 +65,7 @@ void InitSDL()
     }
 
     // Creating the window
-    window = SDL_CreateWindow( "Snake Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+    window = SDL_CreateWindow( "Snake Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
     // Checking if the window was successfully created
     if(!window)
@@ -984,7 +984,7 @@ void RenderMode2(SDL_Renderer *renderer)
     SDL_RenderPresent(renderer);
 
     // Delay to control frame rate
-    SDL_Delay((snake1.speed > snake2.speed)? snake1.speed: snake2.speed);
+    SDL_Delay((snake1.speed < snake2.speed)? snake1.speed: snake2.speed);
 }
 
 void HandleGameOverInput()
