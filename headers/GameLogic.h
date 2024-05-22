@@ -63,8 +63,8 @@ typedef struct
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *SnakeHeadSurface, *SnakeBodySurface, *SnakeCornerSurface, *SnakeTailSurface, *MenuBackgroundSurface, *HomeSurface, *PlayAgainSurface;
-extern SDL_Texture *AppleTexture, *ScoreTexture, *PointerTexture, *GameOverTexture, *SnakeHeadTexture, *SnakeBodyTexture, *SnakeCornerTexture, *SnakeTailTexture, *MenuBackgroundTexture, *HomeTexture, *PlayAgainTexture;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *GreenSnakeHeadSurface, *GreenSnakeBodySurface, *GreenSnakeCornerSurface, *GreenSnakeTailSurface, *MenuBackgroundSurface, *HomeSurface, *PlayAgainSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture, *PointerTexture, *GameOverTexture, *GreenSnakeHeadTexture, *GreenSnakeBodyTexture, *GreenSnakeCornerTexture, *GreenSnakeTailTexture, *MenuBackgroundTexture, *HomeTexture, *PlayAgainTexture;
 extern SDL_Cursor *Cursor;
 extern Mix_Music *EatingMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
