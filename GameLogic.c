@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *TitleSurface = NULL, *StartSurface = NULL, *ExitSurface = NULL, *ModeSurface = NULL, *Mode1Surface = NULL, *Mode2Surface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *FinalScoreSurface = NULL, *HighestScoreSurface = NULL, *MenuBackgroundSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *TitleTexture = NULL, *StartTexture = NULL, *ExitTexture = NULL, *ModeTexture = NULL, *Mode1Texture = NULL, *Mode2Texture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *FinalScoreTexture = NULL, *HighestScoreTexture = NULL, *MenuBackgroundTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *SnakeHeadSurface = NULL, *SnakeBodySurface = NULL, *SnakeCornerSurface = NULL, *SnakeTailSurface = NULL, *MenuBackgroundSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *SnakeHeadTexture = NULL, *SnakeBodyTexture = NULL, *SnakeCornerTexture = NULL, *SnakeTailTexture = NULL, *MenuBackgroundTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -552,9 +552,9 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_Color DefaultColor = { 160, 160, 160, 255}, HoveringColor = { 0, 153, 76, 255};
 
     // Render the texts onto surfaces using the provided fonts and colors
-    TitleSurface = TTF_RenderText_Solid( MenuFont, "Snake Game", (SDL_Color){ 0, 0, 0, 255});
-    StartSurface = TTF_RenderText_Solid( MenuFont, "Start", (isHovering != onStart)? DefaultColor: HoveringColor);
-    ExitSurface = TTF_RenderText_Solid( MenuFont, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
+    SDL_Surface *TitleSurface = TTF_RenderText_Solid( MenuFont, "Snake Game", (SDL_Color){ 0, 0, 0, 255});
+    SDL_Surface *StartSurface = TTF_RenderText_Solid( MenuFont, "Start", (isHovering != onStart)? DefaultColor: HoveringColor);
+    SDL_Surface *ExitSurface = TTF_RenderText_Solid( MenuFont, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
 
     // Checking if the texts were successfully rendered
     if(!TitleSurface || !StartSurface || !ExitSurface)
@@ -564,9 +564,9 @@ void RenderMenu(SDL_Renderer *renderer)
     }
 
     // Create textures from the rendered surfaces
-    TitleTexture = SDL_CreateTextureFromSurface( renderer, TitleSurface);
-    StartTexture = SDL_CreateTextureFromSurface( renderer, StartSurface);
-    ExitTexture = SDL_CreateTextureFromSurface( renderer, ExitSurface);
+    SDL_Texture *TitleTexture = SDL_CreateTextureFromSurface( renderer, TitleSurface);
+    SDL_Texture *StartTexture = SDL_CreateTextureFromSurface( renderer, StartSurface);
+    SDL_Texture *ExitTexture = SDL_CreateTextureFromSurface( renderer, ExitSurface);
 
     // Checking if the textures were successfully created
     if(!TitleTexture || !StartTexture || !ExitTexture)
@@ -596,6 +596,11 @@ void RenderMenu(SDL_Renderer *renderer)
 
     // Present the renderer
     SDL_RenderPresent(renderer);
+
+    // Destroy the textures used in the menu
+    SDL_DestroyTexture(TitleTexture);
+    SDL_DestroyTexture(StartTexture);
+    SDL_DestroyTexture(ExitTexture);
 }
 
 void HandleModeInput()
@@ -722,9 +727,9 @@ void RenderMode(SDL_Renderer *renderer)
     SDL_Color DefaultColor = { 160, 160, 160, 255};
 
     // Render the texts onto surfaces using the provided fonts and colors
-    ModeSurface = TTF_RenderText_Solid( MenuFont, "Choose the game mode:", (SDL_Color){ 0, 51, 102, 255});
-    Mode1Surface = TTF_RenderText_Solid( MenuFont, "1 Player", (isHovering != onMode1)? DefaultColor: (SDL_Color){ 0, 0, 255, 255});
-    Mode2Surface = TTF_RenderText_Solid( MenuFont, "1v1", (isHovering != onMode2)? DefaultColor: (SDL_Color){ 255, 0, 0, 255});
+    SDL_Surface *ModeSurface = TTF_RenderText_Solid( MenuFont, "Choose the game mode:", (SDL_Color){ 0, 51, 102, 255});
+    SDL_Surface *Mode1Surface = TTF_RenderText_Solid( MenuFont, "1 Player", (isHovering != onMode1)? DefaultColor: (SDL_Color){ 0, 0, 255, 255});
+    SDL_Surface *Mode2Surface = TTF_RenderText_Solid( MenuFont, "1v1", (isHovering != onMode2)? DefaultColor: (SDL_Color){ 255, 0, 0, 255});
 
     // Checking if the texts were successfully rendered
     if(!ModeSurface || !Mode1Surface || !Mode2Surface)
@@ -734,9 +739,9 @@ void RenderMode(SDL_Renderer *renderer)
     }
 
     // Create textures from the rendered surfaces
-    ModeTexture = SDL_CreateTextureFromSurface( renderer, ModeSurface);
-    Mode1Texture = SDL_CreateTextureFromSurface( renderer, Mode1Surface);
-    Mode2Texture = SDL_CreateTextureFromSurface( renderer, Mode2Surface);
+    SDL_Texture *ModeTexture = SDL_CreateTextureFromSurface( renderer, ModeSurface);
+    SDL_Texture *Mode1Texture = SDL_CreateTextureFromSurface( renderer, Mode1Surface);
+    SDL_Texture *Mode2Texture = SDL_CreateTextureFromSurface( renderer, Mode2Surface);
 
     // Checking if the textures were successfully created
     if(!ModeTexture || !Mode1Texture || !Mode2Texture)
@@ -766,6 +771,11 @@ void RenderMode(SDL_Renderer *renderer)
 
     // Present the renderer
     SDL_RenderPresent(renderer);
+
+    // Destroy the textures used in the game modes
+    SDL_DestroyTexture(ModeTexture);
+    SDL_DestroyTexture(Mode1Texture);
+    SDL_DestroyTexture(Mode2Texture);
 }
 
 void HandleMode1Input(player *snake)
@@ -1110,8 +1120,8 @@ void RenderGameOver(SDL_Renderer *renderer)
     sprintf( HighestScoreString, "Highest Score: %d", snake.highestScore);
 
     // Render the game over visuals onto a surface using the provided font and color
-    FinalScoreSurface = TTF_RenderText_Solid( MenuFont, FinalScoreString, (SDL_Color){ 255, 255, 255, 255});
-    HighestScoreSurface = TTF_RenderText_Solid( MenuFont, HighestScoreString, (SDL_Color){ 255, 255, 255, 255});
+    SDL_Surface *FinalScoreSurface = TTF_RenderText_Solid( MenuFont, FinalScoreString, (SDL_Color){ 255, 255, 255, 255});
+    SDL_Surface *HighestScoreSurface = TTF_RenderText_Solid( MenuFont, HighestScoreString, (SDL_Color){ 255, 255, 255, 255});
 
     // Checking if the text was successfully rendered
     if(!FinalScoreSurface || !HighestScoreSurface)
@@ -1121,8 +1131,8 @@ void RenderGameOver(SDL_Renderer *renderer)
     }
 
     // Create a texture from the rendered surface
-    FinalScoreTexture = SDL_CreateTextureFromSurface( renderer, FinalScoreSurface);
-    HighestScoreTexture = SDL_CreateTextureFromSurface( renderer, HighestScoreSurface);
+    SDL_Texture *FinalScoreTexture = SDL_CreateTextureFromSurface( renderer, FinalScoreSurface);
+    SDL_Texture *HighestScoreTexture = SDL_CreateTextureFromSurface( renderer, HighestScoreSurface);
 
     // Checking if the texture was successfully created
     if(!FinalScoreTexture || !HighestScoreTexture)
@@ -1143,28 +1153,16 @@ void RenderGameOver(SDL_Renderer *renderer)
 
     // Presenting the renderer
     SDL_RenderPresent(renderer);
+
+    // Destroy the textures used in the game over
+    SDL_DestroyTexture(FinalScoreTexture);
+    SDL_DestroyTexture(HighestScoreTexture);
 }
 
 void QuitSDL()
 {
-    if(ModeTexture)
-        SDL_DestroyTexture(ModeTexture);
-    if(Mode1Texture)
-        SDL_DestroyTexture(Mode1Texture);
-    if(Mode2Texture)
-        SDL_DestroyTexture(Mode2Texture);
-    if(HighestScoreTexture)
-        SDL_DestroyTexture(HighestScoreTexture);
-    if(FinalScoreTexture)
-        SDL_DestroyTexture(FinalScoreTexture);
     if(ScoreTexture)
         SDL_DestroyTexture(ScoreTexture);
-    if(TitleTexture)
-        SDL_DestroyTexture(TitleTexture);
-    if(StartTexture)
-        SDL_DestroyTexture(StartTexture);
-    if(ExitTexture)
-        SDL_DestroyTexture(ExitTexture);
     if(MenuFont)
         TTF_CloseFont(MenuFont);
     if(ScoreFont)
