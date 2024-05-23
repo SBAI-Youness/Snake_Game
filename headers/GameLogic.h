@@ -27,6 +27,9 @@ typedef enum{ MENU, START, EXIT, MODE, GAMEOVER} GameState;
 // Button's state enumeration
 typedef enum{ onNothing, onStart, onExit, onMode1, onMode2, onHome, onPlayAgain} MouseHoveringState;
 
+// Snake's color enumeration
+typedef enum{ GREEN, BLUE} SnakeColor;
+
 // Direction enumerations
 typedef enum{ STABLE, UP, RIGHT, DOWN, LEFT} Direction;
 
@@ -63,8 +66,8 @@ typedef struct
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *GreenSnakeHeadSurface, *GreenSnakeBodySurface, *GreenSnakeCornerSurface, *GreenSnakeTailSurface, *MenuBackgroundSurface, *HomeSurface, *PlayAgainSurface;
-extern SDL_Texture *AppleTexture, *ScoreTexture, *PointerTexture, *GameOverTexture, *GreenSnakeHeadTexture, *GreenSnakeBodyTexture, *GreenSnakeCornerTexture, *GreenSnakeTailTexture, *MenuBackgroundTexture, *HomeTexture, *PlayAgainTexture;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *GreenSnakeHeadSurface, *GreenSnakeBodySurface, *GreenSnakeCornerSurface, *GreenSnakeTailSurface, *BlueSnakeHeadSurface, *BlueSnakeBodySurface, *BlueSnakeCornerSurface, *BlueSnakeTailSurface, *MenuBackgroundSurface, *HomeSurface, *PlayAgainSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture, *PointerTexture, *GameOverTexture, *GreenSnakeHeadTexture, *GreenSnakeBodyTexture, *GreenSnakeCornerTexture, *GreenSnakeTailTexture, *BlueSnakeHeadTexture, *BlueSnakeBodyTexture, *BlueSnakeCornerTexture, *BlueSnakeTailTexture, *MenuBackgroundTexture, *HomeTexture, *PlayAgainTexture;
 extern SDL_Cursor *Cursor;
 extern Mix_Music *EatingMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
@@ -78,6 +81,8 @@ extern bool quit;
 extern GameState MenuOption;
 
 extern MouseHoveringState isHovering;
+
+extern SnakeColor color;
 
 // Function used to initialize the SDL2 library
 void InitSDL();
@@ -101,7 +106,7 @@ void InitializeHighestScore(player *snake);
 void CreateSnake( player *snake, int initialX, int initialY);
 
 // Function used to draw the snake in the window
-void DrawSnake( player *snake, SDL_Renderer *renderer);
+void DrawSnake( player *snake, SDL_Renderer *renderer, SnakeColor color);
 
 // Function used to move the snake
 void MoveSnake(player *snake);
