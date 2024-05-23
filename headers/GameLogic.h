@@ -25,7 +25,7 @@
 typedef enum{ MENU, START, EXIT, MODE, GAMEOVER} GameState;
 
 // Button's state enumeration
-typedef enum{ onNothing, onStart, onExit, onMode1, onMode2, onHome, onPlayAgain} MouseHoveringState;
+typedef enum{ onNothing, onStart, onExit, onReturn, onMode1, onMode2, onHome, onPlayAgain} MouseHoveringState;
 
 // Snake's color enumeration
 typedef enum{ GREEN, BLUE} SnakeColor;

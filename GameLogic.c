@@ -701,7 +701,15 @@ void HandleModeInput()
                 // Extract the x and y coordinates of the mouse pointer from the event
                 int mouseX = event.motion.x, mouseY = event.motion.y;
 
-                if(mouseX >= 325 && mouseX <= 475 && mouseY >= 150 && mouseY <= 220) // Mouse is hovering the first mode
+                if(mouseX >= 10 && mouseX <= 60 && mouseY >= 10 && mouseY <= 60) // Mouse is hovering the return button
+                {
+                    if(isHovering != onReturn)
+                    {
+                        isHovering = onReturn;
+                        Mix_PlayMusic( ClickingPopMusic, 0);
+                    }
+                }
+                else if(mouseX >= 325 && mouseX <= 475 && mouseY >= 150 && mouseY <= 220) // Mouse is hovering the first mode
                 {
                     if(isHovering != onMode1)
                     {
@@ -729,7 +737,13 @@ void HandleModeInput()
                     case SDL_BUTTON_LEFT:
                         int mouseX = event.button.x, mouseY = event.button.y;
 
-                        if(mouseX >= 325 && mouseX <= 475 && mouseY >= 150 && mouseY <= 220) // If the user pressed the first mode
+                        if(mouseX >= 10 && mouseX <= 60 && mouseY >= 10 && mouseY <= 60) // Mouse is hovering the return button
+                        {
+                            Mix_HaltMusic();
+                            Mix_PlayMusic( ClickingMusic, 0);
+                            MenuOption = MENU;
+                        }
+                        else if(mouseX >= 325 && mouseX <= 475 && mouseY >= 150 && mouseY <= 220) // If the user pressed the first mode
                         {
                             Mix_HaltMusic();
                             Mix_PlayMusic( ClickingMusic, 0);
@@ -764,6 +778,29 @@ void RenderMode(SDL_Renderer *renderer)
         QuitSDL();
     }
 
+    // Loading an image from the file
+    SDL_Surface *returnSurface = IMG_Load("tools/images/return.png");
+
+    // Checking if the image was successfully loaded
+    if(!returnSurface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
+        QuitSDL();
+    }
+
+    // Creating a texture from the surface
+    SDL_Texture *returnTexture = SDL_CreateTextureFromSurface(renderer, returnSurface);
+
+    // Checking if the texture was successfully created
+    if(!returnTexture)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Freeing the surface after creating the texture
+    SDL_FreeSurface(returnSurface);
+
     SDL_RenderCopy( renderer, MenuBackgroundTexture, NULL, NULL);
 
     // Setting colors for the game title and the buttons
@@ -797,6 +834,8 @@ void RenderMode(SDL_Renderer *renderer)
     SDL_FreeSurface(Mode1Surface);
     SDL_FreeSurface(Mode2Surface);
 
+    SDL_RenderCopy( renderer, returnTexture, NULL, (isHovering != onReturn)? &(SDL_Rect){ 10, 10, 50, 50}: &(SDL_Rect){ 5, 5, 60, 60});
+
     // Rendering the textures onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, ModeTexture, NULL, &(SDL_Rect){ 175, 50, 450, 85});
     SDL_RenderCopy( renderer, Mode1Texture, NULL, &(SDL_Rect){ 325, 150, 150, 70});
@@ -814,6 +853,8 @@ void RenderMode(SDL_Renderer *renderer)
 
     // Present the renderer
     SDL_RenderPresent(renderer);
+
+    SDL_DestroyTexture(returnTexture);
 
     // Destroy the textures used in the game modes
     SDL_DestroyTexture(ModeTexture);
