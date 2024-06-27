@@ -1,16 +1,18 @@
 # Snake Game 🐍
 
-This is a simple Snake Game implemented in C using SDL2 library. The game allows players to control a snake to eat apples and grow longer without hitting itself.
+This is a Snake Game implemented in C using the SDL2 library. The game offers two modes: single-player and two-players. In the single-player mode, the player controls a snake to eat apples and grow longer without hitting itself. In the two-players mode, two players compete against each other, each controlling their own snake, and the game ends when the time runs out.
 
 ![Snake Game Screen](tools/images/ScreenImage.png)
 
 ## Features
 
-- Control the snake using arrow keys (Up, Down, Left, Right)
+- Two game modes: single-player and two-players
+- Control the snake using arrow keys (for single-player mode) or ZQSD keys (for two-players mode)
 - Snake grows longer after eating apples
 - Score is displayed and updated as the snake eats apples
 - Random generation of apples and stars for visual effects
-- Menu system with start and exit options
+- Menu system with start, mode selection, and exit options
+- Game over screen with final score and highest score
 
 ## Prerequisites
 
