@@ -497,6 +497,45 @@ void RenderMenuBackgroundImage(SDL_Renderer *renderer)
     // Destroy the texture
     SDL_DestroyTexture(texture);
 }
+
+void RenderCreator( SDL_Renderer *renderer, char Creator[])
+{
+    // Defining a string to store the text "Created by: Creator"
+    char CreatorString[100];
+
+    // Copy the text "Created by: Creator" to the string CreatorString using the sprintf function
+    sprintf(CreatorString, "Created by: %s", Creator);
+
+    // Render the text "Created by: Youness SBAI" using the provided font and color
+    SDL_Surface *CreatedBySurface = TTF_RenderText_Solid( MenuFont, CreatorString, (SDL_Color){ 179, 59, 0, 255});
+
+    // Checking if the surface was successfully created
+    if(!CreatedBySurface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
+        QuitSDL();
+    }
+
+    // Create a texture from the surface
+    SDL_Texture *CreatedByTexture = SDL_CreateTextureFromSurface( renderer, CreatedBySurface);
+
+    // Checking if the texture was successfully created
+    if(!CreatedByTexture)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Free the surface after creating the texture
+    SDL_FreeSurface(CreatedBySurface);
+
+    // Render the texture onto the renderer at a specific position and size
+    SDL_RenderCopy( renderer, CreatedByTexture, NULL, &(SDL_Rect){ 20, 420, 360, 80});
+
+    // Destroy the texture
+    SDL_DestroyTexture(CreatedByTexture);
+}
+
 void HandleMenuInput()  
 {
     // Event handling loop
@@ -619,6 +658,8 @@ void RenderMenu(SDL_Renderer *renderer)
 
     RenderMenuBackgroundImage(renderer);
 
+    RenderCreator( renderer , "Youness SBAI");
+
     // Setting colors for the game title and the buttons
     SDL_Color DefaultColor = { 160, 160, 160, 255}, HoveringColor = { 0, 153, 76, 255};
 
@@ -626,10 +667,9 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_Surface *TitleSurface = TTF_RenderText_Solid( MenuFont, "Snake Game", (SDL_Color){ 0, 0, 0, 255});
     SDL_Surface *StartSurface = TTF_RenderText_Solid( MenuFont, "Start", (isHovering != onStart)? DefaultColor: HoveringColor);
     SDL_Surface *ExitSurface = TTF_RenderText_Solid( MenuFont, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
-    SDL_Surface *CreatedBySurface = TTF_RenderText_Solid( MenuFont, "Created by: Youness SBAI", (SDL_Color){ 179, 59, 0, 255});
 
     // Checking if the texts were successfully rendered
-    if(!TitleSurface || !StartSurface || !ExitSurface || !CreatedBySurface)
+    if(!TitleSurface || !StartSurface || !ExitSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
@@ -639,10 +679,9 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_Texture *TitleTexture = SDL_CreateTextureFromSurface( renderer, TitleSurface);
     SDL_Texture *StartTexture = SDL_CreateTextureFromSurface( renderer, StartSurface);
     SDL_Texture *ExitTexture = SDL_CreateTextureFromSurface( renderer, ExitSurface);
-    SDL_Texture *CreatedByTexture = SDL_CreateTextureFromSurface( renderer, CreatedBySurface);
 
     // Checking if the textures were successfully created
-    if(!TitleTexture || !StartTexture || !ExitTexture || !CreatedByTexture)
+    if(!TitleTexture || !StartTexture || !ExitTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -652,13 +691,11 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_FreeSurface(TitleSurface);
     SDL_FreeSurface(StartSurface);
     SDL_FreeSurface(ExitSurface);
-    SDL_FreeSurface(CreatedBySurface);
 
     // Rendering the textures onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, TitleTexture, NULL, &(SDL_Rect){ 100, 20, 600, 100});
     SDL_RenderCopy( renderer, StartTexture, NULL, &(SDL_Rect){ 280, 150, 220, 80});
     SDL_RenderCopy( renderer, ExitTexture, NULL, &(SDL_Rect){ 280, 240, 220, 80});
-    SDL_RenderCopy( renderer, CreatedByTexture, NULL, &(SDL_Rect){ 20, 420, 360, 80});
 
     switch(isHovering)
     {
@@ -677,7 +714,6 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_DestroyTexture(TitleTexture);
     SDL_DestroyTexture(StartTexture);
     SDL_DestroyTexture(ExitTexture);
-    SDL_DestroyTexture(CreatedByTexture);
 }
 
 void HandleModeInput()
@@ -813,6 +849,8 @@ void RenderMode(SDL_Renderer *renderer)
     }
 
     RenderMenuBackgroundImage(renderer);
+
+    RenderCreator( renderer , "Youness SBAI");
 
     // Loading an image from the file
     SDL_Surface *returnSurface = IMG_Load("tools/images/return.png");

@@ -117,6 +117,9 @@ void DrawScore( player *snake, SDL_Renderer *renderer, SDL_Surface *surface, SDL
 // Function used render the menu background image
 void RenderMenuBackgroundImage(SDL_Renderer *renderer);
 
+// Function used to show the creator of the game
+void RenderCreator( SDL_Renderer *renderer, char Creator[]);
+
 // Function used to handle user input while the menu is shown
 void HandleMenuInput();
 
