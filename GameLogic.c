@@ -552,88 +552,97 @@ void HandleMenuInput()
 
             // If a key is pressed
             case SDL_KEYDOWN:
-                // Handle keyboard input
-                switch(event.key.keysym.sym)
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
                 {
-                    case SDLK_UP:
-                        if(isHovering == onStart)
-                            isHovering = onExit;
-                        else if(isHovering == onExit)
-                            isHovering = onStart;
-                        else
-                            isHovering = onStart;
+                    // Handle keyboard input
+                    switch(event.key.keysym.sym)
+                    {
+                        case SDLK_UP:
+                            if(isHovering == onStart)
+                                isHovering = onExit;
+                            else if(isHovering == onExit)
+                                isHovering = onStart;
+                            else
+                                isHovering = onStart;
 
-                        Mix_PlayMusic( ClickingPopMusic, 0);
-                        break;
-                    case SDLK_DOWN:
-                        if(isHovering == onStart)
-                            isHovering = onExit;
-                        else if(isHovering == onExit)
-                            isHovering = onStart;
-                        else
-                            isHovering = onExit;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            break;
+                        case SDLK_DOWN:
+                            if(isHovering == onStart)
+                                isHovering = onExit;
+                            else if(isHovering == onExit)
+                                isHovering = onStart;
+                            else
+                                isHovering = onExit;
 
-                        Mix_PlayMusic( ClickingPopMusic, 0);
-                        break;
-                    case SDLK_RETURN:
-                        if(isHovering == onStart)
-                        {
-                            Mix_HaltMusic();
-                            Mix_PlayMusic( ClickingMusic, 0);
-                            MenuOption = MODE;
-                        }
-                        else if(isHovering == onExit)
-                        {
-                            MenuOption = EXIT;
-                        }
-                        break;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            break;
+                        case SDLK_RETURN:
+                            if(isHovering == onStart)
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = MODE;
+                            }
+                            else if(isHovering == onExit)
+                            {
+                                MenuOption = EXIT;
+                            }
+                            break;
+                    }
                 }
                 break;
 
             // This case is related to mouse motions
             case SDL_MOUSEMOTION:
-                // Extract the x and y coordinates of the mouse pointer from the event
-                int mouseX = event.motion.x, mouseY = event.motion.y;
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
+                {
+                    // Extract the x and y coordinates of the mouse pointer from the event
+                    int mouseX = event.motion.x, mouseY = event.motion.y;
 
-                if(mouseX >= 280 && mouseX <= 500 && mouseY >= 150 && mouseY <= 230) // Mouse is hovering start button
-                {
-                    if(isHovering != onStart)
+                    if(mouseX >= 280 && mouseX <= 500 && mouseY >= 150 && mouseY <= 230) // Mouse is hovering start button
                     {
-                        isHovering = onStart;
-                        Mix_PlayMusic( ClickingPopMusic, 0);
+                        if(isHovering != onStart)
+                        {
+                            isHovering = onStart;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
                     }
-                }
-                else if(mouseX >= 280 && mouseX <= 500 && mouseY >= 240 && mouseY <= 320) // Mouse is hovering exit button
-                {
-                    if (isHovering != onExit)
+                    else if(mouseX >= 280 && mouseX <= 500 && mouseY >= 240 && mouseY <= 320) // Mouse is hovering exit button
                     {
-                        isHovering = onExit;
-                        Mix_PlayMusic( ClickingPopMusic, 0);
+                        if (isHovering != onExit)
+                        {
+                            isHovering = onExit;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
                     }
+                    else // Mouse is hovering any button
+                        isHovering = onNothing;
                 }
-                else // Mouse is hovering any button
-                    isHovering = onNothing;
                 break;
 
             // If a mouse button is released
             case SDL_MOUSEBUTTONUP:
-                // Handle mouse input
-                switch(event.button.button)
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
                 {
-                    case SDL_BUTTON_LEFT:
-                        int mouseX = event.button.x, mouseY = event.button.y;
+                    // Handle mouse input
+                    switch(event.button.button)
+                    {
+                        case SDL_BUTTON_LEFT:
+                            int mouseX = event.button.x, mouseY = event.button.y;
 
-                        if(mouseX >= 280 && mouseX <= 500 && mouseY >= 150 && mouseY <= 230) // If the user pressed start
-                        {
-                            Mix_HaltMusic();
-                            Mix_PlayMusic( ClickingMusic, 0);
-                            MenuOption = MODE;
-                        }
-                        else if(mouseX >= 280 && mouseX <= 500 && mouseY >= 240 && mouseY <= 320) // If the user pressed exit
-                        {
-                            MenuOption = EXIT;
-                        }
-                        break;
+                            if(mouseX >= 280 && mouseX <= 500 && mouseY >= 150 && mouseY <= 230) // If the user pressed start
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = MODE;
+                            }
+                            else if(mouseX >= 280 && mouseX <= 500 && mouseY >= 240 && mouseY <= 320) // If the user pressed exit
+                            {
+                                MenuOption = EXIT;
+                            }
+                            break;
+                    }
                 }
                 break;
         }
@@ -732,100 +741,109 @@ void HandleModeInput()
 
             // If a key is pressed
             case SDL_KEYDOWN:
-                // Handle keyboard input
-                switch(event.key.keysym.sym)
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
                 {
-                    case SDLK_UP:
-                        if(isHovering == onMode1)
-                            isHovering = onMode2;
-                        else if(isHovering == onMode2)
-                            isHovering = onMode1;
-                        else
-                            isHovering = onMode1;
+                    // Handle keyboard input
+                    switch(event.key.keysym.sym)
+                    {
+                        case SDLK_UP:
+                            if(isHovering == onMode1)
+                                isHovering = onMode2;
+                            else if(isHovering == onMode2)
+                                isHovering = onMode1;
+                            else
+                                isHovering = onMode1;
 
-                        Mix_PlayMusic( ClickingPopMusic, 0);
-                        break;
-                    case SDLK_DOWN:
-                        if(isHovering == onMode1)
-                            isHovering = onMode2;
-                        else if(isHovering == onMode2)
-                            isHovering = onMode1;
-                        else
-                            isHovering = onMode2;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            break;
+                        case SDLK_DOWN:
+                            if(isHovering == onMode1)
+                                isHovering = onMode2;
+                            else if(isHovering == onMode2)
+                                isHovering = onMode1;
+                            else
+                                isHovering = onMode2;
 
-                        Mix_PlayMusic( ClickingPopMusic, 0);
-                        break;
-                    case SDLK_RETURN:
-                        if(isHovering == onMode1 || isHovering == onMode2)
-                        {
-                            Mix_HaltMusic();
-                            Mix_PlayMusic( ClickingMusic, 0);
-                            MenuOption = START;
-                        }
-                        break;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            break;
+                        case SDLK_RETURN:
+                            if(isHovering == onMode1 || isHovering == onMode2)
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = START;
+                            }
+                            break;
+                    }
                 }
                 break;
 
             // This case is related to mouse motions
             case SDL_MOUSEMOTION:
-                // Extract the x and y coordinates of the mouse pointer from the event
-                int mouseX = event.motion.x, mouseY = event.motion.y;
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
+                {
+                    // Extract the x and y coordinates of the mouse pointer from the event
+                    int mouseX = event.motion.x, mouseY = event.motion.y;
 
-                if(mouseX >= 10 && mouseX <= 60 && mouseY >= 10 && mouseY <= 60) // Mouse is hovering the return button
-                {
-                    if(isHovering != onReturn)
+                    if(mouseX >= 10 && mouseX <= 60 && mouseY >= 10 && mouseY <= 60) // Mouse is hovering the return button
                     {
-                        isHovering = onReturn;
-                        Mix_PlayMusic( ClickingPopMusic, 0);
+                        if(isHovering != onReturn)
+                        {
+                            isHovering = onReturn;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
                     }
-                }
-                else if(mouseX >= 325 && mouseX <= 475 && mouseY >= 150 && mouseY <= 220) // Mouse is hovering the first mode
-                {
-                    if(isHovering != onMode1)
+                    else if(mouseX >= 325 && mouseX <= 475 && mouseY >= 150 && mouseY <= 220) // Mouse is hovering the first mode
                     {
-                        isHovering = onMode1;
-                        Mix_PlayMusic( ClickingPopMusic, 0);
+                        if(isHovering != onMode1)
+                        {
+                            isHovering = onMode1;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
                     }
-                }
-                else if(mouseX >= 325 && mouseX <= 475 && mouseY >= 240 && mouseY <= 310) // Mouse is hovering the second mode
-                {
-                    if (isHovering != onMode2)
+                    else if(mouseX >= 325 && mouseX <= 475 && mouseY >= 240 && mouseY <= 310) // Mouse is hovering the second mode
                     {
-                        isHovering = onMode2;
-                        Mix_PlayMusic( ClickingPopMusic, 0);
+                        if (isHovering != onMode2)
+                        {
+                            isHovering = onMode2;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
                     }
+                    else // Mouse is hovering any button
+                        isHovering = onNothing;
                 }
-                else // Mouse is hovering any button
-                    isHovering = onNothing;
                 break;
 
             // If a mouse button is released
             case SDL_MOUSEBUTTONUP:
-                // Handle mouse input
-                switch(event.button.button)
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
                 {
-                    case SDL_BUTTON_LEFT:
-                        int mouseX = event.button.x, mouseY = event.button.y;
+                    // Handle mouse input
+                    switch(event.button.button)
+                    {
+                        case SDL_BUTTON_LEFT:
+                            int mouseX = event.button.x, mouseY = event.button.y;
 
-                        if(mouseX >= 10 && mouseX <= 60 && mouseY >= 10 && mouseY <= 60) // Mouse is hovering the return button
-                        {
-                            Mix_HaltMusic();
-                            Mix_PlayMusic( ClickingMusic, 0);
-                            MenuOption = MENU;
-                        }
-                        else if(mouseX >= 325 && mouseX <= 475 && mouseY >= 150 && mouseY <= 220) // If the user pressed the first mode
-                        {
-                            Mix_HaltMusic();
-                            Mix_PlayMusic( ClickingMusic, 0);
-                            MenuOption = START;
-                        }
-                        else if(mouseX >= 325 && mouseX <= 475 && mouseY >= 240 && mouseY <= 310) // If the user pressed the second mode
-                        {
-                            Mix_HaltMusic();
-                            Mix_PlayMusic( ClickingMusic, 0);
-                            MenuOption = START;
-                        }
-                        break;
+                            if(mouseX >= 10 && mouseX <= 60 && mouseY >= 10 && mouseY <= 60) // Mouse is hovering the return button
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = MENU;
+                            }
+                            else if(mouseX >= 325 && mouseX <= 475 && mouseY >= 150 && mouseY <= 220) // If the user pressed the first mode
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = START;
+                            }
+                            else if(mouseX >= 325 && mouseX <= 475 && mouseY >= 240 && mouseY <= 310) // If the user pressed the second mode
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = START;
+                            }
+                            break;
+                    }
                 }
                 break;
         }
@@ -1169,80 +1187,89 @@ void HandleGameOverInput()
 
             // If a key is pressed
             case SDL_KEYDOWN:
-                // Handle keyboard input
-                switch(event.key.keysym.sym)
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
                 {
-                    case SDLK_RIGHT:
-                        if (isHovering != onPlayAgain)
-                        {
-                            isHovering = onPlayAgain;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
-                        }
-                        break;
-                    case SDLK_LEFT:
-                        if (isHovering != onHome)
-                        {
-                            isHovering = onHome;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
-                        }
-                        break;
-                    case SDLK_RETURN:
-                        if(isHovering == onHome || isHovering == onPlayAgain)
-                        {
-                            Mix_HaltMusic();
-                            Mix_PlayMusic( ClickingMusic, 0);
-                            MenuOption = (isHovering == onHome)? MENU: (isHovering == onPlayAgain)? START: isHovering;
-                        }
-                        break;
+                    // Handle keyboard input
+                    switch(event.key.keysym.sym)
+                    {
+                        case SDLK_RIGHT:
+                            if (isHovering != onPlayAgain)
+                            {
+                                isHovering = onPlayAgain;
+                                Mix_PlayMusic( ClickingPopMusic, 0);
+                            }
+                            break;
+                        case SDLK_LEFT:
+                            if (isHovering != onHome)
+                            {
+                                isHovering = onHome;
+                                Mix_PlayMusic( ClickingPopMusic, 0);
+                            }
+                            break;
+                        case SDLK_RETURN:
+                            if(isHovering == onHome || isHovering == onPlayAgain)
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = (isHovering == onHome)? MENU: (isHovering == onPlayAgain)? START: isHovering;
+                            }
+                            break;
+                    }
                 }
                 break;
 
             // This case is related to mouse motions
             case SDL_MOUSEMOTION:
-                // Extract the x and y coordinates of the mouse pointer from the event
-                int mouseX = event.motion.x, mouseY = event.motion.y;
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
+                {
+                    // Extract the x and y coordinates of the mouse pointer from the event
+                    int mouseX = event.motion.x, mouseY = event.motion.y;
 
-                if(mouseX >= 290 && mouseX <= 360 && mouseY >= 300 && mouseY <= 370) // Mouse is hovering home button
-                {
-                    if(isHovering != onHome)
+                    if(mouseX >= 290 && mouseX <= 360 && mouseY >= 300 && mouseY <= 370) // Mouse is hovering home button
                     {
-                        isHovering = onHome;
-                        Mix_PlayMusic( ClickingPopMusic, 0);
+                        if(isHovering != onHome)
+                        {
+                            isHovering = onHome;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
                     }
-                }
-                else if(mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // Mouse is hovering play again button
-                {
-                    if (isHovering != onPlayAgain)
+                    else if(mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // Mouse is hovering play again button
                     {
-                        isHovering = onPlayAgain;
-                        Mix_PlayMusic( ClickingPopMusic, 0);
+                        if (isHovering != onPlayAgain)
+                        {
+                            isHovering = onPlayAgain;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
                     }
+                    else // Mouse is hovering any button
+                        isHovering = onNothing;
                 }
-                else // Mouse is hovering any button
-                    isHovering = onNothing;
                 break;
 
             // If a mouse button is released
             case SDL_MOUSEBUTTONUP:
-                // Handle mouse input
-                switch(event.button.button)
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
                 {
-                    case SDL_BUTTON_LEFT:
-                        int mouseX = event.button.x, mouseY = event.button.y;
+                    // Handle mouse input
+                    switch(event.button.button)
+                    {
+                        case SDL_BUTTON_LEFT:
+                            int mouseX = event.button.x, mouseY = event.button.y;
 
-                        if(mouseX >= 290 && mouseX <= 360 && mouseY >= 300 && mouseY <= 370) // If the user pressed home
-                        {
-                            Mix_HaltMusic();
-                            Mix_PlayMusic( ClickingMusic, 0);
-                            MenuOption = MENU;
-                        }
-                        else if(mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // If the user pressed play again
-                        {
-                            Mix_HaltMusic();
-                            Mix_PlayMusic( ClickingMusic, 0);
-                            MenuOption = START;
-                        }
-                        break;
+                            if(mouseX >= 290 && mouseX <= 360 && mouseY >= 300 && mouseY <= 370) // If the user pressed home
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = MENU;
+                            }
+                            else if(mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // If the user pressed play again
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = START;
+                            }
+                            break;
+                    }
                 }
                 break;
         }
