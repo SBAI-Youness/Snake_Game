@@ -294,16 +294,29 @@ void CreateApple(fruit *apple)
         apple->position.y = (rand() % (WINDOW_HEIGHT / SNAKE_SIZE)) * SNAKE_SIZE;
 
         onSnake = false;
-        // Checking if the apple is generated on the body of the snake
-        for( int i = 0; i < snake.size; i++)
+        if(isHovering == onMode1)
         {
-            if(snake.chunk[i].position.x == apple->position.x && snake.chunk[i].position.y == apple->position.y)
+            // Checking if the apple is generated on the body of the snake in the first mode
+            for( int i = 0; i < snake.size && !onSnake; i++)
+                onSnake = (snake.chunk[i].position.x == apple->position.x) && (snake.chunk[i].position.y == apple->position.y);
+        }
+        else if (isHovering == onMode2)
+        {
+            // Checking if the apple is generated on the body of the first snake in the second mode
+            for (int i = 0; i < snake1.size && !onSnake; i++)
+                onSnake = (snake1.chunk[i].position.x == apple->position.x) && (snake1.chunk[i].position.y == apple->position.y);
+
+            if (!onSnake)
             {
-                onSnake = true;
-                break;
+                // Checking if the apple is generated on the body of the second snake in the second mode
+                for (int i = 0; i < snake2.size && !onSnake; i++)
+                    onSnake = (snake2.chunk[i].position.x == apple->position.x) && (snake2.chunk[i].position.y == apple->position.y);
             }
         }
-    } while(((apple->position.x >= 750 && apple->position.x < 790) && (apple->position.y >= 0 && apple->position.y < 40)) || onSnake);
+
+    } while(((apple->position.x >= 750 && apple->position.x < 790) && (apple->position.y >= 0 && apple->position.y < 40) && (isHovering == onMode1)) ||
+            ((apple->position.x >= 360 && apple->position.x < 440) && (apple->position.y >= 0 && apple->position.y < 40) && (isHovering == onMode2)) ||
+            onSnake);
 }
 
 void DrawApple(SDL_Renderer *renderer)

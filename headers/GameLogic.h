@@ -24,6 +24,9 @@
 // Menu's options enumeration
 typedef enum{ MENU, START, EXIT, MODE, GAMEOVER} GameState;
 
+// Game mode enumeration
+typedef enum { NONE, MODE_SINGLE_PLAYER, MODE_TWO_PLAYERS} GameMode;
+
 // Button's state enumeration
 typedef enum{ onNothing, onStart, onExit, onReturn, onMode1, onMode2, onHome, onPlayAgain} MouseHoveringState;
 
@@ -79,6 +82,8 @@ extern star stars[NUMBER_OF_STARS];
 extern bool quit;
 
 extern GameState MenuOption;
+
+extern GameMode currentMode;
 
 extern MouseHoveringState isHovering;
 

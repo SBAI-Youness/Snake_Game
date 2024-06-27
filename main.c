@@ -1,5 +1,7 @@
 #include "headers/GameLogic.h"
 
+GameMode currentMode;
+
 int main( int argc, char *argv[])
 {
     InitSDL();
@@ -17,8 +19,10 @@ int main( int argc, char *argv[])
 
             // Start the game
             case START:
-                if(isHovering == onMode1)
+                if(isHovering == onMode1 || currentMode == MODE_SINGLE_PLAYER)
                 {
+                    currentMode = MODE_SINGLE_PLAYER;
+                    isHovering = onMode1;
                     CreateApple(&apple), CreateSnake( &snake, 40, 0), CreateStars(stars);
                     while(!quit && snake.state)
                     {
@@ -26,8 +30,10 @@ int main( int argc, char *argv[])
                         RenderMode1(renderer);
                     }
                 }
-                else if(isHovering == onMode2)
+                else if(isHovering == onMode2 || currentMode == MODE_TWO_PLAYERS)
                 {
+                    currentMode = MODE_TWO_PLAYERS;
+                    isHovering = onMode2;
                     CreateApple(&apple), CreateSnake( &snake1, 40, 0), CreateSnake( &snake2, 40, 480), CreateStars(stars);
                     while(!quit) // TODO: This game loop should also depend on the time (1 minute)
                     {
@@ -44,6 +50,7 @@ int main( int argc, char *argv[])
 
             // Show the modes
             case MODE:
+                currentMode = NONE;   
                 HandleModeInput();
                 RenderMode(renderer);
                 break;
