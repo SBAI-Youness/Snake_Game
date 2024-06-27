@@ -66,8 +66,8 @@ typedef struct
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *GreenSnakeHeadSurface, *GreenSnakeBodySurface, *GreenSnakeCornerSurface, *GreenSnakeTailSurface, *BlueSnakeHeadSurface, *BlueSnakeBodySurface, *BlueSnakeCornerSurface, *BlueSnakeTailSurface, *MenuBackgroundSurface, *HomeSurface, *PlayAgainSurface;
-extern SDL_Texture *AppleTexture, *ScoreTexture, *PointerTexture, *GameOverTexture, *GreenSnakeHeadTexture, *GreenSnakeBodyTexture, *GreenSnakeCornerTexture, *GreenSnakeTailTexture, *BlueSnakeHeadTexture, *BlueSnakeBodyTexture, *BlueSnakeCornerTexture, *BlueSnakeTailTexture, *MenuBackgroundTexture, *HomeTexture, *PlayAgainTexture;
+extern SDL_Surface *IconSurface, *AppleSurface, *ScoreSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *GreenSnakeHeadSurface, *GreenSnakeBodySurface, *GreenSnakeCornerSurface, *GreenSnakeTailSurface, *BlueSnakeHeadSurface, *BlueSnakeBodySurface, *BlueSnakeCornerSurface, *BlueSnakeTailSurface, *HomeSurface, *PlayAgainSurface;
+extern SDL_Texture *AppleTexture, *ScoreTexture, *PointerTexture, *GameOverTexture, *GreenSnakeHeadTexture, *GreenSnakeBodyTexture, *GreenSnakeCornerTexture, *GreenSnakeTailTexture, *BlueSnakeHeadTexture, *BlueSnakeBodyTexture, *BlueSnakeCornerTexture, *BlueSnakeTailTexture, *HomeTexture, *PlayAgainTexture;
 extern SDL_Cursor *Cursor;
 extern Mix_Music *EatingMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic;
 extern TTF_Font *ScoreFont, *MenuFont;
@@ -113,6 +113,9 @@ void MoveSnake(player *snake);
 
 // Function used to show the score in the window
 void DrawScore( player *snake, SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, SDL_Color color, SDL_Rect rect);
+
+// Function used render the menu background image
+void RenderMenuBackgroundImage(SDL_Renderer *renderer);
 
 // Function used to handle user input while the menu is shown
 void HandleMenuInput();

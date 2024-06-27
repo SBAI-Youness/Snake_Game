@@ -2,8 +2,8 @@
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *GreenSnakeHeadSurface = NULL, *GreenSnakeBodySurface = NULL, *GreenSnakeCornerSurface = NULL, *GreenSnakeTailSurface = NULL, *BlueSnakeHeadSurface = NULL, *BlueSnakeBodySurface = NULL, *BlueSnakeCornerSurface = NULL, *BlueSnakeTailSurface = NULL, *MenuBackgroundSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *GreenSnakeHeadTexture = NULL, *GreenSnakeBodyTexture = NULL, *GreenSnakeCornerTexture = NULL, *GreenSnakeTailTexture = NULL, *BlueSnakeHeadTexture = NULL, *BlueSnakeBodyTexture = NULL, *BlueSnakeCornerTexture = NULL, *BlueSnakeTailTexture = NULL, *MenuBackgroundTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *ScoreSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *GreenSnakeHeadSurface = NULL, *GreenSnakeBodySurface = NULL, *GreenSnakeCornerSurface = NULL, *GreenSnakeTailSurface = NULL, *BlueSnakeHeadSurface = NULL, *BlueSnakeBodySurface = NULL, *BlueSnakeCornerSurface = NULL, *BlueSnakeTailSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *ScoreTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *GreenSnakeHeadTexture = NULL, *GreenSnakeBodyTexture = NULL, *GreenSnakeCornerTexture = NULL, *GreenSnakeTailTexture = NULL, *BlueSnakeHeadTexture = NULL, *BlueSnakeBodyTexture = NULL, *BlueSnakeCornerTexture = NULL, *BlueSnakeTailTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL;
 SDL_Cursor *Cursor = NULL;
 Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *ScoreFont = NULL, *MenuFont = NULL;
@@ -93,12 +93,11 @@ void InitSDL()
     AppleSurface = IMG_Load("tools/images/AppleImage.png");
     PointerSurface = IMG_Load("tools/images/pointer.png");
     GameOverSurface = IMG_Load("tools/images/GameOver.png");
-    MenuBackgroundSurface = IMG_Load("tools/images/MenuBackground.png");
     HomeSurface = IMG_Load("tools/images/home.png");
     PlayAgainSurface = IMG_Load("tools/images/PlayAgain.png");
 
     // Checking if the image was successfully loaded
-    if(!AppleSurface || !PointerSurface || !GameOverSurface || !MenuBackgroundSurface || !HomeSurface || !PlayAgainSurface)
+    if(!AppleSurface || !PointerSurface || !GameOverSurface || !HomeSurface || !PlayAgainSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -108,12 +107,11 @@ void InitSDL()
     AppleTexture = SDL_CreateTextureFromSurface( renderer, AppleSurface);
     PointerTexture = SDL_CreateTextureFromSurface( renderer, PointerSurface);
     GameOverTexture = SDL_CreateTextureFromSurface( renderer, GameOverSurface);
-    MenuBackgroundTexture = SDL_CreateTextureFromSurface( renderer, MenuBackgroundSurface);
     HomeTexture = SDL_CreateTextureFromSurface( renderer, HomeSurface);
     PlayAgainTexture = SDL_CreateTextureFromSurface( renderer, PlayAgainSurface);
 
     // Checking if the texture was successfully created from surface
-    if(!AppleTexture || !PointerTexture || !GameOverTexture || !MenuBackgroundTexture || !HomeTexture || !PlayAgainTexture)
+    if(!AppleTexture || !PointerTexture || !GameOverTexture || !HomeTexture || !PlayAgainTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -123,7 +121,6 @@ void InitSDL()
     SDL_FreeSurface(AppleSurface);
     SDL_FreeSurface(PointerSurface);
     SDL_FreeSurface(GameOverSurface);
-    SDL_FreeSurface(MenuBackgroundSurface);
     SDL_FreeSurface(HomeSurface);
     SDL_FreeSurface(PlayAgainSurface);
 
@@ -469,6 +466,37 @@ void DrawScore( player *snake, SDL_Renderer *renderer, SDL_Surface *surface, SDL
     SDL_RenderCopy( renderer, texture, NULL, &rect);
 }
 
+void RenderMenuBackgroundImage(SDL_Renderer *renderer)
+{
+    // Load the image file into a surface
+    SDL_Surface *surface = IMG_Load("tools/images/MenuBackground.png");
+
+    // Checking if the surface was successfully loaded
+    if(!surface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
+        QuitSDL();
+    }
+
+    // Create a texture from the surface
+    SDL_Texture *texture = SDL_CreateTextureFromSurface( renderer, surface);
+
+    // Checking if the texture was successfully created
+    if(!texture)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Freeing the surface after creating the texture
+    SDL_FreeSurface(surface);
+
+    // Render the texture onto the renderer
+    SDL_RenderCopy( renderer, texture, NULL, NULL);
+
+    // Destroy the texture
+    SDL_DestroyTexture(texture);
+}
 void HandleMenuInput()  
 {
     // Event handling loop
@@ -509,13 +537,15 @@ void HandleMenuInput()
                         Mix_PlayMusic( ClickingPopMusic, 0);
                         break;
                     case SDLK_RETURN:
-                        if(isHovering == onStart || isHovering == onExit)
+                        if(isHovering == onStart)
                         {
                             Mix_HaltMusic();
                             Mix_PlayMusic( ClickingMusic, 0);
-                            if(isHovering == onStart)
-                                MenuOption = MODE;
-                            else MenuOption = EXIT;
+                            MenuOption = MODE;
+                        }
+                        else if(isHovering == onExit)
+                        {
+                            MenuOption = EXIT;
                         }
                         break;
                 }
@@ -562,8 +592,6 @@ void HandleMenuInput()
                         }
                         else if(mouseX >= 280 && mouseX <= 500 && mouseY >= 240 && mouseY <= 320) // If the user pressed exit
                         {
-                            Mix_HaltMusic();
-                            Mix_PlayMusic( ClickingMusic, 0);
                             MenuOption = EXIT;
                         }
                         break;
@@ -589,7 +617,7 @@ void RenderMenu(SDL_Renderer *renderer)
         QuitSDL();
     }
 
-    SDL_RenderCopy( renderer, MenuBackgroundTexture, NULL, NULL);
+    RenderMenuBackgroundImage(renderer);
 
     // Setting colors for the game title and the buttons
     SDL_Color DefaultColor = { 160, 160, 160, 255}, HoveringColor = { 0, 153, 76, 255};
@@ -598,9 +626,10 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_Surface *TitleSurface = TTF_RenderText_Solid( MenuFont, "Snake Game", (SDL_Color){ 0, 0, 0, 255});
     SDL_Surface *StartSurface = TTF_RenderText_Solid( MenuFont, "Start", (isHovering != onStart)? DefaultColor: HoveringColor);
     SDL_Surface *ExitSurface = TTF_RenderText_Solid( MenuFont, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
+    SDL_Surface *CreatedBySurface = TTF_RenderText_Solid( MenuFont, "Created by: Youness SBAI", (SDL_Color){ 179, 59, 0, 255});
 
     // Checking if the texts were successfully rendered
-    if(!TitleSurface || !StartSurface || !ExitSurface)
+    if(!TitleSurface || !StartSurface || !ExitSurface || !CreatedBySurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
@@ -610,22 +639,26 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_Texture *TitleTexture = SDL_CreateTextureFromSurface( renderer, TitleSurface);
     SDL_Texture *StartTexture = SDL_CreateTextureFromSurface( renderer, StartSurface);
     SDL_Texture *ExitTexture = SDL_CreateTextureFromSurface( renderer, ExitSurface);
+    SDL_Texture *CreatedByTexture = SDL_CreateTextureFromSurface( renderer, CreatedBySurface);
 
     // Checking if the textures were successfully created
-    if(!TitleTexture || !StartTexture || !ExitTexture)
+    if(!TitleTexture || !StartTexture || !ExitTexture || !CreatedByTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
+    // Free the surfaces after they are no longer needed
     SDL_FreeSurface(TitleSurface);
     SDL_FreeSurface(StartSurface);
     SDL_FreeSurface(ExitSurface);
+    SDL_FreeSurface(CreatedBySurface);
 
     // Rendering the textures onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, TitleTexture, NULL, &(SDL_Rect){ 100, 20, 600, 100});
     SDL_RenderCopy( renderer, StartTexture, NULL, &(SDL_Rect){ 280, 150, 220, 80});
     SDL_RenderCopy( renderer, ExitTexture, NULL, &(SDL_Rect){ 280, 240, 220, 80});
+    SDL_RenderCopy( renderer, CreatedByTexture, NULL, &(SDL_Rect){ 20, 420, 360, 80});
 
     switch(isHovering)
     {
@@ -644,6 +677,7 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_DestroyTexture(TitleTexture);
     SDL_DestroyTexture(StartTexture);
     SDL_DestroyTexture(ExitTexture);
+    SDL_DestroyTexture(CreatedByTexture);
 }
 
 void HandleModeInput()
@@ -778,6 +812,8 @@ void RenderMode(SDL_Renderer *renderer)
         QuitSDL();
     }
 
+    RenderMenuBackgroundImage(renderer);
+
     // Loading an image from the file
     SDL_Surface *returnSurface = IMG_Load("tools/images/return.png");
 
@@ -800,8 +836,6 @@ void RenderMode(SDL_Renderer *renderer)
 
     // Freeing the surface after creating the texture
     SDL_FreeSurface(returnSurface);
-
-    SDL_RenderCopy( renderer, MenuBackgroundTexture, NULL, NULL);
 
     // Setting colors for the game title and the buttons
     SDL_Color DefaultColor = { 160, 160, 160, 255};
@@ -1274,8 +1308,6 @@ void QuitSDL()
         SDL_DestroyTexture(PlayAgainTexture);
     if(HomeTexture)
         SDL_DestroyTexture(HomeTexture);
-    if(MenuBackgroundTexture)
-        SDL_DestroyTexture(MenuBackgroundTexture);
     if(GameOverTexture)
         SDL_DestroyTexture(GameOverTexture);
     if(PointerTexture)
