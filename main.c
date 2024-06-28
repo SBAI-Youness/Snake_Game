@@ -1,15 +1,15 @@
 #include "headers/GameLogic.h"
 
-GameMode currentMode;
+GameMode currentMode; int countDown; Uint32 startTime;
 
 int main( int argc, char *argv[])
 {
-    InitSDL();
-    InitializeHighestScore(&snake);
+    InitSDL(); // Initialize SDL
+    InitializeHighestScore(&snake); // Initialize the highest score
 
-    while(!quit)
+    while(!quit) // Game loop
     {
-        switch(MenuOption)
+        switch(MenuOption) // Switch statement to handle the menu options
         {
             // Show the menu
             case MENU:
@@ -21,10 +21,9 @@ int main( int argc, char *argv[])
             case START:
                 if(isHovering == onMode1 || currentMode == MODE_SINGLE_PLAYER)
                 {
-                    currentMode = MODE_SINGLE_PLAYER;
-                    isHovering = onMode1;
+                    currentMode = MODE_SINGLE_PLAYER; isHovering = onMode1;
                     CreateApple(&apple), CreateSnake( &snake, 40, 0), CreateStars(stars);
-                    while(!quit && snake.state)
+                    while(!quit && snake.state) // Game loop for single player mode
                     {
                         HandleMode1Input(&snake);
                         RenderMode1(renderer);
@@ -32,13 +31,13 @@ int main( int argc, char *argv[])
                 }
                 else if(isHovering == onMode2 || currentMode == MODE_TWO_PLAYERS)
                 {
-                    currentMode = MODE_TWO_PLAYERS;
-                    isHovering = onMode2;
+                    currentMode = MODE_TWO_PLAYERS; isHovering = onMode2;
+                    startTime = SDL_GetTicks(); countDown = 60; // 1 minute countdown
                     CreateApple(&apple), CreateSnake( &snake1, 40, 0), CreateSnake( &snake2, 40, 480), CreateStars(stars);
-                    while(!quit) // TODO: This game loop should also depend on the time (1 minute)
+                    while(!quit) // Game loop for two players mode
                     {
                         HandleMode2Input( &snake1, &snake2);
-                        RenderMode2(renderer);
+                        RenderMode2( renderer, &countDown, &startTime);
                     }
                 }
                 break;
@@ -50,7 +49,7 @@ int main( int argc, char *argv[])
 
             // Show the modes
             case MODE:
-                currentMode = NONE;   
+                currentMode = NONE;
                 HandleModeInput();
                 RenderMode(renderer);
                 break;
@@ -63,6 +62,6 @@ int main( int argc, char *argv[])
         }
     }
 
-    QuitSDL();
+    QuitSDL(); // Quit SDL
     return 0;
 }

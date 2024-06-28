@@ -89,6 +89,10 @@ extern MouseHoveringState isHovering;
 
 extern SnakeColor color;
 
+extern int countDown;
+
+extern Uint32 startTime;
+
 // Function used to initialize the SDL2 library
 void InitSDL();
 
@@ -119,6 +123,9 @@ void MoveSnake(player *snake);
 // Function used to show the score in the window
 void DrawScore( player *snake, SDL_Renderer *renderer, SDL_Surface *surface, SDL_Texture *texture, SDL_Color color, SDL_Rect rect);
 
+// Function used to show the countdown in the second mode
+void RenderCountdown( SDL_Renderer *renderer, const char *text, SDL_Color color, SDL_Rect rect);
+
 // Function used render the menu background image
 void RenderMenuBackgroundImage(SDL_Renderer *renderer);
 
@@ -147,7 +154,7 @@ void RenderMode1(SDL_Renderer *renderer);
 void HandleMode2Input( player *snake1, player *snake2);
 
 // Function used for rendering the second mode
-void RenderMode2(SDL_Renderer *renderer);
+void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime);
 
 // Function used to handle the user input while he is in the game over
 void HandleGameOverInput();

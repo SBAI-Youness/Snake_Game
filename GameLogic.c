@@ -315,7 +315,7 @@ void CreateApple(fruit *apple)
         }
 
     } while(((apple->position.x >= 750 && apple->position.x < 790) && (apple->position.y >= 0 && apple->position.y < 40) && (isHovering == onMode1)) ||
-            ((apple->position.x >= 360 && apple->position.x < 440) && (apple->position.y >= 0 && apple->position.y < 40) && (isHovering == onMode2)) ||
+            (((apple->position.x >= 360 && apple->position.x < 440) && (apple->position.y >= 0 && apple->position.y < 40) || (apple->position.x >= 360 && apple->position.x < 440) && (apple->position.y >= 460 && apple->position.y < 500)) && (isHovering == onMode2)) ||
             onSnake);
 }
 
@@ -477,6 +477,38 @@ void DrawScore( player *snake, SDL_Renderer *renderer, SDL_Surface *surface, SDL
 
     // Rendering the texture onto the renderer at a specific position and size
     SDL_RenderCopy( renderer, texture, NULL, &rect);
+}
+
+void RenderCountdown( SDL_Renderer *renderer, const char *text, SDL_Color color, SDL_Rect rect)
+{
+    // Render the text onto a surface using the provided font and color
+    SDL_Surface *surface = TTF_RenderText_Solid(ScoreFont, text, color);
+
+    // Checking if the text was successfully rendered
+    if(!surface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
+        QuitSDL();
+    }
+
+    // Create a texture from the rendered surface
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    // Checking if the texture was successfully created
+    if(!texture)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Free the surface after creating the texture
+    SDL_FreeSurface(surface);
+
+    // Rendering the texture onto the renderer at a specific position and size
+    SDL_RenderCopy(renderer, texture, NULL, &rect);
+
+    // Destroy the texture
+    SDL_DestroyTexture(texture);
 }
 
 void RenderMenuBackgroundImage(SDL_Renderer *renderer)
@@ -1155,7 +1187,7 @@ void HandleMode2Input( player *snake1, player *snake2)
     } direction1Changed = false; direction2Changed = false;
 }
 
-void RenderMode2(SDL_Renderer *renderer)
+void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
 {
     // Set the window color to black
     if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
@@ -1177,8 +1209,21 @@ void RenderMode2(SDL_Renderer *renderer)
     DrawSnake( &snake1, renderer, GREEN), DrawSnake( &snake2, renderer, BLUE);
     DrawScore( &snake1, renderer, ScoreSurface, ScoreTexture, (SDL_Color){ 0, 255, 0, 255}, (SDL_Rect){ 360, 0, 40, 40}), DrawScore( &snake2, renderer, ScoreSurface, ScoreTexture, (SDL_Color){ 0, 0, 255, 255}, (SDL_Rect){ 400, 0, 40, 40});
 
+    Uint32 elapsed = (SDL_GetTicks() - *startTime) / 1000; // Get the elapsed time in seconds
+    if (elapsed >= 1){ *countDown -= 1; *startTime = SDL_GetTicks();} // Update the countdown
+
+    int minutes = *countDown / 60, seconds = *countDown % 60; // Convert the countdown to minutes and seconds
+
+    char timeText[6]; // The text to be displayed for the countdown
+    snprintf( timeText, sizeof(timeText), "%02d:%02d", minutes, seconds); // Format the text using snprintf
+
+    // Render the countdown text
+    RenderCountdown( renderer, timeText, (*countDown > 10)? (SDL_Color){ 153, 153, 255, 255}: (SDL_Color){ 153, 0, 0, 255}, (SDL_Rect){ 360, 460, 80, 40});
+
     // Present the renderer
     SDL_RenderPresent(renderer);
+
+    if(!*countDown) quit = true; // If the countdown is finished, quit the game
 
     // Delay to control frame rate
     SDL_Delay((snake1.speed < snake2.speed)? snake1.speed: snake2.speed);
