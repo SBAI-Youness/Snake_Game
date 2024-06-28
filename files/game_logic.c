@@ -1,4 +1,4 @@
-#include "headers\game_logic.h"
+#include "../headers/game_logic.h"
 
 void CreateStars(star stars[])
 {

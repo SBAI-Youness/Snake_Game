@@ -1,10 +1,10 @@
-#include "headers\sdl_utils.h"
-#include "headers\menu_logic.h"
-#include "headers\game_logic.h"
+#include "../headers/sdl_utils.h"
+#include "../headers/menu_logic.h"
+#include "../headers/game_logic.h"
 
 // Input
 
-void HandleMenuInput()  
+void HandleMenuInput()
 {
     // Event handling loop
     SDL_Event event;
@@ -513,7 +513,7 @@ void HandleGameOverInput()
 void RenderMenuBackgroundImage(SDL_Renderer *renderer)
 {
     // Load the image file into a surface
-    SDL_Surface *surface = IMG_Load("tools/images/MenuBackground.png");
+    SDL_Surface *surface = IMG_Load("../tools/images/MenuBackground.png");
 
     // Checking if the surface was successfully loaded
     if(!surface)
@@ -677,7 +677,7 @@ void RenderMode(SDL_Renderer *renderer)
     RenderCreator( renderer , "Youness SBAI");
 
     // Loading an image from the file
-    SDL_Surface *returnSurface = IMG_Load("tools/images/return.png");
+    SDL_Surface *returnSurface = IMG_Load("../tools/images/return.png");
 
     // Checking if the image was successfully loaded
     if(!returnSurface)
@@ -705,7 +705,7 @@ void RenderMode(SDL_Renderer *renderer)
     // Render the texts onto surfaces using the provided fonts and colors
     SDL_Surface *ModeSurface = TTF_RenderText_Solid( font50, "Choose the game mode:", (SDL_Color){ 0, 51, 102, 255});
     SDL_Surface *Mode1Surface = TTF_RenderText_Solid( font50, "1 Player", (isHovering != onMode1)? DefaultColor: (SDL_Color){ 0, 0, 255, 255});
-    SDL_Surface *Mode2Surface = TTF_RenderText_Solid( font50, "1v1", (isHovering != onMode2)? DefaultColor: (SDL_Color){ 255, 0, 0, 255});
+    SDL_Surface *Mode2Surface = TTF_RenderText_Solid( font50, "1vs1", (isHovering != onMode2)? DefaultColor: (SDL_Color){ 255, 0, 0, 255});
 
     // Checking if the texts were successfully rendered
     if(!ModeSurface || !Mode1Surface || !Mode2Surface)

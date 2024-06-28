@@ -1,4 +1,4 @@
-#include "headers\sdl_utils.h"
+#include "../headers/sdl_utils.h"
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
@@ -38,10 +38,10 @@ void InitSDL()
     }
 
     // Loading the mp3 audio file
-    EatingMusic = Mix_LoadMUS("tools/sounds/SnakeEats.mp3");
-    ClickingMusic = Mix_LoadMUS("tools/sounds/Clicking.mp3");
-    ClickingPopMusic = Mix_LoadMUS("tools/sounds/ClickingPop.mp3");
-    GameOverMusic = Mix_LoadMUS("tools/sounds/GameOver.mp3");
+    EatingMusic = Mix_LoadMUS("../tools/sounds/SnakeEats.mp3");
+    ClickingMusic = Mix_LoadMUS("../tools/sounds/Clicking.mp3");
+    ClickingPopMusic = Mix_LoadMUS("../tools/sounds/ClickingPop.mp3");
+    GameOverMusic = Mix_LoadMUS("../tools/sounds/GameOver.mp3");
 
     // Checking if the audio was successfully loaded
     if(!EatingMusic || !ClickingMusic || !ClickingPopMusic || !GameOverMusic)
@@ -58,7 +58,7 @@ void InitSDL()
     }
 
     // Loading the window icon image
-    IconSurface = IMG_Load("tools/images/WindowIcon.png");
+    IconSurface = IMG_Load("../tools/images/WindowIcon.png");
 
     // Checking if the image was successfully loaded
     if(!IconSurface)
@@ -91,11 +91,11 @@ void InitSDL()
     }
 
     // Loading image files
-    AppleSurface = IMG_Load("tools/images/AppleImage.png");
-    PointerSurface = IMG_Load("tools/images/pointer.png");
-    GameOverSurface = IMG_Load("tools/images/GameOver.png");
-    HomeSurface = IMG_Load("tools/images/home.png");
-    PlayAgainSurface = IMG_Load("tools/images/PlayAgain.png");
+    AppleSurface = IMG_Load("../tools/images/AppleImage.png");
+    PointerSurface = IMG_Load("../tools/images/pointer.png");
+    GameOverSurface = IMG_Load("../tools/images/GameOver.png");
+    HomeSurface = IMG_Load("../tools/images/home.png");
+    PlayAgainSurface = IMG_Load("../tools/images/PlayAgain.png");
 
     // Checking if the image was successfully loaded
     if(!AppleSurface || !PointerSurface || !GameOverSurface || !HomeSurface || !PlayAgainSurface)
@@ -126,7 +126,7 @@ void InitSDL()
     SDL_FreeSurface(PlayAgainSurface);
 
     // Loading the cursor image
-    CursorSurface = IMG_Load("tools/images/cursor.png");
+    CursorSurface = IMG_Load("../tools/images/cursor.png");
 
     // Checking if the cursor image was successfully loaded
     if(!CursorSurface)
@@ -153,15 +153,15 @@ void InitSDL()
     // Loading snake's image files
 
     // Green snake color
-    GreenSnakeHeadSurface = IMG_Load("tools/images/snake/green/head.png");
-    GreenSnakeBodySurface = IMG_Load("tools/images/snake/green/body.png");
-    GreenSnakeCornerSurface = IMG_Load("tools/images/snake/green/corner.png");
-    GreenSnakeTailSurface = IMG_Load("tools/images/snake/green/tail.png");
+    GreenSnakeHeadSurface = IMG_Load("../tools/images/snake/green/head.png");
+    GreenSnakeBodySurface = IMG_Load("../tools/images/snake/green/body.png");
+    GreenSnakeCornerSurface = IMG_Load("../tools/images/snake/green/corner.png");
+    GreenSnakeTailSurface = IMG_Load("../tools/images/snake/green/tail.png");
     // Blue snake color
-    BlueSnakeHeadSurface = IMG_Load("tools/images/snake/blue/head.png");
-    BlueSnakeBodySurface = IMG_Load("tools/images/snake/blue/body.png");
-    BlueSnakeCornerSurface = IMG_Load("tools/images/snake/blue/corner.png");
-    BlueSnakeTailSurface = IMG_Load("tools/images/snake/blue/tail.png");
+    BlueSnakeHeadSurface = IMG_Load("../tools/images/snake/blue/head.png");
+    BlueSnakeBodySurface = IMG_Load("../tools/images/snake/blue/body.png");
+    BlueSnakeCornerSurface = IMG_Load("../tools/images/snake/blue/corner.png");
+    BlueSnakeTailSurface = IMG_Load("../tools/images/snake/blue/tail.png");
 
     // Checking if the snake's image was successfully loaded
     if(!GreenSnakeHeadSurface || !GreenSnakeBodySurface || !GreenSnakeCornerSurface || !GreenSnakeTailSurface ||
@@ -215,8 +215,8 @@ void InitSDL()
     }
 
     // Opening a font
-    font28 = TTF_OpenFont("tools/fonts/MinecraftRegularFont.TTF", 28);
-    font50 = TTF_OpenFont("tools/fonts/TalkComic.TTF", 50);
+    font28 = TTF_OpenFont("../tools/fonts/MinecraftRegularFont.TTF", 28);
+    font50 = TTF_OpenFont("../tools/fonts/TalkComic.TTF", 50);
 
     // Checking if the font was successfully openned
     if(!font28 || !font50)
