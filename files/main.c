@@ -1,6 +1,7 @@
 #include "../headers/sdl_utils.h"
 #include "../headers/game_logic.h"
-#include "../headers/menu_logic.h"
+#include "../headers/input.h"
+#include "../headers/render.h"
 
 GameMode currentMode; int countDown; Uint32 startTime;
 
