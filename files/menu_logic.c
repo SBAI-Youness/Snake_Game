@@ -551,7 +551,7 @@ void RenderCreator( SDL_Renderer *renderer, char Creator[])
     sprintf(CreatorString, "Created by: %s", Creator);
 
     // Render the text "Created by: Youness SBAI" using the provided font and color
-    SDL_Surface *CreatedBySurface = TTF_RenderText_Solid( font50, CreatorString, (SDL_Color){ 179, 59, 0, 255});
+    SDL_Surface *CreatedBySurface = TTF_RenderText_Solid( font32, CreatorString, (SDL_Color){ 179, 59, 0, 255});
 
     // Checking if the surface was successfully created
     if(!CreatedBySurface)
@@ -574,7 +574,7 @@ void RenderCreator( SDL_Renderer *renderer, char Creator[])
     SDL_FreeSurface(CreatedBySurface);
 
     // Render the texture onto the renderer at a specific position and size
-    SDL_RenderCopy( renderer, CreatedByTexture, NULL, &(SDL_Rect){ 20, 420, 360, 80});
+    SDL_RenderCopy( renderer, CreatedByTexture, NULL, &(SDL_Rect){ 20, 420, 400, 80});
 
     // Destroy the texture
     SDL_DestroyTexture(CreatedByTexture);
@@ -816,6 +816,11 @@ void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
 
     char timeText[6]; // The text to be displayed for the countdown
     snprintf( timeText, sizeof(timeText), "%02d:%02d", minutes, seconds); // Format the text using snprintf
+
+    if(*countDown > 0 && *countDown <= 10 && !Mix_PlayingMusic()) // Play the countdown music if the countdown is less than 10 seconds
+        Mix_PlayMusic( BeepMusic, 1);
+    else if (!*countDown) // If the countdown is finished, stop the music
+        Mix_HaltMusic();
 
     // Render the countdown text
     RenderCountdown( renderer, timeText, (*countDown > 10)? (SDL_Color){ 153, 153, 255, 255}: (SDL_Color){ 153, 0, 0, 255}, (SDL_Rect){ 360, 460, 80, 40});

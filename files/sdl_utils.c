@@ -3,8 +3,8 @@
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Cursor *Cursor = NULL;
-Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
-TTF_Font *font28 = NULL, *font50 = NULL;
+Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL, *BeepMusic = NULL;
+TTF_Font *font28 = NULL, *font32 = NULL, *font50 = NULL;
 
 player snake, snake1, snake2;
 fruit apple;
@@ -42,9 +42,10 @@ void InitSDL()
     ClickingMusic = Mix_LoadMUS("../tools/sounds/Clicking.mp3");
     ClickingPopMusic = Mix_LoadMUS("../tools/sounds/ClickingPop.mp3");
     GameOverMusic = Mix_LoadMUS("../tools/sounds/GameOver.mp3");
+    BeepMusic = Mix_LoadMUS("../tools/sounds/BeepSound.mp3");
 
     // Checking if the audio was successfully loaded
-    if(!EatingMusic || !ClickingMusic || !ClickingPopMusic || !GameOverMusic)
+    if(!EatingMusic || !ClickingMusic || !ClickingPopMusic || !GameOverMusic || !BeepMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
         QuitSDL();
@@ -216,10 +217,11 @@ void InitSDL()
 
     // Opening a font
     font28 = TTF_OpenFont("../tools/fonts/MinecraftRegularFont.TTF", 28);
+    font32 = TTF_OpenFont("../tools/fonts/impact.TTF", 32);
     font50 = TTF_OpenFont("../tools/fonts/TalkComic.TTF", 50);
 
     // Checking if the font was successfully openned
-    if(!font28 || !font50)
+    if(!font28 || !font32 || !font50)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
         QuitSDL();
@@ -230,6 +232,8 @@ void QuitSDL()
 {
     if(font50)
         TTF_CloseFont(font50);
+    if(font32)
+        TTF_CloseFont(font32);
     if(font28)
         TTF_CloseFont(font28);
     TTF_Quit();
@@ -268,6 +272,8 @@ void QuitSDL()
     if(IconSurface)
         SDL_FreeSurface(IconSurface);
     IMG_Quit();
+    if(BeepMusic)
+        Mix_FreeMusic(BeepMusic);
     if(GameOverMusic)
         Mix_FreeMusic(GameOverMusic);
     if(ClickingPopMusic)
