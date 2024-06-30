@@ -308,8 +308,8 @@ void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
     char timeText[6]; // The text to be displayed for the countdown
     snprintf( timeText, sizeof(timeText), "%02d:%02d", minutes, seconds); // Format the text using snprintf
 
-    if(*countDown > 0 && *countDown <= 10 && !Mix_PlayingMusic()) // Play the countdown music if the countdown is less than 10 seconds
-        Mix_PlayMusic( BeepMusic, 1);
+    if (*countDown > 0 && *countDown <= 10 && !Mix_PlayingMusic()) // Play the countdown music if the countdown is less than 10 seconds
+        Mix_PlayMusic( BeepMusic, 0);
     else if (!*countDown) // If the countdown is finished, stop the music
         Mix_HaltMusic();
 
@@ -325,7 +325,7 @@ void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
     SDL_Delay((snake1.speed < snake2.speed)? snake1.speed: snake2.speed);
 }
 
-void RenderGameOver(SDL_Renderer *renderer)
+void RenderGameOverMode1(SDL_Renderer *renderer)
 {
     // Set the window color to black
     if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))

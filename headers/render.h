@@ -21,4 +21,4 @@ void RenderMode1(SDL_Renderer *renderer);
 void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime);
 
 // Function used to render the game over screen
-void RenderGameOver(SDL_Renderer *renderer);
+void RenderGameOverMode1(SDL_Renderer *renderer);

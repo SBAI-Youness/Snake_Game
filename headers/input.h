@@ -15,4 +15,4 @@ void HandleMode1Input(player *snake);
 void HandleMode2Input( player *snake1, player *snake2);
 
 // Function used to handle the input of the game over screen
-void HandleGameOverInput();
+void HandleGameOverMode1Input();

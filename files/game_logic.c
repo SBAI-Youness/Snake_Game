@@ -191,7 +191,7 @@ void MoveSnake(player *snake)
     if(snake->chunk[0].position.x == apple.position.x && snake->chunk[0].position.y == apple.position.y)
     {
         Mix_PlayMusic( EatingMusic, 0);
-        snake->size++, snake->score++, snake->speed = (snake->speed > 50)? snake->speed -= 2: snake->speed;
+        snake->size++, snake->score++, snake->speed = (snake->speed > 50)? snake->speed -= 4: snake->speed;
         CreateApple(&apple);
     }
 

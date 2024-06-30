@@ -400,7 +400,7 @@ void HandleMode2Input( player *snake1, player *snake2)
     } direction1Changed = false; direction2Changed = false;
 }
 
-void HandleGameOverInput()
+void HandleGameOverMode1Input()
 {
     // Event handling loop
     SDL_Event event;

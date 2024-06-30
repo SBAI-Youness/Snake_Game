@@ -54,8 +54,8 @@ int main( int argc, char *argv[])
                 break;
 
             case GAMEOVER: // Game over screen
-                HandleGameOverInput();
-                RenderGameOver(renderer);
+                HandleGameOverMode1Input();
+                RenderGameOverMode1(renderer);
                 break;
         }
     }
