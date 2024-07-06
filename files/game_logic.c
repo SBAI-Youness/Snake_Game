@@ -101,10 +101,7 @@ void DrawApple(SDL_Renderer *renderer)
     SDL_RenderCopy( renderer, AppleTexture, NULL, &AppleCell);
 }
 
-void InitializeHighestScore(player *snake)
-{
-    snake->highestScore = -1;
-}
+void InitializeHighestScore(player *snake) { snake->highestScore = -1; }
 
 void CreateSnake( player *snake, int initialX, int initialY)
 {
@@ -171,7 +168,7 @@ void MoveSnake(player *snake)
         {
             if (snake->score > snake->highestScore) snake->highestScore = snake->score;
             snake->state = false; // Snake collides with itself, game over
-            MenuOption = GAMEOVER;
+            MenuOption = GAMEOVER1;
             Mix_PlayMusic( GameOverMusic, 0);
             break;
         }
@@ -219,7 +216,7 @@ void MoveSnake(player *snake)
     }
 }
 
-void DrawScore( player *snake, SDL_Renderer *renderer, SDL_Color color, SDL_Rect rect)
+void DrawScore( player *snake, SDL_Renderer *renderer, TTF_Font *font, SDL_Color color, SDL_Rect rect)
 {
     // Defining an array characters to store the score as a string
     char ScoreString[50];
@@ -228,7 +225,7 @@ void DrawScore( player *snake, SDL_Renderer *renderer, SDL_Color color, SDL_Rect
     itoa(snake->score, ScoreString, 10);
 
     // Render the score string onto a surface using the provided font and color
-    SDL_Surface *surface = TTF_RenderText_Solid( font28, ScoreString, color);
+    SDL_Surface *surface = TTF_RenderText_Solid( font, ScoreString, color);
 
     // Checking if the text was successfully rendered
     if(!surface)

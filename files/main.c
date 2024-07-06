@@ -35,7 +35,7 @@ int main( int argc, char *argv[])
                     currentMode = MODE_TWO_PLAYERS; isHovering = onMode2;
                     startTime = SDL_GetTicks(); countDown = 60; // 1 minute countdown
                     CreateApple(&apple), CreateSnake( &snake1, 40, 0), CreateSnake( &snake2, 40, 480), CreateStars(stars);
-                    while (!quit) // Game loop for two players mode
+                    while (!quit && countDown) // Game loop for two players mode
                     {
                         HandleMode2Input( &snake1, &snake2);
                         RenderMode2( renderer, &countDown, &startTime);
@@ -53,9 +53,14 @@ int main( int argc, char *argv[])
                 RenderMode(renderer);
                 break;
 
-            case GAMEOVER: // Game over screen
+            case GAMEOVER1: // Game over screen for single player mode
                 HandleGameOverMode1Input();
                 RenderGameOverMode1(renderer);
+                break;
+
+            case GAMEOVER2: // Game over screen for two players mode
+                HandleGameOverMode2Input();
+                RenderGameOverMode2(renderer);
                 break;
         }
     }

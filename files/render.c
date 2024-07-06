@@ -71,6 +71,38 @@ void RenderCreator( SDL_Renderer *renderer, char Creator[])
     SDL_DestroyTexture(CreatedByTexture);
 }
 
+void RenderPlayer( SDL_Renderer *renderer, const char *playerNumber, SDL_Rect rect)
+{
+    // Render the text onto a surface using the provided font and color
+    SDL_Surface *surface = TTF_RenderText_Solid( font50, playerNumber, (SDL_Color){ 255, 255, 255, 255});
+
+    // Checking if the text was successfully rendered
+    if(!surface)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
+        QuitSDL();
+    }
+
+    // Create a texture from the rendered surface
+    SDL_Texture *texture = SDL_CreateTextureFromSurface( renderer, surface);
+
+    // Checking if the texture was successfully created
+    if(!texture)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Free the surface after creating the texture
+    SDL_FreeSurface(surface);
+
+    // Rendering the texture onto the renderer at a specific position and size
+    SDL_RenderCopy( renderer, texture, NULL, &rect);
+
+    // Destroy the texture
+    SDL_DestroyTexture(texture);
+}
+
 void RenderMenu(SDL_Renderer *renderer)
 {
     // Set the window color to black
@@ -269,7 +301,7 @@ void RenderMode1(SDL_Renderer *renderer)
     DrawApple(renderer);
     MoveSnake(&snake);
     DrawSnake( &snake, renderer, GREEN);
-    DrawScore( &snake, renderer, (SDL_Color){ 255, 255, 255, 255}, (SDL_Rect){ 750, 0, 40, 40});
+    DrawScore( &snake, renderer, font28, (SDL_Color){ 255, 255, 255, 255}, (SDL_Rect){ 750, 0, 40, 40});
 
     // Present the renderer
     SDL_RenderPresent(renderer);
@@ -298,7 +330,7 @@ void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
     DrawApple(renderer);
     MoveSnake(&snake1), MoveSnake(&snake2);
     DrawSnake( &snake1, renderer, GREEN), DrawSnake( &snake2, renderer, BLUE);
-    DrawScore( &snake1, renderer, (SDL_Color){ 0, 255, 0, 255}, (SDL_Rect){ 360, 0, 40, 40}), DrawScore( &snake2, renderer, (SDL_Color){ 0, 0, 255, 255}, (SDL_Rect){ 400, 0, 40, 40});
+    DrawScore( &snake1, renderer, font28, (SDL_Color){ 0, 255, 0, 255}, (SDL_Rect){ 360, 0, 40, 40}), DrawScore( &snake2, renderer, font28, (SDL_Color){ 0, 0, 255, 255}, (SDL_Rect){ 400, 0, 40, 40});
 
     Uint32 elapsed = (SDL_GetTicks() - *startTime) / 1000; // Get the elapsed time in seconds
     if (elapsed >= 1){ *countDown -= 1; *startTime = SDL_GetTicks();} // Update the countdown
@@ -311,15 +343,16 @@ void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
     if (*countDown > 0 && *countDown <= 10 && !Mix_PlayingMusic()) // Play the countdown music if the countdown is less than 10 seconds
         Mix_PlayMusic( BeepMusic, 0);
     else if (!*countDown) // If the countdown is finished, stop the music
+    {
+        MenuOption = GAMEOVER2;
         Mix_HaltMusic();
+    }
 
     // Render the countdown text
     RenderCountdown( renderer, timeText, (*countDown > 10)? (SDL_Color){ 153, 153, 255, 255}: (SDL_Color){ 153, 0, 0, 255}, (SDL_Rect){ 360, 460, 80, 40});
 
     // Present the renderer
     SDL_RenderPresent(renderer);
-
-    if(!*countDown) quit = true; // If the countdown is finished, quit the game
 
     // Delay to control frame rate
     SDL_Delay((snake1.speed < snake2.speed)? snake1.speed: snake2.speed);
@@ -389,4 +422,35 @@ void RenderGameOverMode1(SDL_Renderer *renderer)
     // Destroy the textures used in the game over
     SDL_DestroyTexture(FinalScoreTexture);
     SDL_DestroyTexture(HighestScoreTexture);
+}
+
+void RenderGameOverMode2(SDL_Renderer *renderer)
+{
+    // Set the window color to black
+    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Clearing the rendering target
+    if(SDL_RenderClear(renderer))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
+        QuitSDL();
+    }
+
+    // Rendering the player's number onto the renderer at a specific position and size
+    RenderPlayer( renderer, "player 1", (SDL_Rect){ 100, 20, 200, 80});
+    RenderPlayer( renderer, "player 2", (SDL_Rect){ 500, 20, 200, 80});
+
+    // Rendering the player's score onto the renderer at a specific position and size
+    DrawScore( &snake1, renderer, font50, (SDL_Color){ 0, 255, 0, 255}, (SDL_Rect){ 170, 120, 60, 60});
+    DrawScore( &snake2, renderer, font50, (SDL_Color){ 0, 0, 255, 255}, (SDL_Rect){ 570, 120, 60, 60});
+
+    SDL_RenderCopy( renderer, HomeTexture, NULL, (isHovering != onHome)? &(SDL_Rect){ 290, 300, 70, 70}: &(SDL_Rect){ 285, 295, 80, 80});
+    SDL_RenderCopy( renderer, PlayAgainTexture, NULL, (isHovering != onPlayAgain)? &(SDL_Rect){ 440, 300, 70, 70}: &(SDL_Rect){ 435, 295, 80, 80});
+
+    // Presenting the renderer
+    SDL_RenderPresent(renderer);
 }

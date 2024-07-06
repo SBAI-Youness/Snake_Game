@@ -504,3 +504,108 @@ void HandleGameOverMode1Input()
         }
     }
 }
+
+void HandleGameOverMode2Input()
+{
+    // Event handling loop
+    SDL_Event event;
+    while(SDL_PollEvent(&event))
+    {
+        // Handle each event type
+        switch(event.type)
+        {
+            // If the user quits the game
+            case SDL_QUIT:
+                quit = true;
+                break;
+
+            // If a key is pressed
+            case SDL_KEYDOWN:
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
+                {
+                    // Handle keyboard input
+                    switch(event.key.keysym.sym)
+                    {
+                        case SDLK_RIGHT:
+                            if (isHovering != onPlayAgain)
+                            {
+                                isHovering = onPlayAgain;
+                                Mix_PlayMusic( ClickingPopMusic, 0);
+                            }
+                            break;
+                        case SDLK_LEFT:
+                            if (isHovering != onHome)
+                            {
+                                isHovering = onHome;
+                                Mix_PlayMusic( ClickingPopMusic, 0);
+                            }
+                            break;
+                        case SDLK_RETURN:
+                            if(isHovering == onHome || isHovering == onPlayAgain)
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = (isHovering == onHome)? MENU: (isHovering == onPlayAgain)? START: isHovering;
+                            }
+                            break;
+                    }
+                }
+                break;
+
+            // This case is related to mouse motions
+            case SDL_MOUSEMOTION:
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
+                {
+                    // Extract the x and y coordinates of the mouse pointer from the event
+                    int mouseX = event.motion.x, mouseY = event.motion.y;
+
+                    if(mouseX >= 290 && mouseX <= 360 && mouseY >= 300 && mouseY <= 370) // Mouse is hovering home button
+                    {
+                        if(isHovering != onHome)
+                        {
+                            isHovering = onHome;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
+                    }
+                    else if(mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // Mouse is hovering play again button
+                    {
+                        if (isHovering != onPlayAgain)
+                        {
+                            isHovering = onPlayAgain;
+                            Mix_PlayMusic( ClickingPopMusic, 0);
+                        }
+                    }
+                    else // Mouse is hovering any button
+                        isHovering = onNothing;
+                }
+                break;
+
+            // If a mouse button is released
+            case SDL_MOUSEBUTTONUP:
+                if(!Mix_PlayingMusic()) // Ignore input if the music is still playing
+                {
+                    // Handle mouse input
+                    switch(event.button.button)
+                    {
+                        case SDL_BUTTON_LEFT:
+                            int mouseX = event.button.x, mouseY = event.button.y;
+
+                            if(mouseX >= 290 && mouseX <= 360 && mouseY >= 300 && mouseY <= 370) // If the user pressed home
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = MENU;
+                            }
+                            else if(mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // If the user pressed play again
+                            {
+                                Mix_HaltMusic();
+                                Mix_PlayMusic( ClickingMusic, 0);
+                                MenuOption = START;
+                            }
+                            break;
+                    }
+                }
+                break;
+        }
+    }
+}

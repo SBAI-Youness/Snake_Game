@@ -17,7 +17,7 @@
 
 #define NUMBER_OF_STARS 400
 
-typedef enum { MENU, START, EXIT, MODE, GAMEOVER} GameState;
+typedef enum { MENU, START, EXIT, MODE, GAMEOVER1, GAMEOVER2} GameState;
 
 typedef enum { NONE, MODE_SINGLE_PLAYER, MODE_TWO_PLAYERS} GameMode;
 

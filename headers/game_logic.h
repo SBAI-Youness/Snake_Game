@@ -27,7 +27,7 @@ void DrawSnake( player *snake, SDL_Renderer *renderer, SnakeColor color);
 void MoveSnake(player *snake);
 
 // Function used to show the score in the window
-void DrawScore( player *snake, SDL_Renderer *renderer, SDL_Color color, SDL_Rect rect);
+void DrawScore( player *snake, SDL_Renderer *renderer, TTF_Font *font, SDL_Color color, SDL_Rect rect);
 
 // Function used to show the countdown in the second mode
 void RenderCountdown( SDL_Renderer *renderer, const char *text, SDL_Color color, SDL_Rect rect);
