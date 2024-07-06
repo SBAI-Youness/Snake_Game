@@ -444,6 +444,12 @@ void RenderGameOverMode2(SDL_Renderer *renderer)
     RenderPlayer( renderer, "player 1", (SDL_Rect){ 100, 20, 200, 80});
     RenderPlayer( renderer, "player 2", (SDL_Rect){ 500, 20, 200, 80});
 
+    if (snake1.score > snake2.score)
+        SDL_RenderCopy( renderer, winnerTexture, NULL, &(SDL_Rect){ 20, 30, 60, 60});
+    else if (snake1.score < snake2.score)
+        SDL_RenderCopy( renderer, winnerTexture, NULL, &(SDL_Rect){ 420, 30, 60, 60});
+    else // TODO: need to do the draw case
+
     // Rendering the player's score onto the renderer at a specific position and size
     DrawScore( &snake1, renderer, font50, (SDL_Color){ 0, 255, 0, 255}, (SDL_Rect){ 170, 120, 60, 60});
     DrawScore( &snake2, renderer, font50, (SDL_Color){ 0, 0, 255, 255}, (SDL_Rect){ 570, 120, 60, 60});

@@ -10,8 +10,8 @@ player snake, snake1, snake2;
 fruit apple;
 star stars[NUMBER_OF_STARS];
 
-SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *GreenSnakeHeadSurface = NULL, *GreenSnakeBodySurface = NULL, *GreenSnakeCornerSurface = NULL, *GreenSnakeTailSurface = NULL, *BlueSnakeHeadSurface = NULL, *BlueSnakeBodySurface = NULL, *BlueSnakeCornerSurface = NULL, *BlueSnakeTailSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL;
-SDL_Texture *AppleTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *GreenSnakeHeadTexture = NULL, *GreenSnakeBodyTexture = NULL, *GreenSnakeCornerTexture = NULL, *GreenSnakeTailTexture = NULL, *BlueSnakeHeadTexture = NULL, *BlueSnakeBodyTexture = NULL, *BlueSnakeCornerTexture = NULL, *BlueSnakeTailTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL;
+SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *GreenSnakeHeadSurface = NULL, *GreenSnakeBodySurface = NULL, *GreenSnakeCornerSurface = NULL, *GreenSnakeTailSurface = NULL, *BlueSnakeHeadSurface = NULL, *BlueSnakeBodySurface = NULL, *BlueSnakeCornerSurface = NULL, *BlueSnakeTailSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL, *winnerSurface = NULL;
+SDL_Texture *AppleTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *GreenSnakeHeadTexture = NULL, *GreenSnakeBodyTexture = NULL, *GreenSnakeCornerTexture = NULL, *GreenSnakeTailTexture = NULL, *BlueSnakeHeadTexture = NULL, *BlueSnakeBodyTexture = NULL, *BlueSnakeCornerTexture = NULL, *BlueSnakeTailTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL, *winnerTexture = NULL;
 
 bool quit = false;
 
@@ -97,9 +97,10 @@ void InitSDL()
     GameOverSurface = IMG_Load("../tools/images/GameOver.png");
     HomeSurface = IMG_Load("../tools/images/home.png");
     PlayAgainSurface = IMG_Load("../tools/images/PlayAgain.png");
+    winnerSurface = IMG_Load("../tools/images/winner.png");
 
     // Checking if the image was successfully loaded
-    if(!AppleSurface || !PointerSurface || !GameOverSurface || !HomeSurface || !PlayAgainSurface)
+    if(!AppleSurface || !PointerSurface || !GameOverSurface || !HomeSurface || !PlayAgainSurface || !winnerSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -111,9 +112,10 @@ void InitSDL()
     GameOverTexture = SDL_CreateTextureFromSurface( renderer, GameOverSurface);
     HomeTexture = SDL_CreateTextureFromSurface( renderer, HomeSurface);
     PlayAgainTexture = SDL_CreateTextureFromSurface( renderer, PlayAgainSurface);
+    winnerTexture = SDL_CreateTextureFromSurface( renderer, winnerSurface);
 
     // Checking if the texture was successfully created from surface
-    if(!AppleTexture || !PointerTexture || !GameOverTexture || !HomeTexture || !PlayAgainTexture)
+    if(!AppleTexture || !PointerTexture || !GameOverTexture || !HomeTexture || !PlayAgainTexture || !winnerTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -125,6 +127,7 @@ void InitSDL()
     SDL_FreeSurface(GameOverSurface);
     SDL_FreeSurface(HomeSurface);
     SDL_FreeSurface(PlayAgainSurface);
+    SDL_FreeSurface(winnerSurface);
 
     // Loading the cursor image
     CursorSurface = IMG_Load("../tools/images/cursor.png");
@@ -237,6 +240,8 @@ void QuitSDL()
     if(font28)
         TTF_CloseFont(font28);
     TTF_Quit();
+    if(winnerTexture)
+        SDL_DestroyTexture(winnerTexture);
     if(BlueSnakeTailTexture)
         SDL_DestroyTexture(BlueSnakeTailTexture);
     if(BlueSnakeCornerTexture)
