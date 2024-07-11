@@ -3,7 +3,8 @@
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Cursor *Cursor = NULL;
-Mix_Music *EatingMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL, *BeepMusic = NULL;
+Mix_Chunk *EatingMusic = NULL, *BeepMusic = NULL;
+Mix_Music *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
 TTF_Font *font28 = NULL, *font32 = NULL, *font50 = NULL;
 
 player snake, snake1, snake2;
@@ -37,15 +38,24 @@ void InitSDL()
         QuitSDL();
     }
 
+    // Loading the wav audio file
+    EatingMusic = Mix_LoadWAV("../tools/sounds/SnakeEats.wav");
+    BeepMusic = Mix_LoadWAV("../tools/sounds/BeepSound.wav");
+
+    // Checking if the audio was successfully loaded
+    if(!EatingMusic || !BeepMusic)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadWAV Error: %s\n", Mix_GetError());
+        QuitSDL();
+    }
+
     // Loading the mp3 audio file
-    EatingMusic = Mix_LoadMUS("../tools/sounds/SnakeEats.mp3");
     ClickingMusic = Mix_LoadMUS("../tools/sounds/Clicking.mp3");
     ClickingPopMusic = Mix_LoadMUS("../tools/sounds/ClickingPop.mp3");
     GameOverMusic = Mix_LoadMUS("../tools/sounds/GameOver.mp3");
-    BeepMusic = Mix_LoadMUS("../tools/sounds/BeepSound.mp3");
 
     // Checking if the audio was successfully loaded
-    if(!EatingMusic || !ClickingMusic || !ClickingPopMusic || !GameOverMusic || !BeepMusic)
+    if(!ClickingMusic || !ClickingPopMusic || !GameOverMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
         QuitSDL();
@@ -233,60 +243,34 @@ void InitSDL()
 
 void QuitSDL()
 {
-    if(font50)
-        TTF_CloseFont(font50);
-    if(font32)
-        TTF_CloseFont(font32);
-    if(font28)
-        TTF_CloseFont(font28);
+    if(font50) TTF_CloseFont(font50);
+    if(font32) TTF_CloseFont(font32);
+    if(font28) TTF_CloseFont(font28);
     TTF_Quit();
-    if(winnerTexture)
-        SDL_DestroyTexture(winnerTexture);
-    if(BlueSnakeTailTexture)
-        SDL_DestroyTexture(BlueSnakeTailTexture);
-    if(BlueSnakeCornerTexture)
-        SDL_DestroyTexture(BlueSnakeCornerTexture);
-    if(BlueSnakeBodyTexture)
-        SDL_DestroyTexture(BlueSnakeBodyTexture);
-    if(BlueSnakeHeadTexture)
-        SDL_DestroyTexture(BlueSnakeHeadTexture);
-    if(GreenSnakeTailTexture)
-        SDL_DestroyTexture(GreenSnakeTailTexture);
-    if(GreenSnakeCornerTexture)
-        SDL_DestroyTexture(GreenSnakeCornerTexture);
-    if(GreenSnakeBodyTexture)
-        SDL_DestroyTexture(GreenSnakeBodyTexture);
-    if(GreenSnakeHeadTexture)
-        SDL_DestroyTexture(GreenSnakeHeadTexture);
-    if(Cursor)
-        SDL_FreeCursor(Cursor);
-    if(PlayAgainTexture)
-        SDL_DestroyTexture(PlayAgainTexture);
-    if(HomeTexture)
-        SDL_DestroyTexture(HomeTexture);
-    if(GameOverTexture)
-        SDL_DestroyTexture(GameOverTexture);
-    if(PointerTexture)
-        SDL_DestroyTexture(PointerTexture);
-    if(AppleTexture)
-        SDL_DestroyTexture(AppleTexture);
-    if(renderer)
-        SDL_DestroyRenderer(renderer);
-    if(window)
-        SDL_DestroyWindow(window);
-    if(IconSurface)
-        SDL_FreeSurface(IconSurface);
+    if(winnerTexture) SDL_DestroyTexture(winnerTexture);
+    if(BlueSnakeTailTexture) SDL_DestroyTexture(BlueSnakeTailTexture);
+    if(BlueSnakeCornerTexture) SDL_DestroyTexture(BlueSnakeCornerTexture);
+    if(BlueSnakeBodyTexture) SDL_DestroyTexture(BlueSnakeBodyTexture);
+    if(BlueSnakeHeadTexture) SDL_DestroyTexture(BlueSnakeHeadTexture);
+    if(GreenSnakeTailTexture) SDL_DestroyTexture(GreenSnakeTailTexture);
+    if(GreenSnakeCornerTexture) SDL_DestroyTexture(GreenSnakeCornerTexture);
+    if(GreenSnakeBodyTexture) SDL_DestroyTexture(GreenSnakeBodyTexture);
+    if(GreenSnakeHeadTexture) SDL_DestroyTexture(GreenSnakeHeadTexture);
+    if(Cursor) SDL_FreeCursor(Cursor);
+    if(PlayAgainTexture) SDL_DestroyTexture(PlayAgainTexture);
+    if(HomeTexture) SDL_DestroyTexture(HomeTexture);
+    if(GameOverTexture) SDL_DestroyTexture(GameOverTexture);
+    if(PointerTexture) SDL_DestroyTexture(PointerTexture);
+    if(AppleTexture) SDL_DestroyTexture(AppleTexture);
+    if(renderer) SDL_DestroyRenderer(renderer);
+    if(window) SDL_DestroyWindow(window);
+    if(IconSurface) SDL_FreeSurface(IconSurface);
     IMG_Quit();
-    if(BeepMusic)
-        Mix_FreeMusic(BeepMusic);
-    if(GameOverMusic)
-        Mix_FreeMusic(GameOverMusic);
-    if(ClickingPopMusic)
-        Mix_FreeMusic(ClickingPopMusic);
-    if(ClickingMusic)
-        Mix_FreeMusic(ClickingMusic);
-    if(EatingMusic)
-        Mix_FreeMusic(EatingMusic);
+    if(BeepMusic)  Mix_FreeChunk(BeepMusic);
+    if(EatingMusic) Mix_FreeChunk(EatingMusic);
+    if(GameOverMusic) Mix_FreeMusic(GameOverMusic);
+    if(ClickingPopMusic) Mix_FreeMusic(ClickingPopMusic);
+    if(ClickingMusic) Mix_FreeMusic(ClickingMusic);
     Mix_CloseAudio();
     SDL_Quit();
 }

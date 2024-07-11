@@ -187,7 +187,7 @@ void MoveSnake(player *snake)
     // Generating another position of the apple, increasing the size of the snake and playing a sound if the apple has been eaten by the snake 
     if(snake->chunk[0].position.x == apple.position.x && snake->chunk[0].position.y == apple.position.y)
     {
-        Mix_PlayMusic( EatingMusic, 0);
+        Mix_PlayChannel( -1, EatingMusic, 0);
         snake->size++, snake->score++, snake->speed = (snake->speed > 50)? snake->speed -= 4: snake->speed;
         CreateApple(&apple);
     }
