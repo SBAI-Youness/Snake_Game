@@ -341,10 +341,13 @@ void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
     snprintf( timeText, sizeof(timeText), "%02d:%02d", minutes, seconds); // Format the text using snprintf
 
     static Mix_Chunk *currentPlayingMusic = NULL;
-    if (*countDown > 0 && *countDown <= 10 && currentPlayingMusic != BeepMusic) // Play the countdown music if the countdown is less than 10 seconds
+    if (*countDown > 0 && *countDown <= 10) // Play the countdown music if the countdown is less than 10 seconds
     {
-        Mix_PlayChannel( -1, BeepMusic, 1);
-        currentPlayingMusic = BeepMusic;
+        if (currentPlayingMusic != BeepMusic)
+        {
+            Mix_PlayChannel( -1, BeepMusic, 1);
+            currentPlayingMusic = BeepMusic;
+        }
     }
 
     else if (!*countDown) // If the countdown is finished, stop the music
@@ -453,6 +456,11 @@ void RenderGameOverMode2(SDL_Renderer *renderer)
         SDL_RenderCopy( renderer, winnerTexture, NULL, &(SDL_Rect){ 20, 30, 60, 60});
     else if (snake1.score < snake2.score)
         SDL_RenderCopy( renderer, winnerTexture, NULL, &(SDL_Rect){ 420, 30, 60, 60});
+    else
+    {
+        SDL_RenderCopy( renderer, winnerTexture, NULL, &(SDL_Rect){ 20, 30, 60, 60});
+        SDL_RenderCopy( renderer, winnerTexture, NULL, &(SDL_Rect){ 420, 30, 60, 60});
+    }
 
     // Rendering the player's score onto the renderer at a specific position and size
     DrawScore( &snake1, renderer, font50, (SDL_Color){ 0, 255, 0, 255}, (SDL_Rect){ 170, 120, 60, 60});
