@@ -25,14 +25,14 @@ SnakeColor color;
 void InitSDL()
 {
     // Initialization of the SDL2 library
-    if(SDL_Init(SDL_INIT_EVERYTHING))
+    if (SDL_Init(SDL_INIT_EVERYTHING))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
     // Initialization of the SDL audio system with specified parameters
-    if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024))
+    if (Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_OpenAudio Error: %s\n", Mix_GetError());
         QuitSDL();
@@ -43,7 +43,7 @@ void InitSDL()
     BeepMusic = Mix_LoadWAV("../tools/sounds/BeepSound.wav");
 
     // Checking if the audio was successfully loaded
-    if(!EatingMusic || !BeepMusic)
+    if (!EatingMusic || !BeepMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadWAV Error: %s\n", Mix_GetError());
         QuitSDL();
@@ -55,14 +55,14 @@ void InitSDL()
     GameOverMusic = Mix_LoadMUS("../tools/sounds/GameOver.mp3");
 
     // Checking if the audio was successfully loaded
-    if(!ClickingMusic || !ClickingPopMusic || !GameOverMusic)
+    if (!ClickingMusic || !ClickingPopMusic || !GameOverMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
         QuitSDL();
     }
 
     // Initialization of the PNG images
-    if(!IMG_Init(IMG_INIT_PNG))
+    if (!IMG_Init(IMG_INIT_PNG))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Init Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -72,7 +72,7 @@ void InitSDL()
     IconSurface = IMG_Load("../tools/images/WindowIcon.png");
 
     // Checking if the image was successfully loaded
-    if(!IconSurface)
+    if (!IconSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -82,7 +82,7 @@ void InitSDL()
     window = SDL_CreateWindow( "Snake Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
     // Checking if the window was successfully created
-    if(!window)
+    if (!window)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -95,7 +95,7 @@ void InitSDL()
     renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     // Checking if the renderer was successfully created
-    if(!renderer)
+    if (!renderer)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -110,7 +110,7 @@ void InitSDL()
     winnerSurface = IMG_Load("../tools/images/winner.png");
 
     // Checking if the image was successfully loaded
-    if(!AppleSurface || !PointerSurface || !GameOverSurface || !HomeSurface || !PlayAgainSurface || !winnerSurface)
+    if (!AppleSurface || !PointerSurface || !GameOverSurface || !HomeSurface || !PlayAgainSurface || !winnerSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -125,7 +125,7 @@ void InitSDL()
     winnerTexture = SDL_CreateTextureFromSurface( renderer, winnerSurface);
 
     // Checking if the texture was successfully created from surface
-    if(!AppleTexture || !PointerTexture || !GameOverTexture || !HomeTexture || !PlayAgainTexture || !winnerTexture)
+    if (!AppleTexture || !PointerTexture || !GameOverTexture || !HomeTexture || !PlayAgainTexture || !winnerTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -143,7 +143,7 @@ void InitSDL()
     CursorSurface = IMG_Load("../tools/images/cursor.png");
 
     // Checking if the cursor image was successfully loaded
-    if(!CursorSurface)
+    if (!CursorSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -153,7 +153,7 @@ void InitSDL()
     Cursor = SDL_CreateColorCursor( CursorSurface, 0, 0);
 
     // Checking if the cursor was successfully created
-    if(!Cursor)
+    if (!Cursor)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,  "SDL_CreateColorCursor Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -178,8 +178,8 @@ void InitSDL()
     BlueSnakeTailSurface = IMG_Load("../tools/images/snake/blue/tail.png");
 
     // Checking if the snake's image was successfully loaded
-    if(!GreenSnakeHeadSurface || !GreenSnakeBodySurface || !GreenSnakeCornerSurface || !GreenSnakeTailSurface ||
-       !BlueSnakeHeadSurface || !BlueSnakeBodySurface || !BlueSnakeCornerSurface || !BlueSnakeTailSurface)
+    if (!GreenSnakeHeadSurface || !GreenSnakeBodySurface || !GreenSnakeCornerSurface || !GreenSnakeTailSurface ||
+        !BlueSnakeHeadSurface  || !BlueSnakeBodySurface  || !BlueSnakeCornerSurface  || !BlueSnakeTailSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -200,8 +200,8 @@ void InitSDL()
     BlueSnakeTailTexture = SDL_CreateTextureFromSurface( renderer, BlueSnakeTailSurface);
 
     // Checking if the texture was successfully created from surface
-    if(!GreenSnakeHeadTexture || !GreenSnakeBodyTexture || !GreenSnakeCornerTexture || !GreenSnakeTailTexture ||
-       !BlueSnakeHeadTexture || !BlueSnakeBodyTexture || !BlueSnakeCornerTexture || !BlueSnakeTailTexture)
+    if (!GreenSnakeHeadTexture || !GreenSnakeBodyTexture || !GreenSnakeCornerTexture || !GreenSnakeTailTexture ||
+        !BlueSnakeHeadTexture  || !BlueSnakeBodyTexture  || !BlueSnakeCornerTexture  || !BlueSnakeTailTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -234,7 +234,7 @@ void InitSDL()
     font50 = TTF_OpenFont("../tools/fonts/TalkComic.TTF", 50);
 
     // Checking if the font was successfully openned
-    if(!font28 || !font32 || !font50)
+    if (!font28 || !font32 || !font50)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont Error: %s\n", TTF_GetError());
         QuitSDL();
@@ -243,34 +243,34 @@ void InitSDL()
 
 void QuitSDL()
 {
-    if(font50) TTF_CloseFont(font50);
-    if(font32) TTF_CloseFont(font32);
-    if(font28) TTF_CloseFont(font28);
+    if (font50) TTF_CloseFont(font50);
+    if (font32) TTF_CloseFont(font32);
+    if (font28) TTF_CloseFont(font28);
     TTF_Quit();
-    if(winnerTexture) SDL_DestroyTexture(winnerTexture);
-    if(BlueSnakeTailTexture) SDL_DestroyTexture(BlueSnakeTailTexture);
-    if(BlueSnakeCornerTexture) SDL_DestroyTexture(BlueSnakeCornerTexture);
-    if(BlueSnakeBodyTexture) SDL_DestroyTexture(BlueSnakeBodyTexture);
-    if(BlueSnakeHeadTexture) SDL_DestroyTexture(BlueSnakeHeadTexture);
-    if(GreenSnakeTailTexture) SDL_DestroyTexture(GreenSnakeTailTexture);
-    if(GreenSnakeCornerTexture) SDL_DestroyTexture(GreenSnakeCornerTexture);
-    if(GreenSnakeBodyTexture) SDL_DestroyTexture(GreenSnakeBodyTexture);
-    if(GreenSnakeHeadTexture) SDL_DestroyTexture(GreenSnakeHeadTexture);
-    if(Cursor) SDL_FreeCursor(Cursor);
-    if(PlayAgainTexture) SDL_DestroyTexture(PlayAgainTexture);
-    if(HomeTexture) SDL_DestroyTexture(HomeTexture);
-    if(GameOverTexture) SDL_DestroyTexture(GameOverTexture);
-    if(PointerTexture) SDL_DestroyTexture(PointerTexture);
-    if(AppleTexture) SDL_DestroyTexture(AppleTexture);
-    if(renderer) SDL_DestroyRenderer(renderer);
-    if(window) SDL_DestroyWindow(window);
-    if(IconSurface) SDL_FreeSurface(IconSurface);
+    if (winnerTexture) SDL_DestroyTexture(winnerTexture);
+    if (BlueSnakeTailTexture) SDL_DestroyTexture(BlueSnakeTailTexture);
+    if (BlueSnakeCornerTexture) SDL_DestroyTexture(BlueSnakeCornerTexture);
+    if (BlueSnakeBodyTexture) SDL_DestroyTexture(BlueSnakeBodyTexture);
+    if (BlueSnakeHeadTexture) SDL_DestroyTexture(BlueSnakeHeadTexture);
+    if (GreenSnakeTailTexture) SDL_DestroyTexture(GreenSnakeTailTexture);
+    if (GreenSnakeCornerTexture) SDL_DestroyTexture(GreenSnakeCornerTexture);
+    if (GreenSnakeBodyTexture) SDL_DestroyTexture(GreenSnakeBodyTexture);
+    if (GreenSnakeHeadTexture) SDL_DestroyTexture(GreenSnakeHeadTexture);
+    if (Cursor) SDL_FreeCursor(Cursor);
+    if (PlayAgainTexture) SDL_DestroyTexture(PlayAgainTexture);
+    if (HomeTexture) SDL_DestroyTexture(HomeTexture);
+    if (GameOverTexture) SDL_DestroyTexture(GameOverTexture);
+    if (PointerTexture) SDL_DestroyTexture(PointerTexture);
+    if (AppleTexture) SDL_DestroyTexture(AppleTexture);
+    if (renderer) SDL_DestroyRenderer(renderer);
+    if (window) SDL_DestroyWindow(window);
+    if (IconSurface) SDL_FreeSurface(IconSurface);
     IMG_Quit();
-    if(BeepMusic)  Mix_FreeChunk(BeepMusic);
-    if(EatingMusic) Mix_FreeChunk(EatingMusic);
-    if(GameOverMusic) Mix_FreeMusic(GameOverMusic);
-    if(ClickingPopMusic) Mix_FreeMusic(ClickingPopMusic);
-    if(ClickingMusic) Mix_FreeMusic(ClickingMusic);
+    if (BeepMusic)  Mix_FreeChunk(BeepMusic);
+    if (EatingMusic) Mix_FreeChunk(EatingMusic);
+    if (GameOverMusic) Mix_FreeMusic(GameOverMusic);
+    if (ClickingPopMusic) Mix_FreeMusic(ClickingPopMusic);
+    if (ClickingMusic) Mix_FreeMusic(ClickingMusic);
     Mix_CloseAudio();
     SDL_Quit();
 }

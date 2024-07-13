@@ -7,7 +7,7 @@ void RenderMenuBackgroundImage(SDL_Renderer *renderer)
     SDL_Surface *surface = IMG_Load("../tools/images/MenuBackground.png");
 
     // Checking if the surface was successfully loaded
-    if(!surface)
+    if (!surface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -17,7 +17,7 @@ void RenderMenuBackgroundImage(SDL_Renderer *renderer)
     SDL_Texture *texture = SDL_CreateTextureFromSurface( renderer, surface);
 
     // Checking if the texture was successfully created
-    if(!texture)
+    if (!texture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -45,7 +45,7 @@ void RenderCreator( SDL_Renderer *renderer, char Creator[])
     SDL_Surface *CreatedBySurface = TTF_RenderText_Solid( font32, CreatorString, (SDL_Color){ 179, 59, 0, 255});
 
     // Checking if the surface was successfully created
-    if(!CreatedBySurface)
+    if (!CreatedBySurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
@@ -55,7 +55,7 @@ void RenderCreator( SDL_Renderer *renderer, char Creator[])
     SDL_Texture *CreatedByTexture = SDL_CreateTextureFromSurface( renderer, CreatedBySurface);
 
     // Checking if the texture was successfully created
-    if(!CreatedByTexture)
+    if (!CreatedByTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -77,7 +77,7 @@ void RenderPlayer( SDL_Renderer *renderer, const char *playerNumber, SDL_Rect re
     SDL_Surface *surface = TTF_RenderText_Solid( font50, playerNumber, (SDL_Color){ 255, 255, 255, 255});
 
     // Checking if the text was successfully rendered
-    if(!surface)
+    if (!surface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
@@ -87,7 +87,7 @@ void RenderPlayer( SDL_Renderer *renderer, const char *playerNumber, SDL_Rect re
     SDL_Texture *texture = SDL_CreateTextureFromSurface( renderer, surface);
 
     // Checking if the texture was successfully created
-    if(!texture)
+    if (!texture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -106,14 +106,14 @@ void RenderPlayer( SDL_Renderer *renderer, const char *playerNumber, SDL_Rect re
 void RenderMenu(SDL_Renderer *renderer)
 {
     // Set the window color to black
-    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    if (SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
     // Clearing the rendering target
-    if(SDL_RenderClear(renderer))
+    if (SDL_RenderClear(renderer))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -127,24 +127,24 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_Color DefaultColor = { 160, 160, 160, 255}, HoveringColor = { 0, 153, 76, 255};
 
     // Render the texts onto surfaces using the provided fonts and colors
-    SDL_Surface *TitleSurface = TTF_RenderText_Solid( font50, "Snake Game", (SDL_Color){ 0, 0, 0, 255});
-    SDL_Surface *StartSurface = TTF_RenderText_Solid( font50, "Start", (isHovering != onStart)? DefaultColor: HoveringColor);
-    SDL_Surface *ExitSurface = TTF_RenderText_Solid( font50, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
+    SDL_Surface *TitleSurface = TTF_RenderText_Solid( font50, "Snake Game", (SDL_Color){ 0, 0, 0, 255}),
+                *StartSurface = TTF_RenderText_Solid( font50, "Start", (isHovering != onStart)? DefaultColor: HoveringColor),
+                *ExitSurface = TTF_RenderText_Solid( font50, "Exit", (isHovering != onExit)? DefaultColor: HoveringColor);
 
     // Checking if the texts were successfully rendered
-    if(!TitleSurface || !StartSurface || !ExitSurface)
+    if (!TitleSurface || !StartSurface || !ExitSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
     }
 
     // Create textures from the rendered surfaces
-    SDL_Texture *TitleTexture = SDL_CreateTextureFromSurface( renderer, TitleSurface);
-    SDL_Texture *StartTexture = SDL_CreateTextureFromSurface( renderer, StartSurface);
-    SDL_Texture *ExitTexture = SDL_CreateTextureFromSurface( renderer, ExitSurface);
+    SDL_Texture *TitleTexture = SDL_CreateTextureFromSurface( renderer, TitleSurface),
+                *StartTexture = SDL_CreateTextureFromSurface( renderer, StartSurface),
+                *ExitTexture = SDL_CreateTextureFromSurface( renderer, ExitSurface);
 
     // Checking if the textures were successfully created
-    if(!TitleTexture || !StartTexture || !ExitTexture)
+    if (!TitleTexture || !StartTexture || !ExitTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -160,7 +160,7 @@ void RenderMenu(SDL_Renderer *renderer)
     SDL_RenderCopy( renderer, StartTexture, NULL, &(SDL_Rect){ 280, 150, 220, 80});
     SDL_RenderCopy( renderer, ExitTexture, NULL, &(SDL_Rect){ 280, 240, 220, 80});
 
-    switch(isHovering)
+    switch (isHovering)
     {
         case onStart:
             SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 220, 170, 50, 40});
@@ -168,6 +168,7 @@ void RenderMenu(SDL_Renderer *renderer)
 
         case onExit:
             SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 220, 260, 50, 40});
+            break;
     }
 
     // Present the renderer
@@ -182,14 +183,14 @@ void RenderMenu(SDL_Renderer *renderer)
 void RenderMode(SDL_Renderer *renderer)
 {
     // Set the window color to black
-    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    if (SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
     // Clearing the rendering target
-    if(SDL_RenderClear(renderer))
+    if (SDL_RenderClear(renderer))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -203,7 +204,7 @@ void RenderMode(SDL_Renderer *renderer)
     SDL_Surface *returnSurface = IMG_Load("../tools/images/return.png");
 
     // Checking if the image was successfully loaded
-    if(!returnSurface)
+    if (!returnSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load Error: %s\n", IMG_GetError());
         QuitSDL();
@@ -213,7 +214,7 @@ void RenderMode(SDL_Renderer *renderer)
     SDL_Texture *returnTexture = SDL_CreateTextureFromSurface(renderer, returnSurface);
 
     // Checking if the texture was successfully created
-    if(!returnTexture)
+    if (!returnTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -226,24 +227,24 @@ void RenderMode(SDL_Renderer *renderer)
     SDL_Color DefaultColor = { 160, 160, 160, 255};
 
     // Render the texts onto surfaces using the provided fonts and colors
-    SDL_Surface *ModeSurface = TTF_RenderText_Solid( font50, "Choose the game mode:", (SDL_Color){ 0, 51, 102, 255});
-    SDL_Surface *Mode1Surface = TTF_RenderText_Solid( font50, "1 Player", (isHovering != onMode1)? DefaultColor: (SDL_Color){ 0, 0, 255, 255});
-    SDL_Surface *Mode2Surface = TTF_RenderText_Solid( font50, "1vs1", (isHovering != onMode2)? DefaultColor: (SDL_Color){ 255, 0, 0, 255});
+    SDL_Surface *ModeSurface = TTF_RenderText_Solid( font50, "Choose the game mode:", (SDL_Color){ 0, 51, 102, 255}),
+                *Mode1Surface = TTF_RenderText_Solid( font50, "1 Player", (isHovering != onMode1)? DefaultColor: (SDL_Color){ 0, 0, 255, 255}),
+                *Mode2Surface = TTF_RenderText_Solid( font50, "1vs1", (isHovering != onMode2)? DefaultColor: (SDL_Color){ 255, 0, 0, 255});
 
     // Checking if the texts were successfully rendered
-    if(!ModeSurface || !Mode1Surface || !Mode2Surface)
+    if (!ModeSurface || !Mode1Surface || !Mode2Surface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
     }
 
     // Create textures from the rendered surfaces
-    SDL_Texture *ModeTexture = SDL_CreateTextureFromSurface( renderer, ModeSurface);
-    SDL_Texture *Mode1Texture = SDL_CreateTextureFromSurface( renderer, Mode1Surface);
-    SDL_Texture *Mode2Texture = SDL_CreateTextureFromSurface( renderer, Mode2Surface);
+    SDL_Texture *ModeTexture = SDL_CreateTextureFromSurface( renderer, ModeSurface),
+                *Mode1Texture = SDL_CreateTextureFromSurface( renderer, Mode1Surface),
+                *Mode2Texture = SDL_CreateTextureFromSurface( renderer, Mode2Surface);
 
     // Checking if the textures were successfully created
-    if(!ModeTexture || !Mode1Texture || !Mode2Texture)
+    if (!ModeTexture || !Mode1Texture || !Mode2Texture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -260,7 +261,7 @@ void RenderMode(SDL_Renderer *renderer)
     SDL_RenderCopy( renderer, Mode1Texture, NULL, &(SDL_Rect){ 325, 150, 150, 70});
     SDL_RenderCopy( renderer, Mode2Texture, NULL, &(SDL_Rect){ 325, 240, 150, 70});
 
-    switch(isHovering)
+    switch (isHovering)
     {
         case onMode1:
             SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 265, 170, 50, 35});
@@ -268,6 +269,7 @@ void RenderMode(SDL_Renderer *renderer)
 
         case onMode2:
             SDL_RenderCopy( renderer, PointerTexture, NULL, &(SDL_Rect){ 265, 260, 50, 35});
+            break;
     }
 
     // Present the renderer
@@ -284,14 +286,14 @@ void RenderMode(SDL_Renderer *renderer)
 void RenderMode1(SDL_Renderer *renderer)
 {
     // Set the window color to black
-    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    if (SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
     // Clearing the rendering target
-    if(SDL_RenderClear(renderer))
+    if (SDL_RenderClear(renderer))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -313,14 +315,14 @@ void RenderMode1(SDL_Renderer *renderer)
 void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
 {
     // Set the window color to black
-    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    if (SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
     // Clearing the rendering target
-    if(SDL_RenderClear(renderer))
+    if (SDL_RenderClear(renderer))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -330,12 +332,19 @@ void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
     DrawApple(renderer);
     MoveSnake(&snake1), MoveSnake(&snake2);
     DrawSnake( &snake1, renderer, GREEN), DrawSnake( &snake2, renderer, BLUE);
-    DrawScore( &snake1, renderer, font28, (SDL_Color){ 0, 255, 0, 255}, (SDL_Rect){ 360, 0, 40, 40}), DrawScore( &snake2, renderer, font28, (SDL_Color){ 0, 0, 255, 255}, (SDL_Rect){ 400, 0, 40, 40});
+    DrawScore( &snake1, renderer, font28, (SDL_Color){ 0, 255, 0, 255}, (SDL_Rect){ 360, 0, 40, 40});
+    DrawScore( &snake2, renderer, font28, (SDL_Color){ 0, 0, 255, 255}, (SDL_Rect){ 400, 0, 40, 40});
 
     Uint32 elapsed = (SDL_GetTicks() - *startTime) / 1000; // Get the elapsed time in seconds
-    if (elapsed >= 1){ *countDown -= 1; *startTime = SDL_GetTicks();} // Update the countdown
+    // Update the countdown
+    if (elapsed >= 1 && (snake1.chunk[0].direction != STABLE || snake2.chunk[0].direction != STABLE))
+    {
+        *countDown -= 1;
+        *startTime = SDL_GetTicks();
+    } // Update the countdown
 
-    int minutes = *countDown / 60, seconds = *countDown % 60; // Convert the countdown to minutes and seconds
+    int minutes = *countDown / 60,
+        seconds = *countDown % 60; // Convert the countdown to minutes and seconds
 
     char timeText[6]; // The text to be displayed for the countdown
     snprintf( timeText, sizeof(timeText), "%02d:%02d", minutes, seconds); // Format the text using snprintf
@@ -369,14 +378,14 @@ void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
 void RenderGameOverMode1(SDL_Renderer *renderer)
 {
     // Set the window color to black
-    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    if (SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
     // Clearing the rendering target
-    if(SDL_RenderClear(renderer))
+    if (SDL_RenderClear(renderer))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -393,22 +402,22 @@ void RenderGameOverMode1(SDL_Renderer *renderer)
     sprintf( HighestScoreString, "Highest Score: %d", snake.highestScore);
 
     // Render the game over visuals onto a surface using the provided font and color
-    SDL_Surface *FinalScoreSurface = TTF_RenderText_Solid( font50, FinalScoreString, (SDL_Color){ 255, 255, 255, 255});
-    SDL_Surface *HighestScoreSurface = TTF_RenderText_Solid( font50, HighestScoreString, (SDL_Color){ 255, 255, 255, 255});
+    SDL_Surface *FinalScoreSurface = TTF_RenderText_Solid( font50, FinalScoreString, (SDL_Color){ 255, 255, 255, 255}),
+                *HighestScoreSurface = TTF_RenderText_Solid( font50, HighestScoreString, (SDL_Color){ 255, 255, 255, 255});
 
     // Checking if the text was successfully rendered
-    if(!FinalScoreSurface || !HighestScoreSurface)
+    if (!FinalScoreSurface || !HighestScoreSurface)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Solid Error: %s\n", TTF_GetError());
         QuitSDL();
     }
 
     // Create a texture from the rendered surface
-    SDL_Texture *FinalScoreTexture = SDL_CreateTextureFromSurface( renderer, FinalScoreSurface);
-    SDL_Texture *HighestScoreTexture = SDL_CreateTextureFromSurface( renderer, HighestScoreSurface);
+    SDL_Texture *FinalScoreTexture = SDL_CreateTextureFromSurface( renderer, FinalScoreSurface),
+                *HighestScoreTexture = SDL_CreateTextureFromSurface( renderer, HighestScoreSurface);
 
     // Checking if the texture was successfully created
-    if(!FinalScoreTexture || !HighestScoreTexture)
+    if (!FinalScoreTexture || !HighestScoreTexture)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
         QuitSDL();
@@ -435,14 +444,14 @@ void RenderGameOverMode1(SDL_Renderer *renderer)
 void RenderGameOverMode2(SDL_Renderer *renderer)
 {
     // Set the window color to black
-    if(SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
+    if (SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();
     }
 
     // Clearing the rendering target
-    if(SDL_RenderClear(renderer))
+    if (SDL_RenderClear(renderer))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_SetRenderDrawColor Error: %s\n", SDL_GetError());
         QuitSDL();

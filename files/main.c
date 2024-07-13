@@ -3,7 +3,9 @@
 #include "../headers/input.h"
 #include "../headers/render.h"
 
-GameMode currentMode; int countDown; Uint32 startTime;
+int countDown;
+Uint32 startTime;
+GameMode currentMode;
 
 int main( int argc, char *argv[])
 {
@@ -22,8 +24,12 @@ int main( int argc, char *argv[])
             case START: // Start the game
                 if (isHovering == onMode1 || currentMode == MODE_SINGLE_PLAYER) // Single player mode
                 {
-                    currentMode = MODE_SINGLE_PLAYER; isHovering = onMode1;
-                    CreateApple(&apple), CreateSnake( &snake, 40, 0), CreateStars(stars);
+                    isHovering = onMode1;
+                    currentMode = MODE_SINGLE_PLAYER;
+
+                    CreateApple(&apple);
+                    CreateSnake( &snake, 40, 0);
+                    CreateStars(stars);
                     while (!quit && snake.state) // Game loop for single player mode
                     {
                         HandleMode1Input(&snake);
@@ -32,9 +38,14 @@ int main( int argc, char *argv[])
                 }
                 else if (isHovering == onMode2 || currentMode == MODE_TWO_PLAYERS) // Two players mode
                 {
-                    currentMode = MODE_TWO_PLAYERS; isHovering = onMode2;
-                    startTime = SDL_GetTicks(); countDown = 60; // 1 minute countdown
-                    CreateApple(&apple), CreateSnake( &snake1, 40, 0), CreateSnake( &snake2, 40, 480), CreateStars(stars);
+                    isHovering = onMode2;
+                    currentMode = MODE_TWO_PLAYERS;
+                    
+                    startTime = SDL_GetTicks(); // Start the timer
+                    countDown = 60; // 1 minute countdown
+                    CreateApple(&apple);
+                    CreateSnake( &snake1, 40, 0); CreateSnake( &snake2, 40, 480);
+                    CreateStars(stars);
                     while (!quit && countDown) // Game loop for two players mode
                     {
                         HandleMode2Input( &snake1, &snake2);
