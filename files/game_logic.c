@@ -1,19 +1,27 @@
 #include "../headers/game_logic.h"
 
-void CreateStars(star stars[])
+void CreateStars(star **stars)
 {
+    *stars = (star *)malloc(NUMBER_OF_STARS * sizeof(star));
+
+    // Check if the stars were allocated successfully
+    if (!*stars) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to allocate memory for stars\n");
+        QuitSDL();
+    }
+
     // Loop through each star
     for ( int i = 0; i < NUMBER_OF_STARS; i++)
     {
         // Generation of a random position of the star within the window
-        stars[i].position.x = rand() % WINDOW_WIDTH;
-        stars[i].position.y = rand() % WINDOW_HEIGHT;
+        (*stars)[i].position.x = rand() % WINDOW_WIDTH;
+        (*stars)[i].position.y = rand() % WINDOW_HEIGHT;
 
         // Set the velocity (speed) of the star to a random value between 1 and 6
-        stars[i].velocity = ((float)rand() / RAND_MAX) * 5 + 1;
+        (*stars)[i].velocity = ((float)rand() / RAND_MAX) * 5 + 1;
 
         // Set the depth of the star to a random value between 0 and 1000
-        stars[i].depth = ((float)rand() / RAND_MAX) * 1000;
+        (*stars)[i].depth = ((float)rand() / RAND_MAX) * 1000;
     }
 }
 

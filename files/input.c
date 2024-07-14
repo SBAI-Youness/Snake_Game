@@ -292,7 +292,7 @@ void HandleMode1Input(player *snake)
                         break;
                     case SDLK_q:
                     case SDLK_LEFT:
-                        if (snake->chunk[0].direction != RIGHT)
+                        if (snake->chunk[0].direction != RIGHT && snake->chunk[0].direction != STABLE)
                         {
                             snake->chunk[0].direction = LEFT;
                             snake->chunk[0].angle = 180;
@@ -353,7 +353,7 @@ void HandleMode2Input( player *snake1, player *snake2)
                         }
                         break;
                     case SDLK_LEFT:
-                        if (!direction1Changed && snake1->chunk[0].direction != RIGHT)
+                        if (!direction1Changed && snake1->chunk[0].direction != RIGHT  && snake1->chunk[0].direction != STABLE)
                         {
                             snake1->chunk[0].direction = LEFT;
                             snake1->chunk[0].angle = 180;
@@ -387,7 +387,7 @@ void HandleMode2Input( player *snake1, player *snake2)
                         }
                         break;
                     case SDLK_q:
-                        if (!direction2Changed && snake2->chunk[0].direction != RIGHT)
+                        if (!direction2Changed && snake2->chunk[0].direction != RIGHT && snake2->chunk[0].direction != STABLE)
                         {
                             snake2->chunk[0].direction = LEFT;
                             snake2->chunk[0].angle = 180;

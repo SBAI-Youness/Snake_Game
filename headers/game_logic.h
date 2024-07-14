@@ -3,7 +3,7 @@
 #include "sdl_utils.h"
 
 // Function used to create the stars
-void CreateStars(star stars[]);
+void CreateStars(star **stars);
 
 // Function used to update and draw the stars
 void UpdateAndDrawStars( SDL_Renderer *renderer, star stars[]);
