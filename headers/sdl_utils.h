@@ -67,7 +67,7 @@ extern TTF_Font *font28, *font32, *font50;
 
 extern player snake, snake1, snake2;
 extern fruit apple;
-extern star stars[NUMBER_OF_STARS];
+extern star *stars;
 
 extern SDL_Surface *IconSurface, *AppleSurface, *CursorSurface, *PointerSurface, *GameOverSurface, *GreenSnakeHeadSurface, *GreenSnakeBodySurface, *GreenSnakeCornerSurface, *GreenSnakeTailSurface, *BlueSnakeHeadSurface, *BlueSnakeBodySurface, *BlueSnakeCornerSurface, *BlueSnakeTailSurface, *HomeSurface, *PlayAgainSurface, *winnerSurface;
 extern SDL_Texture *AppleTexture, *PointerTexture, *GameOverTexture, *GreenSnakeHeadTexture, *GreenSnakeBodyTexture, *GreenSnakeCornerTexture, *GreenSnakeTailTexture, *BlueSnakeHeadTexture, *BlueSnakeBodyTexture, *BlueSnakeCornerTexture, *BlueSnakeTailTexture, *HomeTexture, *PlayAgainTexture, *winnerTexture;

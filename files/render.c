@@ -354,7 +354,7 @@ void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
     {
         if (currentPlayingMusic != BeepMusic)
         {
-            Mix_PlayChannel( -1, BeepMusic, 1);
+            Mix_PlayChannel( -1, BeepMusic, 0);
             currentPlayingMusic = BeepMusic;
         }
     }

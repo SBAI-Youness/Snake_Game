@@ -9,7 +9,7 @@ TTF_Font *font28 = NULL, *font32 = NULL, *font50 = NULL;
 
 player snake, snake1, snake2;
 fruit apple;
-star stars[NUMBER_OF_STARS];
+star *stars;
 
 SDL_Surface *IconSurface = NULL, *AppleSurface = NULL, *CursorSurface = NULL, *PointerSurface = NULL, *GameOverSurface = NULL, *GreenSnakeHeadSurface = NULL, *GreenSnakeBodySurface = NULL, *GreenSnakeCornerSurface = NULL, *GreenSnakeTailSurface = NULL, *BlueSnakeHeadSurface = NULL, *BlueSnakeBodySurface = NULL, *BlueSnakeCornerSurface = NULL, *BlueSnakeTailSurface = NULL, *HomeSurface = NULL, *PlayAgainSurface = NULL, *winnerSurface = NULL;
 SDL_Texture *AppleTexture = NULL, *PointerTexture = NULL, *GameOverTexture = NULL, *GreenSnakeHeadTexture = NULL, *GreenSnakeBodyTexture = NULL, *GreenSnakeCornerTexture = NULL, *GreenSnakeTailTexture = NULL, *BlueSnakeHeadTexture = NULL, *BlueSnakeBodyTexture = NULL, *BlueSnakeCornerTexture = NULL, *BlueSnakeTailTexture = NULL, *HomeTexture = NULL, *PlayAgainTexture = NULL, *winnerTexture = NULL;
@@ -243,6 +243,7 @@ void InitSDL()
 
 void QuitSDL()
 {
+    if (stars) free(stars);
     if (font50) TTF_CloseFont(font50);
     if (font32) TTF_CloseFont(font32);
     if (font28) TTF_CloseFont(font28);

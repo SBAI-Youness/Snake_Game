@@ -101,12 +101,19 @@ void DrawApple(SDL_Renderer *renderer)
     SDL_RenderCopy( renderer, AppleTexture, NULL, &AppleCell);
 }
 
-void InitializeHighestScore(player *snake) { snake->highestScore = -1; }
+void InitializeHighestScore(player *snake)
+{
+    snake->highestScore = -1;
+}
 
 void CreateSnake( player *snake, int initialX, int initialY)
 {
     // Setting the snake to its initial parameters
-    snake->size = SNAKE_INITIAL_SIZE, snake->score = 0, snake->highestScore = (snake->highestScore == -1)? 0: snake->highestScore, snake->state = true, snake->speed = 100;
+    snake->state = true;
+    snake->size = SNAKE_INITIAL_SIZE;
+    snake->score = 0;
+    snake->speed = 100;
+    snake->highestScore = (snake->highestScore == -1)? 0: snake->highestScore;
 
     // Setting each chunk to its position
     for ( int i = 0; i < snake->size; i++)
@@ -140,7 +147,8 @@ void DrawSnake( player *snake, SDL_Renderer *renderer, SnakeColor color)
     for ( int i = 0; i < snake->size; i++)
     {
         SDL_Rect SnakeSegment = { snake->chunk[i].position.x, snake->chunk[i].position.y, SNAKE_SIZE, SNAKE_SIZE};
-        int previousDirection = snake->chunk[i+1].direction, currentDirection = snake->chunk[i].direction;
+        int previousDirection = snake->chunk[i+1].direction,
+            currentDirection = snake->chunk[i].direction;
 
         if (i == 0) // Render snake head
             SDL_RenderCopyEx( renderer, head, NULL, &SnakeSegment, snake->chunk[i].angle, NULL, SDL_FLIP_NONE);
@@ -166,7 +174,8 @@ void MoveSnake(player *snake)
     {
         if (snake->chunk[0].position.x == snake->chunk[i].position.x && snake->chunk[0].position.y == snake->chunk[i].position.y && snake->score != 0)
         {
-            if (snake->score > snake->highestScore) snake->highestScore = snake->score;
+            if (snake->score > snake->highestScore)
+                snake->highestScore = snake->score;
             snake->state = false; // Snake collides with itself, game over
             MenuOption = GAMEOVER1;
             Mix_PlayMusic( GameOverMusic, 0);
@@ -188,7 +197,9 @@ void MoveSnake(player *snake)
     if (snake->chunk[0].position.x == apple.position.x && snake->chunk[0].position.y == apple.position.y)
     {
         Mix_PlayChannel( -1, EatingMusic, 0);
-        snake->size++, snake->score++, snake->speed = (snake->speed > 50)? snake->speed -= 4: snake->speed;
+        snake->size++;
+        snake->score++;
+        snake->speed = (snake->speed > 50)? snake->speed -= 4: snake->speed;
         CreateApple(&apple);
     }
 

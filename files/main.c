@@ -22,6 +22,14 @@ int main( int argc, char *argv[])
                 break;
 
             case START: // Start the game
+                stars = (star *)malloc(NUMBER_OF_STARS * sizeof(star)); // Allocate memory for stars
+
+                // Check if the stars were allocated successfully
+                if (!stars) {
+                    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to allocate memory for stars\n");
+                    QuitSDL();
+                }
+
                 if (isHovering == onMode1 || currentMode == MODE_SINGLE_PLAYER) // Single player mode
                 {
                     isHovering = onMode1;
@@ -35,6 +43,7 @@ int main( int argc, char *argv[])
                         HandleMode1Input(&snake);
                         RenderMode1(renderer);
                     }
+                    if (stars) free(stars);
                 }
                 else if (isHovering == onMode2 || currentMode == MODE_TWO_PLAYERS) // Two players mode
                 {
@@ -44,13 +53,15 @@ int main( int argc, char *argv[])
                     startTime = SDL_GetTicks(); // Start the timer
                     countDown = 60; // 1 minute countdown
                     CreateApple(&apple);
-                    CreateSnake( &snake1, 40, 0); CreateSnake( &snake2, 40, 480);
+                    CreateSnake( &snake1, 40, 0);
+                    CreateSnake( &snake2, 40, 480);
                     CreateStars(stars);
                     while (!quit && countDown) // Game loop for two players mode
                     {
                         HandleMode2Input( &snake1, &snake2);
                         RenderMode2( renderer, &countDown, &startTime);
                     }
+                    if (stars) free(stars);
                 }
                 break;
 
