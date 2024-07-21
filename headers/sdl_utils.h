@@ -55,7 +55,7 @@ typedef struct
     int score, highestScore, size;
     float speed;
     bool state;
-    segments chunk[999];
+    segments *chunk;
 } player;
 
 extern SDL_Window *window;

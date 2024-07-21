@@ -243,6 +243,9 @@ void InitSDL()
 
 void QuitSDL()
 {
+    if (snake.chunk) free(snake.chunk);
+    if (snake1.chunk) free(snake1.chunk);
+    if (snake2.chunk) free(snake2.chunk);
     if (stars) free(stars);
     if (font50) TTF_CloseFont(font50);
     if (font32) TTF_CloseFont(font32);

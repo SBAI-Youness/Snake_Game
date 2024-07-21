@@ -123,6 +123,13 @@ void CreateSnake( player *snake, int initialX, int initialY)
     snake->speed = 100;
     snake->highestScore = (snake->highestScore == -1)? 0: snake->highestScore;
 
+    snake->chunk = (segments *)malloc(snake->size * sizeof(segments));
+    if(!snake->chunk)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to allocate memory for snake\n");
+        QuitSDL();
+    }
+
     // Setting each chunk to its position
     for ( int i = 0; i < snake->size; i++)
     {
@@ -208,6 +215,12 @@ void MoveSnake(player *snake)
         snake->size++;
         snake->score++;
         snake->speed = (snake->speed > 50)? snake->speed -= 4: snake->speed;
+        segments *new_chunk = (segments *)realloc(snake->chunk, snake->size * sizeof(segments));
+        if (!new_chunk) {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to reallocate memory for snake\n");
+            QuitSDL();
+        }
+        snake->chunk = new_chunk;
         CreateApple(&apple);
     }
 

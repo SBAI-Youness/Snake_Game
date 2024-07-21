@@ -36,12 +36,13 @@ int main( int argc, char *argv[])
                         RenderMode1(renderer);
                     }
                     if (stars) free(stars);
+                    if (snake.chunk) free(snake.chunk);
                 }
                 else if (isHovering == onMode2 || currentMode == MODE_TWO_PLAYERS) // Two players mode
                 {
                     isHovering = onMode2;
                     currentMode = MODE_TWO_PLAYERS;
-                    
+
                     startTime = SDL_GetTicks(); // Start the timer
                     countDown = 60; // 1 minute countdown
                     CreateApple(&apple);
@@ -54,6 +55,8 @@ int main( int argc, char *argv[])
                         RenderMode2( renderer, &countDown, &startTime);
                     }
                     if (stars) free(stars);
+                    if (snake1.chunk) free(snake1.chunk);
+                    if (snake2.chunk) free(snake2.chunk);
                 }
                 break;
 
