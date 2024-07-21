@@ -193,7 +193,7 @@ void MoveSnake(player *snake)
                 snake->highestScore = snake->score;
             snake->state = false; // Snake collides with itself, game over
             MenuOption = GAMEOVER1;
-            Mix_PlayMusic( GameOverMusic, 0);
+            Mix_PlayChannel( -1, GameOverMusic, 0);
             break;
         }
     }

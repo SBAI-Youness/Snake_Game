@@ -362,6 +362,7 @@ void RenderMode2( SDL_Renderer *renderer, int *countDown, int *startTime)
     else if (!*countDown) // If the countdown is finished, stop the music
     {
         MenuOption = GAMEOVER2;
+        currentPlayingMusic = NULL;
         Mix_HaltMusic();
     }
 

@@ -3,8 +3,7 @@
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Cursor *Cursor = NULL;
-Mix_Chunk *EatingMusic = NULL, *BeepMusic = NULL;
-Mix_Music *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL;
+Mix_Chunk *EatingMusic = NULL, *BeepMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL, *GameLoopMusic = NULL;
 TTF_Font *font28 = NULL, *font32 = NULL, *font50 = NULL;
 
 player snake, snake1, snake2;
@@ -41,23 +40,15 @@ void InitSDL()
     // Loading the wav audio file
     EatingMusic = Mix_LoadWAV("../tools/sounds/SnakeEats.wav");
     BeepMusic = Mix_LoadWAV("../tools/sounds/BeepSound.wav");
+    ClickingMusic = Mix_LoadWAV("../tools/sounds/Clicking.wav");
+    ClickingPopMusic = Mix_LoadWAV("../tools/sounds/ClickingPop.wav");
+    GameOverMusic = Mix_LoadWAV("../tools/sounds/GameOver.wav");
+    GameLoopMusic = Mix_LoadWAV("../tools/sounds/GameLoopMusic.wav");
 
     // Checking if the audio was successfully loaded
-    if (!EatingMusic || !BeepMusic)
+    if (!EatingMusic || !BeepMusic || !ClickingMusic || !ClickingPopMusic || !GameOverMusic || !GameLoopMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadWAV Error: %s\n", Mix_GetError());
-        QuitSDL();
-    }
-
-    // Loading the mp3 audio file
-    ClickingMusic = Mix_LoadMUS("../tools/sounds/Clicking.mp3");
-    ClickingPopMusic = Mix_LoadMUS("../tools/sounds/ClickingPop.mp3");
-    GameOverMusic = Mix_LoadMUS("../tools/sounds/GameOver.mp3");
-
-    // Checking if the audio was successfully loaded
-    if (!ClickingMusic || !ClickingPopMusic || !GameOverMusic)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS Error: %s\n", Mix_GetError());
         QuitSDL();
     }
 
@@ -272,9 +263,10 @@ void QuitSDL()
     IMG_Quit();
     if (BeepMusic)  Mix_FreeChunk(BeepMusic);
     if (EatingMusic) Mix_FreeChunk(EatingMusic);
-    if (GameOverMusic) Mix_FreeMusic(GameOverMusic);
-    if (ClickingPopMusic) Mix_FreeMusic(ClickingPopMusic);
-    if (ClickingMusic) Mix_FreeMusic(ClickingMusic);
+    if (GameLoopMusic) Mix_FreeChunk(GameLoopMusic);
+    if (GameOverMusic) Mix_FreeChunk(GameOverMusic);
+    if (ClickingPopMusic) Mix_FreeChunk(ClickingPopMusic);
+    if (ClickingMusic) Mix_FreeChunk(ClickingMusic);
     Mix_CloseAudio();
     SDL_Quit();
 }

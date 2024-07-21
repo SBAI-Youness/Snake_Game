@@ -30,7 +30,7 @@ void HandleMenuInput()
                             else
                                 isHovering = onStart;
 
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                             break;
                         case SDLK_DOWN:
                             if (isHovering == onStart)
@@ -40,13 +40,13 @@ void HandleMenuInput()
                             else
                                 isHovering = onExit;
 
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                             break;
                         case SDLK_RETURN:
                             if (isHovering == onStart)
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = MODE;
                             }
                             else if (isHovering == onExit)
@@ -70,7 +70,7 @@ void HandleMenuInput()
                         if (isHovering != onStart)
                         {
                             isHovering = onStart;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                         }
                     }
                     else if (mouseX >= 280 && mouseX <= 500 && mouseY >= 240 && mouseY <= 320) // Mouse is hovering exit button
@@ -78,7 +78,7 @@ void HandleMenuInput()
                         if (isHovering != onExit)
                         {
                             isHovering = onExit;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                         }
                     }
                     else // Mouse is hovering any button
@@ -99,7 +99,7 @@ void HandleMenuInput()
                             if (mouseX >= 280 && mouseX <= 500 && mouseY >= 150 && mouseY <= 230) // If the user pressed start
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = MODE;
                             }
                             else if (mouseX >= 280 && mouseX <= 500 && mouseY >= 240 && mouseY <= 320) // If the user pressed exit
@@ -143,7 +143,7 @@ void HandleModeInput()
                             else
                                 isHovering = onMode1;
 
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                             break;
                         case SDLK_DOWN:
                             if (isHovering == onMode1)
@@ -153,13 +153,13 @@ void HandleModeInput()
                             else
                                 isHovering = onMode2;
 
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                             break;
                         case SDLK_RETURN:
                             if (isHovering == onMode1 || isHovering == onMode2)
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = START;
                             }
                             break;
@@ -179,7 +179,7 @@ void HandleModeInput()
                         if (isHovering != onReturn)
                         {
                             isHovering = onReturn;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                         }
                     }
                     else if (mouseX >= 325 && mouseX <= 475 && mouseY >= 150 && mouseY <= 220) // Mouse is hovering the first mode
@@ -187,7 +187,7 @@ void HandleModeInput()
                         if (isHovering != onMode1)
                         {
                             isHovering = onMode1;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                         }
                     }
                     else if (mouseX >= 325 && mouseX <= 475 && mouseY >= 240 && mouseY <= 310) // Mouse is hovering the second mode
@@ -195,7 +195,7 @@ void HandleModeInput()
                         if (isHovering != onMode2)
                         {
                             isHovering = onMode2;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                         }
                     }
                     else // Mouse is hovering any button
@@ -216,19 +216,19 @@ void HandleModeInput()
                             if (mouseX >= 10 && mouseX <= 60 && mouseY >= 10 && mouseY <= 60) // Mouse is hovering the return button
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = MENU;
                             }
                             else if (mouseX >= 325 && mouseX <= 475 && mouseY >= 150 && mouseY <= 220) // If the user pressed the first mode
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = START;
                             }
                             else if (mouseX >= 325 && mouseX <= 475 && mouseY >= 240 && mouseY <= 310) // If the user pressed the second mode
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = START;
                             }
                             break;
@@ -425,21 +425,21 @@ void HandleGameOverMode1Input()
                             if (isHovering != onPlayAgain)
                             {
                                 isHovering = onPlayAgain;
-                                Mix_PlayMusic( ClickingPopMusic, 0);
+                                Mix_PlayChannel( -1, ClickingPopMusic, 0);
                             }
                             break;
                         case SDLK_LEFT:
                             if (isHovering != onHome)
                             {
                                 isHovering = onHome;
-                                Mix_PlayMusic( ClickingPopMusic, 0);
+                                Mix_PlayChannel( -1, ClickingPopMusic, 0);
                             }
                             break;
                         case SDLK_RETURN:
                             if (isHovering == onHome || isHovering == onPlayAgain)
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = (isHovering == onHome)? MENU: (isHovering == onPlayAgain)? START: isHovering;
                             }
                             break;
@@ -459,7 +459,7 @@ void HandleGameOverMode1Input()
                         if (isHovering != onHome)
                         {
                             isHovering = onHome;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                         }
                     }
                     else if (mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // Mouse is hovering play again button
@@ -467,7 +467,7 @@ void HandleGameOverMode1Input()
                         if (isHovering != onPlayAgain)
                         {
                             isHovering = onPlayAgain;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                         }
                     }
                     else // Mouse is hovering any button
@@ -488,13 +488,13 @@ void HandleGameOverMode1Input()
                             if (mouseX >= 290 && mouseX <= 360 && mouseY >= 300 && mouseY <= 370) // If the user pressed home
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = MENU;
                             }
                             else if (mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // If the user pressed play again
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = START;
                             }
                             break;
@@ -530,21 +530,21 @@ void HandleGameOverMode2Input()
                             if (isHovering != onPlayAgain)
                             {
                                 isHovering = onPlayAgain;
-                                Mix_PlayMusic( ClickingPopMusic, 0);
+                                Mix_PlayChannel( -1, ClickingPopMusic, 0);
                             }
                             break;
                         case SDLK_LEFT:
                             if (isHovering != onHome)
                             {
                                 isHovering = onHome;
-                                Mix_PlayMusic( ClickingPopMusic, 0);
+                                Mix_PlayChannel( -1, ClickingPopMusic, 0);
                             }
                             break;
                         case SDLK_RETURN:
                             if (isHovering == onHome || isHovering == onPlayAgain)
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = (isHovering == onHome)? MENU: (isHovering == onPlayAgain)? START: isHovering;
                             }
                             break;
@@ -564,7 +564,7 @@ void HandleGameOverMode2Input()
                         if (isHovering != onHome)
                         {
                             isHovering = onHome;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                         }
                     }
                     else if (mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // Mouse is hovering play again button
@@ -572,7 +572,7 @@ void HandleGameOverMode2Input()
                         if (isHovering != onPlayAgain)
                         {
                             isHovering = onPlayAgain;
-                            Mix_PlayMusic( ClickingPopMusic, 0);
+                            Mix_PlayChannel( -1, ClickingPopMusic, 0);
                         }
                     }
                     else // Mouse is hovering any button
@@ -593,13 +593,13 @@ void HandleGameOverMode2Input()
                             if (mouseX >= 290 && mouseX <= 360 && mouseY >= 300 && mouseY <= 370) // If the user pressed home
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = MENU;
                             }
                             else if (mouseX >= 440 && mouseX <= 510 && mouseY >= 300 && mouseY <= 370) // If the user pressed play again
                             {
                                 Mix_HaltMusic();
-                                Mix_PlayMusic( ClickingMusic, 0);
+                                Mix_PlayChannel( -1, ClickingMusic, 0);
                                 MenuOption = START;
                             }
                             break;

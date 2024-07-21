@@ -61,8 +61,7 @@ typedef struct
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern SDL_Cursor *Cursor;
-extern Mix_Chunk *EatingMusic, *BeepMusic;
-extern Mix_Music *ClickingMusic, *ClickingPopMusic, *GameOverMusic;
+extern Mix_Chunk *EatingMusic, *BeepMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic, *GameLoopMusic;
 extern TTF_Font *font28, *font32, *font50;
 
 extern player snake, snake1, snake2;
@@ -79,6 +78,8 @@ extern GameState MenuOption; // Variable used to check the current menu option
 extern MouseHoveringState isHovering; // Variable used to check if the mouse is hovering over a button
 
 extern SnakeColor color;
+
+extern bool isGameLoopMusicPlaying;
 
 // Function used to initialize the SDL2 library
 void InitSDL();

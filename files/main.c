@@ -6,6 +6,7 @@
 int countDown;
 Uint32 startTime;
 GameMode currentMode;
+bool isGameLoopMusicPlaying = false;
 
 int main( int argc, char *argv[])
 {
@@ -17,11 +18,18 @@ int main( int argc, char *argv[])
         switch (MenuOption) // Switch statement to handle the menu options
         {
             case MENU: // Render the menu
+                if(!isGameLoopMusicPlaying)
+                {
+                    isGameLoopMusicPlaying = true;
+                    Mix_PlayChannel( -1, GameLoopMusic, -1);
+                }
                 HandleMenuInput();
                 RenderMenu(renderer);
                 break;
 
             case START: // Start the game
+                isGameLoopMusicPlaying = false;
+                Mix_HaltChannel(-1);
                 if (isHovering == onMode1 || currentMode == MODE_SINGLE_PLAYER) // Single player mode
                 {
                     isHovering = onMode1;
@@ -65,6 +73,11 @@ int main( int argc, char *argv[])
                 break;
 
             case MODE: // Mode selection screen
+                if(!isGameLoopMusicPlaying)
+                {
+                    isGameLoopMusicPlaying = true;
+                    Mix_PlayChannel( -1, GameLoopMusic, -1);
+                }
                 currentMode = NONE;
                 HandleModeInput();
                 RenderMode(renderer);
