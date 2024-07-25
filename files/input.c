@@ -163,6 +163,11 @@ void HandleModeInput()
                                 MenuOption = START;
                             }
                             break;
+                        case SDLK_BACKSPACE:
+                            Mix_HaltMusic();
+                            Mix_PlayChannel( -1, ClickingMusic, 0);
+                            MenuOption = MENU;
+                            break;
                     }
                 }
                 break;
