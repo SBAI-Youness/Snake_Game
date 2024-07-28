@@ -61,7 +61,7 @@ typedef struct
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern SDL_Cursor *Cursor;
-extern Mix_Chunk *EatingMusic, *BeepMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic, *GameLoopMusic;
+extern Mix_Chunk *EatingMusic, *BeepMusic, *ClickingMusic, *ClickingPopMusic, *GameOverMusic, *GameLoopMusic, *WinMusic;
 extern TTF_Font *font28, *font32, *font50;
 
 extern player snake, snake1, snake2;

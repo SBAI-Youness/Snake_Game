@@ -3,7 +3,7 @@
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Cursor *Cursor = NULL;
-Mix_Chunk *EatingMusic = NULL, *BeepMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL, *GameLoopMusic = NULL;
+Mix_Chunk *EatingMusic = NULL, *BeepMusic = NULL, *ClickingMusic = NULL, *ClickingPopMusic = NULL, *GameOverMusic = NULL, *GameLoopMusic = NULL, *WinMusic = NULL;
 TTF_Font *font28 = NULL, *font32 = NULL, *font50 = NULL;
 
 player snake, snake1, snake2;
@@ -44,9 +44,10 @@ void InitSDL()
     ClickingPopMusic = Mix_LoadWAV("../tools/sounds/ClickingPop.wav");
     GameOverMusic = Mix_LoadWAV("../tools/sounds/GameOver.wav");
     GameLoopMusic = Mix_LoadWAV("../tools/sounds/GameLoopMusic.wav");
+    WinMusic = Mix_LoadWAV("../tools/sounds/WinSound.wav");
 
     // Checking if the audio was successfully loaded
-    if (!EatingMusic || !BeepMusic || !ClickingMusic || !ClickingPopMusic || !GameOverMusic || !GameLoopMusic)
+    if (!EatingMusic || !BeepMusic || !ClickingMusic || !ClickingPopMusic || !GameOverMusic || !GameLoopMusic || !WinMusic)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadWAV Error: %s\n", Mix_GetError());
         QuitSDL();
@@ -267,6 +268,7 @@ void QuitSDL()
     if (GameOverMusic) Mix_FreeChunk(GameOverMusic);
     if (ClickingPopMusic) Mix_FreeChunk(ClickingPopMusic);
     if (ClickingMusic) Mix_FreeChunk(ClickingMusic);
+    if (WinMusic) Mix_FreeChunk(WinMusic);
     Mix_CloseAudio();
     SDL_Quit();
 }
